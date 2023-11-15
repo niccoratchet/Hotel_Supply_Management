@@ -1,4 +1,4 @@
-package com.unifysweproject.hotelsupplymanagement;
+package com.unifisweproject.hotelsupplymanagement;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

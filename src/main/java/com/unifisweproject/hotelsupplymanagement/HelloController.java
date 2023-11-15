@@ -1,4 +1,4 @@
-package com.unifysweproject.hotelsupplymanagement;
+package com.unifisweproject.hotelsupplymanagement;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
