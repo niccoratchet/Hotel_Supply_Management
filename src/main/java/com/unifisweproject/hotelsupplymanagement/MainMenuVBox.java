@@ -6,14 +6,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+
+/*
+    Questa classe estende VBox. È il container principale che contiene gli altri sotto container che compongono la finestra del menu principale.
+ */
+
 public class MainMenuVBox extends VBox {
 
     private final HBox welcomeTextBox = new HBox();
     private final Text welcomeText = new Text("Bentornato nel programma gestionale dell'azienda Breig SPA! \n " +
             "Clicca uno dei bottoni per accedere ad una delle sezioni.");
-    private final VBox buttonsContainer = new VBox();
-    private final HBox firstButtons = new HBox();
-    private final HBox secondButtons = new HBox();
+    private final VBox buttonsContainer = new VBox();           // contiene due file di bottoni
+    private final HBox firstButtons = new HBox();               // prima fila contenente due bottoni
+    private final HBox secondButtons = new HBox();              // seconda fila
 
     private final Button manageCustomersButton = new Button("Gestione clienti");
     private final Button manageOrdersButton = new Button("Gestione ordini");
@@ -29,7 +34,7 @@ public class MainMenuVBox extends VBox {
 
     }
 
-    public void createMainWindow() {
+    public void createMainWindow() {            // creazione della finestra principale
 
         welcomeTextBox.setAlignment(Pos.CENTER);
         welcomeTextBox.setSpacing(50);
@@ -37,12 +42,11 @@ public class MainMenuVBox extends VBox {
 
         setButtonsContainer();
 
-        this.getChildren().add(welcomeText);
-        this.getChildren().add(buttonsContainer);
+        this.getChildren().addAll(welcomeText, buttonsContainer);
 
     }
 
-    public void setButtonsContainer() {
+    public void setButtonsContainer() {              // creazione del contenitore verticale contenenti due contenitori orizzontali di bottoni che portano alla varie sezioni del programma
 
         buttonsContainer.setAlignment(Pos.CENTER);
         buttonsContainer.setSpacing(50);
@@ -55,18 +59,14 @@ public class MainMenuVBox extends VBox {
 
         setButtonsProperties();
 
-        firstButtons.getChildren().add(manageCustomersButton);
-        firstButtons.getChildren().add(manageOrdersButton);
+        firstButtons.getChildren().addAll(manageCustomersButton, manageOrdersButton);
+        secondButtons.getChildren().addAll(manageSuppliersButton, manageItemsButton);
+        buttonsContainer.getChildren().addAll(firstButtons, secondButtons);
 
-        secondButtons.getChildren().add(manageSuppliersButton);
-        secondButtons.getChildren().add(manageItemsButton);
-
-        buttonsContainer.getChildren().add(firstButtons);
-        buttonsContainer.getChildren().add(secondButtons);
 
     }
 
-    public void setButtonsProperties() {
+    public void setButtonsProperties() {            // associa un evento al click del tasto sulla gestione dei clienti e definisce le dimensioni dei bottoni
 
         manageCustomersButton.setOnAction((actionEvent -> System.out.println("Gestione clienti!")));
 
