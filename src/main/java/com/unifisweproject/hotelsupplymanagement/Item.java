@@ -2,14 +2,13 @@ package com.unifisweproject.hotelsupplymanagement;
 
 public class Item {
 
-    private int codice_articolo, quantità;
+    private int codice_articolo = -1, quantita;
     private double prezzo;
     private String nome, descrizione, data_inserimento;
 
-    public Item(int codice_articolo, int quantità, double prezzo, String nome, String descrizione, String data_inserimento) {
+    public Item(int quantita, double prezzo, String nome, String descrizione, String data_inserimento) {
 
-        this.codice_articolo = codice_articolo;
-        this.quantità = quantità;
+        this.quantita = quantita;
         this.prezzo = prezzo;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -25,12 +24,12 @@ public class Item {
         this.codice_articolo = codice_articolo;
     }
 
-    public int getQuantità() {
-        return quantità;
+    public int getQuantita() {
+        return quantita;
     }
 
-    public void setQuantità(int quantità) {
-        this.quantità = quantità;
+    public void setQuantita(int quantita) {
+        this.quantita = quantita;
     }
 
     public double getPrezzo() {

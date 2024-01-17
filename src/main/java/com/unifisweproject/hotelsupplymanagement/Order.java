@@ -7,9 +7,8 @@ public class Order {
 
     private String tipo_pagamento, data_ordine;         // TODO: enumerazione tipo pagamento
 
-    public Order(int codice_ordine, int codice_cliente, boolean bolla, String tipo_pagamento, String data_ordine) {
+    public Order(int codice_cliente, boolean bolla, String tipo_pagamento, String data_ordine) {
 
-        this.codice_ordine = codice_ordine;
         this.codice_cliente = codice_cliente;
         this.bolla = bolla;
         this.tipo_pagamento = tipo_pagamento;
