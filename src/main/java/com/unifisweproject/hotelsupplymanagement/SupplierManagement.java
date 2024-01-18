@@ -34,6 +34,20 @@ public class SupplierManagement implements Data_Management{
     @Override
     public void modify(int code, String dataType, Object value) {
 
+        String modifyQuery = "UPDATE Articolo SET ";
+
+        modifyQuery += getDataTypeForQuery(dataType, value);
+
+        modifyQuery += "WHERE Codice_Fornitore = " + code;
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            statement.executeQuery(modifyQuery);
+        }
+        catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
     }
 
     @Override
@@ -72,9 +86,10 @@ public class SupplierManagement implements Data_Management{
             ResultSet resultSet = statement.executeQuery(searchQuery);
 
             while(resultSet.next()) {
-                System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2) +
-                        "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4) + "\t" +
-                        resultSet.getInt(5) + resultSet.getString(6) + resultSet.getString(6));
+                System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2)
+                        + "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4)
+                        + "\t" + resultSet.getString(5) + "\t" + resultSet.getString(6)
+                        + "\t" + resultSet.getString(7));
 
             }
 
@@ -98,9 +113,10 @@ public class SupplierManagement implements Data_Management{
             ResultSet resultSet = statement.executeQuery(printQuery);
 
             while(resultSet.next()) {
-                System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2) +
-                        "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4) + "\t" +
-                        resultSet.getInt(5) + resultSet.getString(6) + resultSet.getString(6));
+                System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2)
+                        + "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4)
+                        + "\t" + resultSet.getString(5) + "\t" + resultSet.getString(6)
+                        + "\t" + resultSet.getString(7));
 
             }
 
@@ -120,6 +136,64 @@ public class SupplierManagement implements Data_Management{
 
     @Override
     public void delete(int code) {
+        String deleteQuery = "DELETE FROM Fornitore WHERE Codice_Fornitore = " + code;
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            statement.executeQuery(deleteQuery);
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+    }
+
+    @Override
+    public String getDataTypeForQuery(String dataType, Object value) {
+
+        String query = switch (dataType) {
+            case "Codice_Fornitore" -> "Codice_Fornitore = " + (Integer) value;
+            case "Data_Inserimento" -> "Data_Inserimento = " + (String) value;
+            case "P_IVA" -> "P_IVA = " + (String) value;
+            case "Ragione_Sociale" -> "Ragione_Sociale = " + (String) value;
+            case "Indirizzo" -> "Indirizzo = " + (String) value;
+            case "CAP" -> "CAP = " + (String) value;
+            case "Civico" -> "Civico = " + (String) value;
+            default -> " ";
+        };
+
+        return query;
+
+    }
+
+    @Override
+    public void executeQuery(String query, boolean isOutput) {
+
+        try {
+
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+
+            if (isOutput) {
+
+                ResultSet resultSet = statement.executeQuery(query);
+
+                while(resultSet.next()) {
+                    System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2)
+                            + "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4)
+                            + "\t" + resultSet.getString(5) + "\t" + resultSet.getString(6)
+                            + "\t" + resultSet.getString(7));
+
+                }
+            }
+
+            else
+                statement.executeQuery(query);
+
+
+        }
+
+        catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
 
     }
 }
