@@ -35,48 +35,16 @@ public class ItemManagement implements Data_Management {
     @Override
     public void modify(int code, String dataType, Object value) {
 
-         String modifyQuery = "UPDATE Articolo SET ";
-
-         modifyQuery += getDataTypeForQuery(dataType, value);
-
-         modifyQuery += "WHERE Codice_Articolo = " + code;
-
-         try {
-             Statement statement = HotelSupplyManagementMain.conn.createStatement();
-             statement.executeQuery(modifyQuery);
-         }
-         catch(SQLException e) {
-             System.err.println(e.getMessage());
-         }
+         String modifyQuery = "UPDATE Articolo SET " + getDataTypeForQuery(dataType, value) + " WHERE Codice_Articolo = " + code;
+         executeQuery(modifyQuery, false);
 
     }
 
     @Override
     public Object search(String dataType, Object value) {
 
-        String searchQuery = "SELECT * FROM Articolo WHERE ";
-
-        searchQuery += getDataTypeForQuery(dataType, value);
-
-        try {
-
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-
-            ResultSet resultSet = statement.executeQuery(searchQuery);
-
-            while(resultSet.next()) {
-                System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2) +
-                        "\t" + resultSet.getDouble(3) + "\t" + resultSet.getInt(4) + "\t" +
-                        resultSet.getString(5) + "\t" + resultSet.getString(6));
-
-            }
-
-        }
-
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
+        String searchQuery = "SELECT * FROM Articolo WHERE " + getDataTypeForQuery(dataType, value);
+        executeQuery(searchQuery, true);
         return null;
 
     }
@@ -85,28 +53,15 @@ public class ItemManagement implements Data_Management {
     public void printAll() {
 
         String printQuery = "SELECT * FROM Articolo";
-
-        try {
-
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-            ResultSet resultSet = statement.executeQuery(printQuery);
-
-            while(resultSet.next()) {
-                System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2) +
-                        "\t" + resultSet.getDouble(3) + "\t" + resultSet.getInt(4) + "\t" +
-                        resultSet.getString(5) + "\t" + resultSet.getString(6));
-
-            }
-
-        }
-        catch(SQLException e) {
-            System.err.println(e.getMessage());
-        }
+        executeQuery(printQuery, true);
 
     }
 
     @Override
-    public void print(Object tobeViewed) {
+    public void print(int code) {
+
+        String printQuery = "SELECT * FROM Articolo WHERE Codice_Articolo = " + code;
+        executeQuery(printQuery, true);
 
     }
 
@@ -114,45 +69,51 @@ public class ItemManagement implements Data_Management {
     public void delete(int code) {
 
         String deleteQuery = "DELETE FROM Articolo WHERE Codice_Articolo = " + code;
-
-        try {
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-            statement.executeQuery(deleteQuery);
-        }
-        catch(SQLException e) {
-            System.err.println(e.getMessage());
-        }
+        executeQuery(deleteQuery, false);
 
     }
 
     public String getDataTypeForQuery(String dataType, Object value) {
 
-        String query = " ";
+        return switch (dataType) {
+            case "Codice_Articolo" -> "Codice_Articolo = " + value;
+            case "Prezzo" -> "Prezzo = " + value;
+            case "Quantita" -> "Quantita = " + value;
+            case "Nome" -> "Nome = " + value;
+            case "Descrizione" -> "Descrizione = " + value;
+            case "Data_Inserimento" -> "Data_Inserimento = " + value;
+            default -> " ";
+        };
 
-        switch (dataType) {
+    }
 
-            case "Codice_Articolo":
-                query = "Codice_Articolo = " + (Integer) value;
-                break;
-            case "Prezzo":
-                query = "Prezzo = " + (Double) value;
-                break;
-            case "Quantita":
-                query = "Quantita = " + (Integer) value;
-                break;
-            case "Nome":
-                query = "Nome = " + (String) value;
-                break;
-            case "Descrizione":
-                query = "Descrizione = " + (String) value;
-                break;
-            case "Data_Inserimento":
-                query = "Data_Inserimento = " + (String) value;
-                break;
+    @Override
+    public void executeQuery(String query, boolean isOutput) {
+
+        try {
+
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+
+            if (isOutput) {
+
+                ResultSet resultSet = statement.executeQuery(query);
+
+                while(resultSet.next()) {
+                    System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2) +
+                            "\t" + resultSet.getDouble(3) + "\t" + resultSet.getInt(4) + "\t" +
+                            resultSet.getString(5) + "\t" + resultSet.getString(6));
+
+                }
+            }
+
+            else
+                statement.executeUpdate(query);
 
         }
 
-        return query;
+        catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
 
     }
 

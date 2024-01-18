@@ -111,7 +111,10 @@ public class SupplierManagement implements Data_Management{
     }
 
     @Override
-    public void print(Object tobeViewed) {
+    public void print(int code) {
+
+        String printQuery = "SELECT * FROM Fornitore WHERE Codice_Fornitore = " + code;
+        executeQuery(printQuery, true);
 
     }
 

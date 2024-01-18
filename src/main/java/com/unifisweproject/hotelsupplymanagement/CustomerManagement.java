@@ -134,7 +134,10 @@ public class CustomerManagement implements Data_Management {
     }
 
     @Override
-    public void print(Object tobeViewed) {
+    public void print(int code) {
+
+        String printQuery = "SELECT * FROM Cliente WHERE Codice_Cliente = " + code;
+        executeQuery(printQuery, true);
 
     }
 

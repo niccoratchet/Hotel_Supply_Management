@@ -44,7 +44,8 @@ public class HotelSupplyManagementMain extends Application {
         CustomerManagement cM = new CustomerManagement();
         OrderManagement oM = new OrderManagement();
 
-        itM.delete(1);
+
+        itM.search("Descrizione", "'Dicio'");
 
         //cM.add(new Customer(20, "Edoardo", "Cravegni", "17/01/2024", "GH", "3", "Paolo", "Via", "5", "34"));
 
