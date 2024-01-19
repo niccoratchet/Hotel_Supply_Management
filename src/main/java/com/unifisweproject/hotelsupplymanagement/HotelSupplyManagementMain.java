@@ -43,11 +43,11 @@ public class HotelSupplyManagementMain extends Application {
         ItemManagement itM = new ItemManagement();
         CustomerManagement cM = new CustomerManagement();
         OrderManagement oM = new OrderManagement();
+        SupplierManagement sM = new SupplierManagement();
+
+        sM.add(new Supplier("19/01/2024", "4", "dsad", "Vittor", "SDF", "SDAS"));
 
 
-        itM.search("Descrizione", "'Dicio'");
-
-        //cM.add(new Customer(20, "Edoardo", "Cravegni", "17/01/2024", "GH", "3", "Paolo", "Via", "5", "34"));
 
         try {
             if(conn != null)

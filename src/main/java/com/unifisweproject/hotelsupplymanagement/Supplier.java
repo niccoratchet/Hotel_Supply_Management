@@ -5,9 +5,8 @@ public class Supplier {
     private int codice_fornitore;
     private String data_inserimento, P_IVA, ragione_sociale, indirizzo, CAP, civico;
 
-    public Supplier(int codice_fornitore, String data_inserimento, String p_IVA, String ragione_sociale, String indirizzo, String CAP, String civico) {
+    public Supplier(String data_inserimento, String p_IVA, String ragione_sociale, String indirizzo, String CAP, String civico) {
 
-        this.codice_fornitore = codice_fornitore;
         this.data_inserimento = data_inserimento;
         P_IVA = p_IVA;
         this.ragione_sociale = ragione_sociale;

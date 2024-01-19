@@ -52,7 +52,7 @@ public class CustomerManagement implements Data_Management {
         executeQuery(searchQuery, true);
         return null;
 
-        }
+    }
 
     @Override
     public void printAll() {
@@ -82,17 +82,17 @@ public class CustomerManagement implements Data_Management {
     public String getDataTypeForQuery(String dataType, Object value) {
 
         return switch (dataType) {
-            case "Codice_Cliente" -> "Codice_Cliente = " + (Integer) value;
-            case "Sconto" -> "Sconto = " + (Integer) value;
-            case "Data_Inserimento" -> "Data_Inserimento = " + (String) value;
-            case "Nome" -> "Nome = " + (String) value;
-            case "Cognome" -> "Cognome = " + (String) value;
-            case "Codice_Fiscale" -> "Codice_fiscale = " + (String) value;
-            case "P_IVA" -> "P_IVA = " + (String) value;
-            case "Ragione_Sociale" -> "Ragione_Sociale = " + (String) value;
-            case "Indirizzo" -> "Indirizzo = " + (String) value;
-            case "CAP" -> "CAP = " + (String) value;
-            case "Civico" -> "Civico = " + (String) value;
+            case "Codice_Cliente" -> "Codice_Cliente = " + value;
+            case "Sconto" -> "Sconto = " + value;
+            case "Data_Inserimento" -> "Data_Inserimento = " + value;
+            case "Nome" -> "Nome = " + value;
+            case "Cognome" -> "Cognome = " + value;
+            case "Codice_Fiscale" -> "Codice_fiscale = " + value;
+            case "P_IVA" -> "P_IVA = " + value;
+            case "Ragione_Sociale" -> "Ragione_Sociale = " + value;
+            case "Indirizzo" -> "Indirizzo = " + value;
+            case "CAP" -> "CAP = " + value;
+            case "Civico" -> "Civico = " + value;
             default -> " ";
         };
 
@@ -113,15 +113,14 @@ public class CustomerManagement implements Data_Management {
                     System.out.println(resultSet.getInt(1) + "\t" + resultSet.getInt(2) +
                             "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4) +
                             "\t" + resultSet.getString(5) + "\t" + resultSet.getString(6) +
-                            "\t" + resultSet.getString(6) + "\t" + resultSet.getString(7) +
-                            "\t" + resultSet.getString(8) + "\t" + resultSet.getString(9) +
-                            "\t" + resultSet.getString(10) + "\t" + resultSet.getString(11));
-
+                            "\t" + resultSet.getString(7) + "\t" + resultSet.getString(8) +
+                            "\t" + resultSet.getString(9) + "\t" + resultSet.getString(10) +
+                            "\t" + resultSet.getString(11));
                 }
             }
 
             else
-                statement.executeQuery(query);
+                statement.executeUpdate(query);
 
         }
 

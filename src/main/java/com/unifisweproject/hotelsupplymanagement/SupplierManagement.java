@@ -11,7 +11,7 @@ public class SupplierManagement implements Data_Management{
 
         Supplier toBeAdded = (Supplier) newSupplier;
 
-        String addQuery = "INSERT INTO Ordine (Data_Inserimento, P_IVA, Ragione_Sociale, Indirizzo, CAP, Civico) \n" +       // creazione della query di inserimento
+        String addQuery = "INSERT INTO Fornitore (Data_Inserimento, P_IVA, Ragione_Sociale, Indirizzo, CAP, Civico) \n" +       // creazione della query di inserimento
                 "VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
