@@ -32,14 +32,18 @@ public class OrderManagement implements Data_Management {
     @Override
     public void modify(int code, String dataType, Object value) {
 
+        String modifyQuery = "UPDATE Ordine SET " + getDataTypeForQuery(dataType, value) + " WHERE Codice_Ordine = " + code;
+        executeQuery(modifyQuery, false);
+
     }
 
     @Override
     public Object search(String dataType, Object value) {
 
         String searchQuery = "SELECT * FROM Ordine WHERE " + getDataTypeForQuery(dataType, value);
-        executeQuery(searchQuery,true);
+        executeQuery(searchQuery, true);
         return null;
+
     }
 
     @Override
@@ -53,11 +57,16 @@ public class OrderManagement implements Data_Management {
     @Override
     public void print(int code) {
 
+        String printQuery = "SELECT * FROM Ordine WHERE Codice_Ordine = " + code;
+        executeQuery(printQuery, true);
+
     }
 
     @Override
     public void delete(int code) {
-        String deleteQuery = "DELETE FROM Ordine WHERE ";
+
+        String deleteQuery = "DELETE FROM Ordine WHERE Codice_Ordine = " + code;
+        executeQuery(deleteQuery, false);
 
     }
 

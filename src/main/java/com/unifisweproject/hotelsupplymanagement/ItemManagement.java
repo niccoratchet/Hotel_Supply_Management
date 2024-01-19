@@ -26,6 +26,7 @@ public class ItemManagement implements Data_Management {
             preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
 
         }
+
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }

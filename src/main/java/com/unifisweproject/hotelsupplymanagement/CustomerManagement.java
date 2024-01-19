@@ -40,111 +40,26 @@ public class CustomerManagement implements Data_Management {
     @Override
     public void modify(int code, String dataType, Object value) {
 
-        String modifyQuery = "UPDATE Cliente SET ";
-
-        modifyQuery += getDataTypeForQuery(dataType, value);
-
-        modifyQuery += "WHERE Codice_Cliente = " + code;
-
-        try {
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-            statement.executeQuery(modifyQuery);
-        }
-        catch(SQLException e) {
-            System.err.println(e.getMessage());
-        }
+        String modifyQuery = "UPDATE Cliente SET " + getDataTypeForQuery(dataType, value) + " WHERE Codice_Cliente = " + code;
+        executeQuery(modifyQuery, false);
 
     }
 
     @Override
     public Object search(String dataType, Object value) {
 
-        String searchQuery = "SELECT * FROM Cliente WHERE ";
-
-        switch (dataType) {
-
-            case "Codice_Cliente":
-                searchQuery += "Codice_Cliente = " + (Integer) value;
-                break;
-            case "Sconto":
-                searchQuery += "Sconto = " + (Integer) value;
-                break;
-            case "Nome":
-                searchQuery += "Nome = " + (String) value;
-                break;
-            case "Cognome":
-                searchQuery += "Cognome = " + (String) value;
-                break;
-            case "Codice_Fiscale":
-                searchQuery += "Codice_Fiscale = " + (String) value;
-                break;
-            case "P_IVA":
-                searchQuery += "P_IVA = " + (String) value;
-                break;
-            case "Ragione_Sociale":
-                searchQuery += "Ragione_Sociale = " + (String) value;
-                break;
-            case "Indirizzo":
-                searchQuery += "Indirizzo = " + (String) value;
-                break;
-            case "CAP":
-                searchQuery += "CAP = " + (String) value;
-                break;
-            case "Civico":
-                searchQuery += "Civico = " + (String) value;
-                break;
-            case "Data_Inserimento":
-                searchQuery += "Data_Inserimento = " + (String) value;
-                break;
-
-        }
-
-        try {
-
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-
-            ResultSet resultSet = statement.executeQuery(searchQuery);
-
-            while(resultSet.next()) {
-                System.out.println(resultSet.getInt(1) + "\t" + resultSet.getInt(2) +
-                        "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4) + "\t" +
-                        resultSet.getString(5) + "\t" + resultSet.getString(6) +
-                        "\t" + resultSet.getString(6) + "\t" + resultSet.getString(7) +
-                        "\t" + resultSet.getString(8) + "\t" + resultSet.getString(9) +
-                        "\t" + resultSet.getString(10) + "\t" + resultSet.getString(11));
-
-            }
-
-        }
-
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
+        String searchQuery = "SELECT * FROM Cliente WHERE " + getDataTypeForQuery(dataType, value);
+        executeQuery(searchQuery, true);
         return null;
-    }
+
+        }
 
     @Override
     public void printAll() {
+
         String printQuery = "SELECT * FROM Cliente";
+        executeQuery(printQuery, true);
 
-        try {
-
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-            ResultSet resultSet = statement.executeQuery(printQuery);
-
-            while (resultSet.next()) {
-                System.out.println(resultSet.getInt(1) + "\t" + resultSet.getInt(2) +
-                        "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4) +
-                        "\t" + resultSet.getString(5) + "\t" + resultSet.getString(6) +
-                        "\t" + resultSet.getString(6) + "\t" + resultSet.getString(7) +
-                        "\t" + resultSet.getString(8) + "\t" + resultSet.getString(9) +
-                        "\t" + resultSet.getString(10) + "\t" + resultSet.getString(11));
-            }
-        }
-        catch(SQLException e) {
-                System.err.println(e.getMessage());
-        }
     }
 
     @Override
@@ -159,16 +74,28 @@ public class CustomerManagement implements Data_Management {
     public void delete(int code) {
 
         String deleteQuery = "DELETE FROM Cliente WHERE Codice_Cliente = " + code;
-
         executeQuery(deleteQuery, false);
 
-        try {
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-            statement.executeQuery(deleteQuery);
-        }
-        catch(SQLException e) {
-            System.err.println(e.getMessage());
-        }
+    }
+
+    @Override
+    public String getDataTypeForQuery(String dataType, Object value) {
+
+        return switch (dataType) {
+            case "Codice_Cliente" -> "Codice_Cliente = " + (Integer) value;
+            case "Sconto" -> "Sconto = " + (Integer) value;
+            case "Data_Inserimento" -> "Data_Inserimento = " + (String) value;
+            case "Nome" -> "Nome = " + (String) value;
+            case "Cognome" -> "Cognome = " + (String) value;
+            case "Codice_Fiscale" -> "Codice_fiscale = " + (String) value;
+            case "P_IVA" -> "P_IVA = " + (String) value;
+            case "Ragione_Sociale" -> "Ragione_Sociale = " + (String) value;
+            case "Indirizzo" -> "Indirizzo = " + (String) value;
+            case "CAP" -> "CAP = " + (String) value;
+            case "Civico" -> "Civico = " + (String) value;
+            default -> " ";
+        };
+
     }
 
     @Override
@@ -196,7 +123,6 @@ public class CustomerManagement implements Data_Management {
             else
                 statement.executeQuery(query);
 
-
         }
 
         catch (SQLException e) {
@@ -204,25 +130,6 @@ public class CustomerManagement implements Data_Management {
         }
 
     }
-    @Override
-    public String getDataTypeForQuery(String dataType, Object value) {
 
-        String query = switch (dataType) {
-            case "Codice_Cliente" -> "Codice_Cliente = " + (Integer) value;
-            case "Sconto" -> "Sconto = " + (Integer) value;
-            case "Data_Inserimento" -> "Data_Inserimento = " + (String) value;
-            case "Nome" -> "Nome = " + (String) value;
-            case "Cognome" -> "Cognome = " + (String) value;
-            case "Codice_Fiscale" -> "Codice_fiscale = " + (String) value;
-            case "P_IVA" -> "P_IVA = " + (String) value;
-            case "Ragione_Sociale" -> "Ragione_Sociale = " + (String) value;
-            case "Indirizzo" -> "Indirizzo = " + (String) value;
-            case "CAP" -> "CAP = " + (String) value;
-            case "Civico" -> "Civico = " + (String) value;
-            default -> " ";
-        };
 
-        return query;
-
-    }
 }
