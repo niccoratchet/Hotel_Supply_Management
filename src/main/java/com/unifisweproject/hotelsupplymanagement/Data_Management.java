@@ -8,7 +8,7 @@ public interface Data_Management {
     public void printAll();                         // Interroga il DB e genera la finestra di riepilogo di tutti i dati di un certo tipo (ad es. lista di tutti i clienti)
     public void print(int code);           // Interroga il DB e genera una finestra per visualizzare le informazioni su un oggetto
     public void delete(int code);         // Ricerca l'oggetto da eliminare nel DB e ne elimina l'istanza
-    public String getDataTypeForQuery(String dataType, Object value);
-    public void executeQuery(String query, boolean isOutput);
+    public String getDataTypeForQuery(String dataType, Object value);       // Contribuisce alla creazione di query SQL
+    public void executeQuery(String query, boolean isOutput);           // Data la query SQL e se questa è un interrogazione con uscita o meno, contatta il DBMS e prende il risultato eventualmente stampandolo
 
 }

@@ -2,6 +2,8 @@ package com.unifisweproject.hotelsupplymanagement;
 
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.sql.Connection;
@@ -13,7 +15,7 @@ public class HotelSupplyManagementMain extends Application {
     public static Connection conn;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
 
         conn = null;
 
@@ -28,26 +30,30 @@ public class HotelSupplyManagementMain extends Application {
             System.out.println(e.getMessage());
         }
 
-        MainMenuVBox mainMenuVBox = new MainMenuVBox();
-        Scene mainMenuScene = new Scene(mainMenuVBox, 600, 400);
-        primaryStage.setTitle("Hotel Supply Management");
-        primaryStage.setScene(mainMenuScene);
-        primaryStage.setResizable(false);
-        primaryStage.show();
+
+        try {
+
+            Parent root = FXMLLoader.load(HotelSupplyManagementMain.class.getResource("LoginScene.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 
     public static void main(String[] args) {
+
         launch(args);
 
         ItemManagement itM = new ItemManagement();
         CustomerManagement cM = new CustomerManagement();
         OrderManagement oM = new OrderManagement();
         SupplierManagement sM = new SupplierManagement();
-
-        sM.add(new Supplier("19/01/2024", "4", "dsad", "Vittor", "SDF", "SDAS"));
-
-
 
         try {
             if(conn != null)
