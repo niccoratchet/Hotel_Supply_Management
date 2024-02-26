@@ -14,6 +14,13 @@ public class HotelSupplyManagementMain extends Application {
 
     public static Connection conn;
 
+
+    public static ItemManagement itM = new ItemManagement();
+    public static CustomerManagement cM = new CustomerManagement();
+    public static OrderManagement oM = new OrderManagement();
+    public static SupplierManagement sM = new SupplierManagement();
+
+
     @Override
     public void start(Stage stage) {
 
@@ -36,11 +43,12 @@ public class HotelSupplyManagementMain extends Application {
             Parent root = FXMLLoader.load(HotelSupplyManagementMain.class.getResource("LoginScene.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setTitle("Login");
             stage.show();
 
         }
         catch(Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
 
 
@@ -49,11 +57,6 @@ public class HotelSupplyManagementMain extends Application {
     public static void main(String[] args) {
 
         launch(args);
-
-        ItemManagement itM = new ItemManagement();
-        CustomerManagement cM = new CustomerManagement();
-        OrderManagement oM = new OrderManagement();
-        SupplierManagement sM = new SupplierManagement();
 
         try {
             if(conn != null)

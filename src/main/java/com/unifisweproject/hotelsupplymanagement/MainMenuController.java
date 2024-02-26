@@ -50,6 +50,7 @@ public class MainMenuController {
 
             Parent root = FXMLLoader.load(getClass().getResource("MainMenuScene.fxml"));
             stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+            stage.setTitle("Hotel Supply Management");
             scene = new Scene(root);
             stage.setScene(scene);
             stage.show();

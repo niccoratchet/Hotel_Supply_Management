@@ -16,7 +16,6 @@ public class ItemManagement implements Data_Management {
                     "VALUES (?, ?, ?, ?, ?)";
 
         try {
-
             PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(addQuery);
             preparedStatement.setString(1, toBeAdded.getNome());
             preparedStatement.setDouble(2, toBeAdded.getPrezzo());
@@ -93,24 +92,20 @@ public class ItemManagement implements Data_Management {
     public void executeQuery(String query, boolean isOutput) {
 
         try {
-
             Statement statement = HotelSupplyManagementMain.conn.createStatement();
 
             if (isOutput) {
-
                 ResultSet resultSet = statement.executeQuery(query);
 
                 while(resultSet.next()) {
                     System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2) +
                             "\t" + resultSet.getDouble(3) + "\t" + resultSet.getInt(4) + "\t" +
                             resultSet.getString(5) + "\t" + resultSet.getString(6));
-
                 }
             }
 
             else
                 statement.executeUpdate(query);
-
         }
 
         catch (SQLException e) {
@@ -119,4 +114,21 @@ public class ItemManagement implements Data_Management {
 
     }
 
+    public ResultSet getRows() {
+
+        String query = "SELECT * FROM Articolo";
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            return statement.executeQuery(query);
+        }
+
+        catch(SQLException e) {
+                System.err.println(e.getMessage());
+        }
+
+        return null;
+
+    }
 }
+
