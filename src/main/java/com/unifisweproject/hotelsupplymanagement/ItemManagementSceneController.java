@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -47,8 +48,8 @@ public class ItemManagementSceneController implements Initializable {
 
         try {
             while (resultSet.next()) {
-                Item item = new Item(resultSet.getInt(1), resultSet.getInt(2),
-                        resultSet.getDouble(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6));
+                Item item = new Item(resultSet.getInt(1), resultSet.getInt(4),
+                        resultSet.getDouble(3), resultSet.getString(2), resultSet.getString(5), resultSet.getString(6));
                 itemList.add(item);
             }
         }
@@ -70,11 +71,15 @@ public class ItemManagementSceneController implements Initializable {
 
     }
 
-    public void displayAddView(ActionEvent event) throws IOException {
+    public void displayAddView() {
 
-        Parent root;
         try {
-            root = FXMLLoader.load(getClass().getResource("AddItemView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddItemView.fxml"));
+            Parent root = loader.load();
+
+            AddItemViewController addItemController = loader.getController();
+            addItemController.setItemManagementSceneController(this);
+
             Stage stage = new Stage();
             stage.setTitle("Aggiungi prodotto");
             stage.setScene(new Scene(root, 580, 400));
@@ -89,7 +94,6 @@ public class ItemManagementSceneController implements Initializable {
     public void addRow(Item newItem) {
 
         itemList.add(newItem);
-        System.out.println(itemList.size());
         HotelSupplyManagementMain.itM.add(newItem);
         updateTable();
 
@@ -97,10 +101,11 @@ public class ItemManagementSceneController implements Initializable {
 
     public void updateTable() {
 
-        itemTable.getItems().clear();
-        itemRows.removeAll();
-        itemRows.addAll(itemList);
-        itemTable.setItems(itemRows);
+        Platform.runLater(() -> {                       // Pulisci e aggiorna la tabella
+            itemTable.getItems().clear();
+            itemRows.setAll(itemList);
+            itemTable.setItems(itemRows);
+        });
 
     }
 
