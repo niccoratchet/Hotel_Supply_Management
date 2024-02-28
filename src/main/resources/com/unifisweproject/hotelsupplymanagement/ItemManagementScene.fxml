@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.ItemManagementSceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.ItemManagementSceneController">
    <children>
       <ScrollPane layoutX="115.0" layoutY="46.0" prefHeight="354.0" prefWidth="486.0">
         <content>
@@ -35,6 +35,6 @@
             <Menu mnemonicParsing="false" text="Ordini" />
         </menus>
       </MenuBar>
-      <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#addRow" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
+      <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayAddView" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
    </children>
 </AnchorPane>

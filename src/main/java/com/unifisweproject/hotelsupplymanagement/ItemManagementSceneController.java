@@ -19,24 +19,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 public class ItemManagementSceneController implements Initializable {
 
     @FXML
-    TableView<Item> itemTable;
+    private TableView<Item> itemTable;
     @FXML
-    TableColumn<Item, Integer> IDColumn;
+    private TableColumn<Item, Integer> IDColumn;
     @FXML
-    TableColumn<Item, String> NameColumn;
+    private TableColumn<Item, String> NameColumn;
     @FXML
-    TableColumn<Item, Integer> AmountColumn;
+    private TableColumn<Item, Integer> AmountColumn;
     @FXML
-    TableColumn<Item, Double> PriceColumn;
+    private TableColumn<Item, Double> PriceColumn;
     @FXML
-    TableColumn<Item, String> DescriptionColumn;
+    private TableColumn<Item, String> DescriptionColumn;
     @FXML
-    TableColumn<Item, String> DateColumn;
+    private TableColumn<Item, String> DateColumn;
 
     private final ArrayList<Item> itemList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Articolo
     ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
@@ -71,7 +70,7 @@ public class ItemManagementSceneController implements Initializable {
 
     }
 
-    public void addRow(ActionEvent event) throws IOException {
+    public void displayAddView(ActionEvent event) throws IOException {
 
         Parent root;
         try {
@@ -84,6 +83,15 @@ public class ItemManagementSceneController implements Initializable {
         catch (IOException e) {
             System.err.println(e.getMessage());
         }
+
+    }
+
+    public void addRow(Item newItem) {
+
+        itemList.add(newItem);
+        System.out.println(itemList.size());
+        HotelSupplyManagementMain.itM.add(newItem);
+        updateTable();
 
     }
 
