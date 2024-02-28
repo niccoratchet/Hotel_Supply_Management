@@ -14,7 +14,7 @@ public class HotelSupplyManagementMain extends Application {
 
     public static Connection conn;
 
-    public ItemManagement itemManagement = new ItemManagement();
+    private final ItemManagement itemManagement = new ItemManagement();
     public static CustomerManagement cM = new CustomerManagement();
     public static OrderManagement oM = new OrderManagement();
     public static SupplierManagement sM = new SupplierManagement();
@@ -36,10 +36,9 @@ public class HotelSupplyManagementMain extends Application {
             System.out.println(e.getMessage());
         }
 
-
         try {
 
-            FXMLLoader loader = FXMLLoader.load(HotelSupplyManagementMain.class.getResource("LoginScene.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginScene.fxml"));
             Parent root = loader.load();
 
             MainMenuController mainMenuController = loader.getController();
@@ -54,7 +53,6 @@ public class HotelSupplyManagementMain extends Application {
         catch(Exception e) {
             System.err.println(e.getMessage());
         }
-
 
     }
 

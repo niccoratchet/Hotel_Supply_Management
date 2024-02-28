@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class ItemManagement implements Data_Management {
 
+    int nextItemCode = 0;               // TODO: Fare in modo che si aggiorni quando si aggiungono elementi
+
     private final ArrayList<Item> itemList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Articolo
 
     @Override

@@ -36,13 +36,17 @@ public class ItemManagementSceneController implements Initializable {
     @FXML
     private TableColumn<Item, String> DateColumn;
 
-    //private final ArrayList<Item> itemList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Articolo
-
     private ItemManagement itemManagement;
     ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Articolo
+        Platform.runLater(() -> {
+            createRows();
+        });
+    }
+
+    public void createRows()  {
 
         ResultSet resultSet = itemManagement.getRows();
 

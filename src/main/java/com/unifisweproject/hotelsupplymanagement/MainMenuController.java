@@ -1,33 +1,43 @@
 package com.unifisweproject.hotelsupplymanagement;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class MainMenuController {
 
+    public Button loginButton;
     private Stage stage;
     private Scene scene;
 
-    private ItemManagement itemManagement = new ItemManagement();
+    private ItemManagement itemManagement;
 
     @FXML
     TextField passwordTextField;
 
     public void switchToScene2(ActionEvent event) throws IOException {
 
-        FXMLLoader loader = FXMLLoader.load(getClass().getResource("ItemManagementScene.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemManagementScene.fxml"));
         Parent root = loader.load();
 
         ItemManagementSceneController itemManagementSceneController = loader.getController();
+
+        if(itemManagement == null) {
+            System.out.println("Cazzo");
+        }
+
         itemManagementSceneController.setItemManagement(itemManagement);
 
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -37,14 +47,22 @@ public class MainMenuController {
 
     }
 
-    public void verifyPassword(ActionEvent event) throws IOException {
-
+    public void verifyPassword(ActionEvent event) throws IOException {              // TODO: Sposta la parte di verifica password in un altro controller
 
         String password = passwordTextField.getText();
 
         if(password.equals("Cazzo")) {
 
-            Parent root = FXMLLoader.load(getClass().getResource("MainMenuScene.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MainMenuScene.fxml"));
+            Parent root = loader.load();
+
+            MainMenuController mainMenuController = loader.getController();
+            mainMenuController.setItemManagement(itemManagement);
+
+            if(itemManagement == null) {
+                System.out.println("Cazzo");
+            }
+
             stage = (Stage)((Node) event.getSource()).getScene().getWindow();
             stage.setTitle("Hotel Supply Management");
             scene = new Scene(root);
@@ -56,13 +74,10 @@ public class MainMenuController {
             passwordTextField.setText("Coglione");
         }
 
-
     }
 
     public void setItemManagement(ItemManagement itemManagement) {
         this.itemManagement = itemManagement;
     }
-
-
 
 }
