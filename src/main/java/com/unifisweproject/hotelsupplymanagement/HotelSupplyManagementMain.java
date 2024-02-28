@@ -9,15 +9,12 @@ import javafx.stage.Stage;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class HotelSupplyManagementMain extends Application {
 
     public static Connection conn;
 
-
-    public static ItemManagement itM = new ItemManagement();
+    public ItemManagement itemManagement = new ItemManagement();
     public static CustomerManagement cM = new CustomerManagement();
     public static OrderManagement oM = new OrderManagement();
     public static SupplierManagement sM = new SupplierManagement();
@@ -42,7 +39,12 @@ public class HotelSupplyManagementMain extends Application {
 
         try {
 
-            Parent root = FXMLLoader.load(HotelSupplyManagementMain.class.getResource("LoginScene.fxml"));
+            FXMLLoader loader = FXMLLoader.load(HotelSupplyManagementMain.class.getResource("LoginScene.fxml"));
+            Parent root = loader.load();
+
+            MainMenuController mainMenuController = loader.getController();
+            mainMenuController.setItemManagement(itemManagement);
+
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Login");

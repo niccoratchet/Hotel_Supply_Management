@@ -4,8 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class ItemManagement implements Data_Management {
+
+    private final ArrayList<Item> itemList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Articolo
 
     @Override
     public void add(Object newItem) {
@@ -129,6 +132,10 @@ public class ItemManagement implements Data_Management {
 
         return null;
 
+    }
+
+    public ArrayList<Item> getItemList() {
+        return itemList;
     }
 }
 

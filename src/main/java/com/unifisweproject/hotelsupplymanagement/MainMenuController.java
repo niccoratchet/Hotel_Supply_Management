@@ -16,14 +16,20 @@ public class MainMenuController {
 
     private Stage stage;
     private Scene scene;
-    private Parent root;
+
+    private ItemManagement itemManagement = new ItemManagement();
 
     @FXML
     TextField passwordTextField;
 
     public void switchToScene2(ActionEvent event) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("ItemManagementScene.fxml"));
+        FXMLLoader loader = FXMLLoader.load(getClass().getResource("ItemManagementScene.fxml"));
+        Parent root = loader.load();
+
+        ItemManagementSceneController itemManagementSceneController = loader.getController();
+        itemManagementSceneController.setItemManagement(itemManagement);
+
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -51,6 +57,10 @@ public class MainMenuController {
         }
 
 
+    }
+
+    public void setItemManagement(ItemManagement itemManagement) {
+        this.itemManagement = itemManagement;
     }
 
 
