@@ -14,12 +14,6 @@ public class HotelSupplyManagementMain extends Application {
 
     public static Connection conn;
 
-    private final ItemManagement itemManagement = new ItemManagement();
-    public static CustomerManagement cM = new CustomerManagement();
-    public static OrderManagement oM = new OrderManagement();
-    public static SupplierManagement sM = new SupplierManagement();
-
-
     @Override
     public void start(Stage stage) {
 
@@ -35,6 +29,8 @@ public class HotelSupplyManagementMain extends Application {
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+
+        ItemManagement itemManagement = new ItemManagement();
 
         try {
 

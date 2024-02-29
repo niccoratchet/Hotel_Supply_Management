@@ -8,9 +8,23 @@ import java.util.ArrayList;
 
 public class ItemManagement implements Data_Management {
 
-    int nextItemCode = 0;               // TODO: Fare in modo che si aggiorni quando si aggiungono elementi
-
+    private int nextItemCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
     private final ArrayList<Item> itemList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Articolo
+
+    public ItemManagement() {
+
+        String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Articolo'";
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(getCodeQuery);
+            nextItemCode = resultSet.getInt(1);
+        }
+        catch(SQLException e) {
+            System.err.println("Errore durante l'estrapolazione dell'ultimo codice articolo");
+        }
+
+    }
 
     @Override
     public void add(Object newItem) {
@@ -28,6 +42,7 @@ public class ItemManagement implements Data_Management {
             preparedStatement.setString(4, toBeAdded.getDescrizione());
             preparedStatement.setString(5, toBeAdded.getData_inserimento());
             preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
+            nextItemCode++;
 
         }
 
@@ -138,6 +153,10 @@ public class ItemManagement implements Data_Management {
 
     public ArrayList<Item> getItemList() {
         return itemList;
+    }
+
+    public int getNextItemCode() {
+        return nextItemCode;
     }
 }
 

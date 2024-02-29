@@ -41,9 +41,7 @@ public class ItemManagementSceneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Articolo
-        Platform.runLater(() -> {
-            createRows();
-        });
+        Platform.runLater(this::createRows);
     }
 
     public void createRows()  {
@@ -97,6 +95,7 @@ public class ItemManagementSceneController implements Initializable {
 
     public void addRow(Item newItem) {
 
+        newItem.setCodice_articolo(itemManagement.getNextItemCode() + 1);
         itemManagement.getItemList().add(newItem);
         itemManagement.add(newItem);
         updateTable();

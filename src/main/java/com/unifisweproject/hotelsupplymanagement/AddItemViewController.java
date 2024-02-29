@@ -2,15 +2,11 @@ package com.unifisweproject.hotelsupplymanagement;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -38,7 +34,7 @@ public class AddItemViewController implements Initializable {
         datePicker.setValue(LocalDate.now());
     }
 
-    public void createItem(ActionEvent event) throws IOException {
+    public void createItem(ActionEvent event) {
 
         boolean error = false;
         int amount = 0;
