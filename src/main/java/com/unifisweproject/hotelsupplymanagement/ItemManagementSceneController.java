@@ -3,11 +3,14 @@ package com.unifisweproject.hotelsupplymanagement;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -35,6 +38,10 @@ public class ItemManagementSceneController implements Initializable {
     private TableColumn<Item, String> DescriptionColumn;
     @FXML
     private TableColumn<Item, String> DateColumn;
+    @FXML
+    private Button modifyButton;
+    @FXML
+    private Button deleteButton;
 
     private ItemManagement itemManagement;
     ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
@@ -42,6 +49,18 @@ public class ItemManagementSceneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Articolo
         Platform.runLater(this::createRows);
+
+        itemTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
+            if(newSelection != null) {
+                modifyButton.setDisable(false);
+                deleteButton.setDisable(false);
+            }
+            else {
+                modifyButton.setDisable(true);
+                deleteButton.setDisable(true);
+            }
+        });
+
     }
 
     public void createRows()  {
@@ -102,6 +121,11 @@ public class ItemManagementSceneController implements Initializable {
 
     }
 
+    public void modifyRow(Item toBeModified) {
+        itemManagement.modify(toBeModified);
+        updateTable();
+    }
+
     public void updateTable() {
 
         Platform.runLater(() -> {                       // Pulisci e aggiorna la tabella
@@ -114,6 +138,33 @@ public class ItemManagementSceneController implements Initializable {
 
     public void setItemManagement(ItemManagement itemManagement) {
         this.itemManagement = itemManagement;
+    }
+
+    public void displayItemView(ActionEvent event) throws IOException {
+
+        SelectionModel<Item> selectionModel = itemTable.getSelectionModel();
+        Item selectedItem = selectionModel.getSelectedItem();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemView.fxml"));
+        Parent root = loader.load();
+
+        ItemViewController itemViewController = loader.getController();
+        itemViewController.setDisplayedItem(selectedItem);
+        itemViewController.setItemManagementSceneController(this);
+
+        Stage stage = new Stage();
+        stage.setTitle(selectedItem.getNome());
+        stage.setScene(new Scene(root, 580, 400));
+        stage.show();
+
+    }
+
+    public void deleteRow() {
+        SelectionModel<Item> selectionModel = itemTable.getSelectionModel();
+        Item selectedItem = selectionModel.getSelectedItem();
+        itemManagement.getItemList().remove(selectedItem);
+        itemManagement.delete(selectedItem.getCodice_articolo());           // TODO: Mettere avviso prima della cancellazione
+        updateTable();
     }
 
 }

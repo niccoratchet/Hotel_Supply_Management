@@ -11,7 +11,7 @@ public class ItemManagement implements Data_Management {
     private int nextItemCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
     private final ArrayList<Item> itemList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Articolo
 
-    public ItemManagement() {
+    public ItemManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Articolo'";
 
@@ -53,10 +53,24 @@ public class ItemManagement implements Data_Management {
     }
 
     @Override
-    public void modify(int code, String dataType, Object value) {
+    public void modifyParameter(int code, String dataType, Object value) {
 
          String modifyQuery = "UPDATE Articolo SET " + getDataTypeForQuery(dataType, value) + " WHERE Codice_Articolo = " + code;
          executeQuery(modifyQuery, false);
+
+    }
+
+    @Override
+    public void modify(Object value) {
+
+        Item modified = (Item) value;
+        String modifyQuery = "UPDATE Articolo SET " + getDataTypeForQuery("Nome", modified.getNome()) + ", "
+                + getDataTypeForQuery("Prezzo", modified.getPrezzo()) + ", " + getDataTypeForQuery("Quantita", modified.getQuantita()) + ", "
+                + getDataTypeForQuery("Descrizione", modified.getDescrizione()) + ", " + getDataTypeForQuery("Data_Inserimento", modified.getData_inserimento()) +
+                " WHERE Codice_Articolo = " + modified.getCodice_articolo();
+
+        System.out.println(modifyQuery);
+        executeQuery(modifyQuery, false);
 
     }
 
@@ -100,9 +114,9 @@ public class ItemManagement implements Data_Management {
             case "Codice_Articolo" -> "Codice_Articolo = " + value;
             case "Prezzo" -> "Prezzo = " + value;
             case "Quantita" -> "Quantita = " + value;
-            case "Nome" -> "Nome = " + value;
-            case "Descrizione" -> "Descrizione = " + value;
-            case "Data_Inserimento" -> "Data_Inserimento = " + value;
+            case "Nome" -> "Nome = '" + value + "'";
+            case "Descrizione" -> "Descrizione = '" + value + "'";
+            case "Data_Inserimento" -> "Data_Inserimento = '" + value + "'";
             default -> " ";
         };
 

@@ -38,10 +38,15 @@ public class CustomerManagement implements Data_Management {
 
 
     @Override
-    public void modify(int code, String dataType, Object value) {
+    public void modifyParameter(int code, String dataType, Object value) {
 
         String modifyQuery = "UPDATE Cliente SET " + getDataTypeForQuery(dataType, value) + " WHERE Codice_Cliente = " + code;
         executeQuery(modifyQuery, false);
+
+    }
+
+    @Override
+    public void modify(Object value) {
 
     }
 
@@ -84,15 +89,15 @@ public class CustomerManagement implements Data_Management {
         return switch (dataType) {
             case "Codice_Cliente" -> "Codice_Cliente = " + value;
             case "Sconto" -> "Sconto = " + value;
-            case "Data_Inserimento" -> "Data_Inserimento = " + value;
-            case "Nome" -> "Nome = " + value;
-            case "Cognome" -> "Cognome = " + value;
-            case "Codice_Fiscale" -> "Codice_fiscale = " + value;
-            case "P_IVA" -> "P_IVA = " + value;
-            case "Ragione_Sociale" -> "Ragione_Sociale = " + value;
-            case "Indirizzo" -> "Indirizzo = " + value;
-            case "CAP" -> "CAP = " + value;
-            case "Civico" -> "Civico = " + value;
+            case "Data_Inserimento" -> "Data_Inserimento = '" + value + "'";
+            case "Nome" -> "Nome = '" + value + "'";
+            case "Cognome" -> "Cognome = '" + value + "'";
+            case "Codice_Fiscale" -> "Codice_fiscale = '" + value + "'";
+            case "P_IVA" -> "P_IVA = '" + value + "'";
+            case "Ragione_Sociale" -> "Ragione_Sociale = '" + value + "'";
+            case "Indirizzo" -> "Indirizzo = '" + value + "'";
+            case "CAP" -> "CAP = '" + value + "'";
+            case "Civico" -> "Civico = '" + value + "'";
             default -> " ";
         };
 

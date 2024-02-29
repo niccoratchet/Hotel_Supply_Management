@@ -30,10 +30,15 @@ public class OrderManagement implements Data_Management {
     }
 
     @Override
-    public void modify(int code, String dataType, Object value) {
+    public void modifyParameter(int code, String dataType, Object value) {
 
         String modifyQuery = "UPDATE Ordine SET " + getDataTypeForQuery(dataType, value) + " WHERE Codice_Ordine = " + code;
         executeQuery(modifyQuery, false);
+
+    }
+
+    @Override
+    public void modify(Object value) {
 
     }
 
@@ -75,9 +80,9 @@ public class OrderManagement implements Data_Management {
 
         return switch (dataType) {
             case "Codice_Ordine" -> "Codice_Ordine = " + value;
-            case "BF" -> "BF = " + value;
-            case "Tipo_Pagamento" -> "Tipo_Pagamento = " + value;
-            case "Data_Ordine" -> "Data_Ordine = " + value;
+            case "BF" -> "BF = '" + value + "'";
+            case "Tipo_Pagamento" -> "Tipo_Pagamento = '" + value + "'";
+            case "Data_Ordine" -> "Data_Ordine = '" + value + "'";
             case "Codice_Cliente" -> "Codice_Cliente = " + value;
             default -> " ";
         };

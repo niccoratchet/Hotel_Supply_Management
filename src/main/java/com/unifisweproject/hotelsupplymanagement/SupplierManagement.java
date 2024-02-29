@@ -32,10 +32,15 @@ public class SupplierManagement implements Data_Management{
     }
 
     @Override
-    public void modify(int code, String dataType, Object value) {
+    public void modifyParameter(int code, String dataType, Object value) {
 
         String modifyQuery = "UPDATE Fornitore SET " + getDataTypeForQuery(dataType, value) + " WHERE Codice_Fornitore = " + code;
         executeQuery(modifyQuery, false);
+
+    }
+
+    @Override
+    public void modify(Object value) {
 
     }
 
@@ -76,13 +81,13 @@ public class SupplierManagement implements Data_Management{
     public String getDataTypeForQuery(String dataType, Object value) {
 
         String query = switch (dataType) {
-            case "Codice_Fornitore" -> "Codice_Fornitore = " + (Integer) value;
-            case "Data_Inserimento" -> "Data_Inserimento = " + (String) value;
-            case "P_IVA" -> "P_IVA = " + (String) value;
-            case "Ragione_Sociale" -> "Ragione_Sociale = " + (String) value;
-            case "Indirizzo" -> "Indirizzo = " + (String) value;
-            case "CAP" -> "CAP = " + (String) value;
-            case "Civico" -> "Civico = " + (String) value;
+            case "Codice_Fornitore" -> "Codice_Fornitore = " + value;
+            case "Data_Inserimento" -> "Data_Inserimento = '" + value + "'";
+            case "P_IVA" -> "P_IVA = '" + value + "'";
+            case "Ragione_Sociale" -> "Ragione_Sociale = '" + value + "'";
+            case "Indirizzo" -> "Indirizzo = '" + value + "'";
+            case "CAP" -> "CAP = '" + value + "'";
+            case "Civico" -> "Civico = '" + value + "'";
             default -> " ";
         };
 

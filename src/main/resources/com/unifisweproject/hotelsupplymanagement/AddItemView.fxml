@@ -18,7 +18,7 @@
       <TextField fx:id="amountField" layoutX="103.0" layoutY="153.0" prefHeight="25.0" prefWidth="83.0" />
       <Label layoutX="35.0" layoutY="157.0" text="Quantità" />
       <Button layoutX="417.0" layoutY="334.0" mnemonicParsing="false" onAction="#createItem" prefHeight="25.0" prefWidth="108.0" text="Aggiungi" />
-      <Button layoutX="282.0" layoutY="334.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Annulla" />
+      <Button layoutX="282.0" layoutY="334.0" mnemonicParsing="false" onAction="#closeAddView" prefHeight="25.0" prefWidth="108.0" text="Annulla" />
       <DatePicker fx:id="datePicker" layoutX="351.0" layoutY="153.0" />
       <Label layoutX="300.0" layoutY="157.0" text="Data" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="35.0" layoutY="32.0" prefHeight="17.0" prefWidth="499.0" text="Inserisci i dati del prodotto">
