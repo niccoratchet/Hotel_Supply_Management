@@ -68,8 +68,6 @@ public class ItemManagement implements Data_Management {
                 + getDataTypeForQuery("Prezzo", modified.getPrezzo()) + ", " + getDataTypeForQuery("Quantita", modified.getQuantita()) + ", "
                 + getDataTypeForQuery("Descrizione", modified.getDescrizione()) + ", " + getDataTypeForQuery("Data_Inserimento", modified.getData_inserimento()) +
                 " WHERE Codice_Articolo = " + modified.getCodice_articolo();
-
-        System.out.println(modifyQuery);
         executeQuery(modifyQuery, false);
 
     }
@@ -80,6 +78,56 @@ public class ItemManagement implements Data_Management {
         String searchQuery = "SELECT * FROM Articolo WHERE " + getDataTypeForQuery(dataType, value);
         executeQuery(searchQuery, true);
         return null;
+
+    }
+
+    @Override
+    public Object search(Object toBeSearched) {
+
+        Item item = (Item) toBeSearched;
+        String searchQuery = "SELECT * FROM Articolo WHERE ";
+        ArrayList<Boolean> putComma = new ArrayList<Boolean>(5);
+
+        int i = 0;
+        while (i < 5) {
+
+            switch (i) {
+                case 0 -> {
+                    if (item.getNome() != null) {
+                        searchQuery = searchQuery + getDataTypeForQuery("Nome", item.getNome());
+                        putComma.set(0, true);
+
+                    }
+                }
+                case 1 -> {
+                    if (item.getPrezzo() != -1) {
+                        searchQuery = searchQuery + getDataTypeForQuery("Prezzo", item.getPrezzo());
+                    }
+                }
+                case 2 -> {
+                    if (item.getQuantita() != -1) {
+                        searchQuery = searchQuery + getDataTypeForQuery("Quantita", item.getQuantita()) + " ";
+                    }
+                }
+                case 3 -> {
+                    if (item.getData_inserimento() != null) {
+                        searchQuery = searchQuery + getDataTypeForQuery("Data_Inserimento", item.getData_inserimento()) + " ";
+                    }
+                }
+                case 4 -> {
+                    if (item.getDescrizione() != null) {
+                        searchQuery = searchQuery + getDataTypeForQuery("Descrizione", item.getDescrizione()) + " ";
+                    }
+                }
+            }
+
+            i++;
+
+        }
+
+        System.out.println(searchQuery);
+
+        return getRows(false, searchQuery);
 
     }
 
@@ -123,7 +171,7 @@ public class ItemManagement implements Data_Management {
     }
 
     @Override
-    public void executeQuery(String query, boolean isOutput) {
+    public void executeQuery(String query, boolean isOutput) {              // TODO: Rendi un unico metodo executeQuery e getRows
 
         try {
             Statement statement = HotelSupplyManagementMain.conn.createStatement();
@@ -148,13 +196,18 @@ public class ItemManagement implements Data_Management {
 
     }
 
-    public ResultSet getRows() {
+    public ResultSet getRows(boolean areAllRowsRequested, String inputQuery) {
 
-        String query = "SELECT * FROM Articolo";
+        String toBeExecutedQuery;
+
+        if (areAllRowsRequested)
+            toBeExecutedQuery = "SELECT * FROM Articolo";
+        else
+            toBeExecutedQuery = inputQuery;
 
         try {
             Statement statement = HotelSupplyManagementMain.conn.createStatement();
-            return statement.executeQuery(query);
+            return statement.executeQuery(toBeExecutedQuery);
         }
 
         catch(SQLException e) {

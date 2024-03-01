@@ -52,6 +52,11 @@ public class OrderManagement implements Data_Management {
     }
 
     @Override
+    public Object search(Object toBeSearched) {
+        return null;
+    }
+
+    @Override
     public void printAll() {
 
         String printQuery = "SELECT * FROM Ordine";

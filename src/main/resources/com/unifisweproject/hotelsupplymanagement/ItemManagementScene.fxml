@@ -38,5 +38,6 @@
       <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayAddView" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
       <Button fx:id="deleteButton" disable="true" layoutX="14.0" layoutY="91.0" mnemonicParsing="false" onAction="#deleteRow" prefHeight="25.0" prefWidth="89.0" text="Elimina" />
       <Button fx:id="modifyButton" disable="true" layoutX="14.0" layoutY="138.0" mnemonicParsing="false" onAction="#displayItemView" prefHeight="25.0" prefWidth="89.0" text="Modifica" />
+      <Button layoutX="14.0" layoutY="188.0" mnemonicParsing="false" onAction="#displaySearchItemView" prefHeight="25.0" prefWidth="89.0" text="Ricerca" />
    </children>
 </AnchorPane>
