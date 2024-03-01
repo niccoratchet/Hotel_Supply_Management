@@ -31,6 +31,7 @@ public class HotelSupplyManagementMain extends Application {
         }
 
         ItemManagement itemManagement = new ItemManagement();
+        CustomerManagement customerManagement = new CustomerManagement();
 
         try {
 
@@ -39,6 +40,7 @@ public class HotelSupplyManagementMain extends Application {
 
             MainMenuController mainMenuController = loader.getController();
             mainMenuController.setItemManagement(itemManagement);
+            mainMenuController.setCustomerManagement(customerManagement);
 
             Scene scene = new Scene(root);
             stage.setScene(scene);

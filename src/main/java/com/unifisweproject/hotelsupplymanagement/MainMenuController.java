@@ -18,17 +18,33 @@ public class MainMenuController {
     private Scene scene;
 
     private ItemManagement itemManagement;
+    private CustomerManagement customerManagement;
 
     @FXML
     TextField passwordTextField;
 
-    public void switchToScene2(ActionEvent event) throws IOException {
+    public void switchToScene2(ActionEvent event) throws IOException {      //Scena Articolo
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemManagementScene.fxml"));
         Parent root = loader.load();
 
         ItemManagementSceneController itemManagementSceneController = loader.getController();
         itemManagementSceneController.setItemManagement(itemManagement);
+
+        stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+    }
+
+    public void switchToScene3(ActionEvent event) throws IOException {      //Scena Cliente
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerManagementScene.fxml"));
+        Parent root = loader.load();
+
+        CustomerManagementSceneController customerManagementSceneController = loader.getController();
+        customerManagementSceneController.setCustomerManagement(customerManagement);
 
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -48,6 +64,7 @@ public class MainMenuController {
 
             MainMenuController mainMenuController = loader.getController();
             mainMenuController.setItemManagement(itemManagement);
+            mainMenuController.setCustomerManagement(customerManagement);
 
             if(itemManagement == null) {
                 System.out.println("Cazzo");
@@ -68,6 +85,10 @@ public class MainMenuController {
 
     public void setItemManagement(ItemManagement itemManagement) {
         this.itemManagement = itemManagement;
+    }
+
+    public void setCustomerManagement(CustomerManagement customerManagement) {
+        this.customerManagement = customerManagement;
     }
 
 }

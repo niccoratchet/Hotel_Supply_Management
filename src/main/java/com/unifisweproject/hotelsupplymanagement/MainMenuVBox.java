@@ -1,6 +1,7 @@
 package com.unifisweproject.hotelsupplymanagement;
 
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -68,12 +69,21 @@ public class MainMenuVBox extends VBox {
 
     public void setButtonsProperties() {            // associa un evento al click del tasto sulla gestione dei clienti e definisce le dimensioni dei bottoni
 
+        manageCustomersButton.setPrefSize(200, 100);
         manageCustomersButton.setOnAction((actionEvent -> System.out.println("Gestione clienti!")));
 
-        manageCustomersButton.setPrefSize(200, 100);
         manageOrdersButton.setPrefSize(200, 100);
+
         manageSuppliersButton.setPrefSize(200, 100);
+
         manageItemsButton.setPrefSize(200, 100);
+        manageItemsButton.setOnAction(actionEvent -> changeScene());
+
+    }
+
+    public void changeScene(){
+            ItemMenu im = new ItemMenu();
+            Scene s = new Scene(this,200,200);
 
     }
 

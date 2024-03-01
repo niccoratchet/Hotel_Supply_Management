@@ -2,24 +2,40 @@ package com.unifisweproject.hotelsupplymanagement;
 
 public class Customer {
 
-    private int codice_cliente = -1, sconto;
+    private int codice_cliente, sconto;
     private String nome, cognome, data_inserimento, codice_fiscale, P_IVA, ragione_sociale, indirizzo, CAP, civico;
 
     public Customer(int sconto, String nome, String cognome, String data_inserimento, String codice_fiscale,
                     String p_IVA, String ragione_sociale, String indirizzo, String CAP, String civico) {
 
-
+        this.codice_cliente = -1;
         this.sconto = sconto;
         this.nome = nome;
         this.cognome = cognome;
         this.data_inserimento = data_inserimento;
         this.codice_fiscale = codice_fiscale;
-        P_IVA = p_IVA;
+        this.P_IVA = p_IVA;
         this.ragione_sociale = ragione_sociale;
         this.indirizzo = indirizzo;
         this.CAP = CAP;
         this.civico = civico;
 
+    }
+
+    public  Customer(int codice_cliente, int sconto, String nome, String cognome, String data_inserimento, String codice_fiscale,
+                     String p_IVA, String ragione_sociale, String indirizzo, String CAP, String civico) {
+
+        this.codice_cliente = codice_cliente;
+        this.sconto = sconto;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.data_inserimento = data_inserimento;
+        this.codice_fiscale = codice_fiscale;
+        this.P_IVA = p_IVA;
+        this.ragione_sociale = ragione_sociale;
+        this.indirizzo = indirizzo;
+        this.CAP = CAP;
+        this.civico = civico;
     }
 
     public int getCodice_cliente() {
