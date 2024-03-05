@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,7 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,6 +20,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ItemManagementSceneController implements Initializable {
@@ -49,6 +49,12 @@ public class ItemManagementSceneController implements Initializable {
     private Button searchButton;
     @FXML
     private Button addButton;
+    @FXML
+    private AnchorPane tableAnchorPane;
+
+    private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
+    private final MenuItem viewItemMenu = new MenuItem("Visualizza");
+    private final MenuItem viewDeleteItemMenu = new MenuItem("Elimina");
 
     private ItemManagement itemManagement;
     private final ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
@@ -74,9 +80,24 @@ public class ItemManagementSceneController implements Initializable {
             }
         });
 
+        rightClickMenu.getItems().addAll(viewItemMenu, viewDeleteItemMenu);
+
+        viewItemMenu.setOnAction(event -> {
+            try {
+                displayItemView(null);
+            } catch (IOException e) {
+                System.out.println("Non è stato possibile visualizzare l'item selezionato");
+            }
+        });
+
+        viewDeleteItemMenu.setOnAction(event -> {
+            deleteRow();
+        });
+
         itemTable.setOnMouseClicked(event -> {
 
             if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
+                rightClickMenu.hide();
                 if (event.getClickCount() == 2) {
                     long currentTime = System.currentTimeMillis();
                     if (currentTime - lastClickTime < 3000)                      // 300 ms Intervallo di tempo per considerare un doppio click
@@ -90,6 +111,15 @@ public class ItemManagementSceneController implements Initializable {
                     lastClickTime = currentTime;
                 }
             }
+            else {
+
+                SelectionModel<Item> selectionModel = itemTable.getSelectionModel();        // verifico se è stato cliccato un elemento
+                Item selectedItem = selectionModel.getSelectedItem();
+                if(selectedItem != null)
+                    rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
+
+            }
+
         });
 
     }
@@ -156,7 +186,8 @@ public class ItemManagementSceneController implements Initializable {
 
     public void modifyRow(Item toBeModified) {
 
-        itemManagement.modify(toBeModified);                // TODO: TOFIX: Se ho modificato dopo una ricerca, non mi viene aggiornata la riga (problema NON lato DB)
+        itemManagement.modify(toBeModified);
+        createConfirmedItemModify();
         updateTable();
 
     }
@@ -229,23 +260,45 @@ public class ItemManagementSceneController implements Initializable {
 
     }
 
-    public void onDoubleClick(MouseEvent event) {
+    public boolean createConfirmDeleteAlert() {            // crea la finestra di avviso di cancellazione di un Item con richiesta di conferma
 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Rimozione prodotto");
+        alert.setContentText("Sicuro di procedere con l'eliminazione del prodotto dalla banca dati?");
 
+        ButtonType buttonTypeYes = new ButtonType("Sì");
+        ButtonType buttonTypeNo = new ButtonType("No");
+        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == buttonTypeYes;
 
     }
 
+    public void createConfirmedItemModify() {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Modifiche applicate");
+        alert.setContentText("Le modifiche sono state eseguite");
+        alert.showAndWait();
+
+    }
+
+
     public void deleteRow() {
 
-        SelectionModel<Item> selectionModel = itemTable.getSelectionModel();
-        Item selectedItem = selectionModel.getSelectedItem();
-        itemManagement.getItemList().remove(selectedItem);
-        itemManagement.delete(selectedItem.getCodice_articolo());           // TODO: Mettere avviso prima della cancellazione
+        if (createConfirmDeleteAlert()) {
+            SelectionModel<Item> selectionModel = itemTable.getSelectionModel();
+            Item selectedItem = selectionModel.getSelectedItem();
+            itemManagement.getItemList().remove(selectedItem);
+            itemManagement.delete(selectedItem.getCodice_articolo());
 
-        if (searchView)
-            results.remove(selectedItem);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
+            if (searchView)
+                results.remove(selectedItem);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
 
-        updateTable();              // TODO: TOFIX: Se ho cancellato dopo una ricerca, non mi viene aggiornata la riga (problema NON lato DB)
+            updateTable();
+        }
+
     }
 
     public void searchRow(Item toBeSearched) {
