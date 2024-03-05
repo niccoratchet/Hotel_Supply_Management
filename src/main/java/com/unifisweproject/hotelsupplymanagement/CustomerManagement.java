@@ -90,7 +90,7 @@ public class CustomerManagement implements Data_Management {
     }
 
     @Override
-    public Object search(Object toBeSearched) {
+    public ArrayList<Item> search(Object toBeSearched) {
         return null;
     }
 

@@ -143,24 +143,24 @@ public class SearchItemController implements Initializable {
             while (i < 5) {
                 switch (i) {
                     case 0 -> {
-                        if (!nameField.isDisabled())
+                        if (!nameField.isDisabled() && ! "".equals(nameField.getText()))
                             searchItem.setNome(nameField.getText());
                     }
                     case 1 -> {
-                        if (!priceField.isDisabled())
+                        if (!priceField.isDisabled() && ! "".equals(priceField.getText()))
                             searchItem.setPrezzo(Double.parseDouble(priceField.getText()));
                     }
                     case 2 -> {
-                        if (!amountField.isDisabled()) {
+                        if (!amountField.isDisabled() && ! "".equals(amountField.getText())) {
                             searchItem.setQuantita(Integer.parseInt(amountField.getText()));
                         }
                     }
                     case 3 -> {
-                        if (!datePicker.isDisabled())
+                        if (!datePicker.isDisabled() && datePicker.getValue() != null)
                             searchItem.setData_inserimento(datePicker.getValue().toString());
                     }
                     case 4 -> {
-                        if (!descriptionField.isDisabled())
+                        if (!descriptionField.isDisabled() && ! "".equals(descriptionField.getText()))
                             searchItem.setDescrizione(descriptionField.getText());
                     }
                 }
@@ -180,6 +180,7 @@ public class SearchItemController implements Initializable {
             return null;
 
         }
+        // TODO: Mettere verifica se tutti i campi sono vuoti
 
     }
 

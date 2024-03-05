@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class SupplierManagement implements Data_Management{
     @Override
@@ -54,7 +55,7 @@ public class SupplierManagement implements Data_Management{
     }
 
     @Override
-    public Object search(Object toBeSearched) {
+    public ArrayList<Item> search(Object toBeSearched) {
         return null;
     }
 

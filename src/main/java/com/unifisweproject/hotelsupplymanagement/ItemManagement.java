@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ItemManagement implements Data_Management {
 
@@ -81,43 +82,89 @@ public class ItemManagement implements Data_Management {
 
     }
 
+
+    public ArrayList<Item> getSearchResults(ResultSet resultSet) {              // dato un oggetto ResultSet (insieme delle righe del risultato di una query) rende un ArrayList di Item che corrispondono alle righe indicate
+
+        ArrayList<Item> results = new ArrayList<>();                // conterrà gli Item che corrispondono ai valori trovati dopo la query
+
+        try {
+            while (resultSet.next()) {
+                for (Item nextItem : itemList) {
+                    if (nextItem.getCodice_articolo() == resultSet.getInt(1)) {
+                        results.add(nextItem);
+                    }
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.err.println("Errore durante la creazione del risultato di ricerca");
+            return null;
+        }
+        return results;
+
+    }
+
     @Override
-    public Object search(Object toBeSearched) {
+    public ArrayList<Item> search(Object toBeSearched) {
 
         Item item = (Item) toBeSearched;
-        String searchQuery = "SELECT * FROM Articolo WHERE ";
-        ArrayList<Boolean> putComma = new ArrayList<Boolean>(5);
+        int numberOfParameters = getNumberOfParameters(item);
+        StringBuilder searchQuery = new StringBuilder("SELECT * FROM Articolo WHERE ");
 
         int i = 0;
-        while (i < 5) {
+        while (i < 5 && numberOfParameters > 0) {
 
             switch (i) {
                 case 0 -> {
-                    if (item.getNome() != null) {
-                        searchQuery = searchQuery + getDataTypeForQuery("Nome", item.getNome());
-                        putComma.set(0, true);
 
+                    if(item.getNome() != null) {
+                        numberOfParameters--;
+                        searchQuery.append(getDataTypeForQuery("Nome", item.getNome()));
+                        if (numberOfParameters != 0)
+                            searchQuery.append(" AND ");
                     }
+
                 }
                 case 1 -> {
-                    if (item.getPrezzo() != -1) {
-                        searchQuery = searchQuery + getDataTypeForQuery("Prezzo", item.getPrezzo());
+
+                    if(item.getPrezzo() != -1) {
+                        numberOfParameters--;
+                        searchQuery.append(getDataTypeForQuery("Prezzo", item.getPrezzo()));
+                        if (numberOfParameters != 0)
+                            searchQuery.append(" AND ");
                     }
+
                 }
                 case 2 -> {
-                    if (item.getQuantita() != -1) {
-                        searchQuery = searchQuery + getDataTypeForQuery("Quantita", item.getQuantita()) + " ";
+
+                    if(item.getQuantita() != -1) {
+                        numberOfParameters--;
+                        searchQuery.append(getDataTypeForQuery("Quantita", item.getQuantita()));
+                        if (numberOfParameters != 0)
+                            searchQuery.append(" AND ");
                     }
+
                 }
                 case 3 -> {
-                    if (item.getData_inserimento() != null) {
-                        searchQuery = searchQuery + getDataTypeForQuery("Data_Inserimento", item.getData_inserimento()) + " ";
+
+                    if(item.getData_inserimento() != null) {
+                        numberOfParameters--;
+                        searchQuery.append(getDataTypeForQuery("Data_Inserimento", item.getData_inserimento()));
+                        if (numberOfParameters != 0)
+                            searchQuery.append(" AND ");
                     }
+
                 }
+
                 case 4 -> {
-                    if (item.getDescrizione() != null) {
-                        searchQuery = searchQuery + getDataTypeForQuery("Descrizione", item.getDescrizione()) + " ";
+
+                    if(item.getDescrizione() != null) {
+                        numberOfParameters--;
+                        searchQuery.append(getDataTypeForQuery("Descrizione", item.getDescrizione()));
+                        if (numberOfParameters != 0)
+                            searchQuery.append(" AND ");
                     }
+
                 }
             }
 
@@ -125,9 +172,41 @@ public class ItemManagement implements Data_Management {
 
         }
 
-        System.out.println(searchQuery);
+        return getSearchResults(getRows(false, searchQuery.toString()));
 
-        return getRows(false, searchQuery);
+    }
+
+    public int getNumberOfParameters(Item forCounting) {
+
+        int i = 0, count = 0;
+        while (i < 5) {
+
+            switch (i) {
+                case 0 -> {
+                    if (forCounting.getNome() != null)
+                        count++;
+                }
+                case 1 -> {
+                    if (forCounting.getPrezzo() != -1)
+                        count++;
+                }
+                case 2 -> {
+                    if (forCounting.getQuantita() != -1)
+                        count++;
+                }
+                case 3 -> {
+                    if (forCounting.getData_inserimento() != null)
+                        count++;
+                }
+                case 4 -> {
+                    if(forCounting.getDescrizione() != null)
+                        count++;
+                }
+            }
+            i++;
+        }
+
+        return count;
 
     }
 
@@ -211,10 +290,9 @@ public class ItemManagement implements Data_Management {
         }
 
         catch(SQLException e) {
-                System.err.println(e.getMessage());
+                System.err.println("Errore durante l'ultima query: " + e.getMessage());
+                return null;
         }
-
-        return null;
 
     }
 

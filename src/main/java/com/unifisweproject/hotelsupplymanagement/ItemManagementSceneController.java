@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,6 +12,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -40,15 +43,25 @@ public class ItemManagementSceneController implements Initializable {
     private Button modifyButton;
     @FXML
     private Button deleteButton;
+    @FXML
+    private Button backButton;
+    @FXML
+    private Button searchButton;
+    @FXML
+    private Button addButton;
 
     private ItemManagement itemManagement;
     private final ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
 
+    private final ObservableList<Item> searchResultRows = FXCollections.observableArrayList();
+    private boolean searchView = false;
+    private ArrayList<Item> results = new ArrayList<>();
+    private long lastClickTime = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Articolo
 
-        Platform.runLater(this::createRows);
+        Platform.runLater(this::createRows);            // TODO: Provare a togliere parte duplicata
 
         itemTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
             if(newSelection != null) {
@@ -61,11 +74,29 @@ public class ItemManagementSceneController implements Initializable {
             }
         });
 
+        itemTable.setOnMouseClicked(event -> {
+
+            if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
+                if (event.getClickCount() == 2) {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastClickTime < 3000)                      // 300 ms Intervallo di tempo per considerare un doppio click
+                    {
+                        try {
+                            displayItemView(null);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    lastClickTime = currentTime;
+                }
+            }
+        });
+
     }
 
     public void createRows()  {
 
-        ResultSet resultSet = itemManagement.getRows(true, null);           // TODO: OCCHIO al caso sia null
+        ResultSet resultSet = itemManagement.getRows(true, null);
 
         try {                                                   // TODO: Far fare il blocco try/catch in ItemManagement (per rispettare MVC)
             while (resultSet.next()) {
@@ -76,7 +107,7 @@ public class ItemManagementSceneController implements Initializable {
         }
 
         catch (SQLException e) {
-            System.err.println("Errore");
+            System.err.println("Errore durante il riempimento della tabella");
         }
 
         itemRows.addAll(itemManagement.getItemList());
@@ -124,17 +155,49 @@ public class ItemManagementSceneController implements Initializable {
     }
 
     public void modifyRow(Item toBeModified) {
-        itemManagement.modify(toBeModified);
+
+        itemManagement.modify(toBeModified);                // TODO: TOFIX: Se ho modificato dopo una ricerca, non mi viene aggiornata la riga (problema NON lato DB)
         updateTable();
+
     }
 
     public void updateTable() {
 
         Platform.runLater(() -> {                       // Pulisci e aggiorna la tabella
-            itemTable.getItems().clear();
-            itemRows.setAll(itemManagement.getItemList());
-            itemTable.setItems(itemRows);
+
+            if(searchView) {
+
+                itemTable.getItems().clear();
+                searchResultRows.clear();
+                searchResultRows.setAll(results);
+                itemTable.setItems(searchResultRows);
+
+            }
+            else {
+
+                itemTable.getItems().clear();
+                itemRows.clear();
+                itemRows.setAll(itemManagement.getItemList());
+                itemTable.setItems(itemRows);
+
+                addButton.setDisable(false);                // Riattivo bottone di aggiunta
+                addButton.setVisible(true);
+
+                backButton.setDisable(true);                // Disattivo bottone "indietro" quando ho terminato una precedente ricerca
+                backButton.setVisible(false);
+
+            }
+
         });
+
+    }
+
+    public void exitSearch() {
+
+        searchButton.setDisable(false);             // Riattivo bottone di ricerca
+        searchButton.setVisible(true);
+        searchView = false;
+        updateTable();
 
     }
 
@@ -142,22 +205,33 @@ public class ItemManagementSceneController implements Initializable {
         this.itemManagement = itemManagement;
     }
 
-    public void displayItemView(ActionEvent event) throws IOException {
+    public void displayItemView(ActionEvent ignoredEvent) throws IOException {
 
         SelectionModel<Item> selectionModel = itemTable.getSelectionModel();
         Item selectedItem = selectionModel.getSelectedItem();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemView.fxml"));
-        Parent root = loader.load();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemView.fxml"));
+            Parent root = loader.load();
+            ItemViewController itemViewController = loader.getController();
+            itemViewController.setDisplayedItem(selectedItem);
+            itemViewController.setItemManagementSceneController(this);
 
-        ItemViewController itemViewController = loader.getController();
-        itemViewController.setDisplayedItem(selectedItem);
-        itemViewController.setItemManagementSceneController(this);
+            Stage stage = new Stage();
+            stage.setTitle(selectedItem.getNome());
+            stage.setScene(new Scene(root, 580, 400));
+            stage.show();
 
-        Stage stage = new Stage();
-        stage.setTitle(selectedItem.getNome());
-        stage.setScene(new Scene(root, 580, 400));
-        stage.show();
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante l'apertura del file ItemView.fxml");
+        }
+
+    }
+
+    public void onDoubleClick(MouseEvent event) {
+
+
 
     }
 
@@ -168,48 +242,48 @@ public class ItemManagementSceneController implements Initializable {
         itemManagement.getItemList().remove(selectedItem);
         itemManagement.delete(selectedItem.getCodice_articolo());           // TODO: Mettere avviso prima della cancellazione
 
-        updateTable();
+        if (searchView)
+            results.remove(selectedItem);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
+
+        updateTable();              // TODO: TOFIX: Se ho cancellato dopo una ricerca, non mi viene aggiornata la riga (problema NON lato DB)
     }
 
     public void searchRow(Item toBeSearched) {
 
-        ResultSet searchResult = (ResultSet) itemManagement.search(toBeSearched);
-        ArrayList<Item> results = new ArrayList<>();
-        int numberOfResults = 0;
 
-        ObservableList<Item> searchResultRows = FXCollections.observableArrayList();
+        results.clear();
+        results = itemManagement.search(toBeSearched);
+        int numberOfResults = results.size();
 
-        try {
-            while (searchResult.next()) {
-                Item item = new Item(searchResult.getInt(1), searchResult.getInt(4),
-                        searchResult.getDouble(3), searchResult.getString(2), searchResult.getString(5), searchResult.getString(6));
-                results.add(item);
-                numberOfResults++;
-            }
-        }
-        catch (SQLException e) {
-            System.err.println("Errore durante la ricerca delle righe della tabella Articolo");
-        }
-        catch(NullPointerException nullException) {
-            System.err.println("La ricerca non ha dato risultati");
-        }
+        searchView = true;
 
-        int finalNumberOfResults = numberOfResults;
+        searchResultRows.clear();
+
         Platform.runLater(() -> {
+
             searchResultRows.setAll(results);
             itemTable.getItems().clear();
             itemTable.setItems(searchResultRows);
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);           // TODO: FIXARE il fatto che dopo una ricerca non ne faccia altre oltre a problemi per altre ricerche
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Risultato ricerca");
-            alert.setContentText("La ricerca ha reso " + finalNumberOfResults + " risultati");
+            alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
             alert.showAndWait();
 
         });
 
+        backButton.setDisable(false);
+        backButton.setVisible(true);
+
+        searchButton.setDisable(true);
+        searchButton.setVisible(false);
+
+        addButton.setDisable(true);
+        addButton.setVisible(false);
+
     }
 
-    public void displaySearchItemView(ActionEvent event) {
+    public void displaySearchItemView(ActionEvent ignoredEvent) {
 
         try {
 
