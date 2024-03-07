@@ -2,12 +2,17 @@ package com.unifisweproject.hotelsupplymanagement;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -44,7 +49,7 @@ public class AddCustomerViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        datePicker.setValue(LocalDate.now());
+        //datePicker.setValue(LocalDate.now());
     }
 
     public void closeAddView(ActionEvent event) {
@@ -73,8 +78,29 @@ public class AddCustomerViewController implements Initializable {
 
     }
 
+    public void addContactDetailsView(ActionEvent event) throws IOException {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddContactDetails.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Aggiungi Recapiti");
+            stage.setScene(new Scene(root, 580, 400));
+            stage.show();
+        }
+        catch(IOException e) {
+            System.err.println("Errore durante il caricamento della pagina " + e);
+        }
+
+    }
+
     public void setCustomerManagementSceneController(CustomerManagementSceneController customerManagementSceneController) {
         this.customerManagementSceneController = customerManagementSceneController;
     }
 
+    public void addContactDetails(ActionEvent event) {
+    }
+
+    public void closeAddContactDetails(ActionEvent event) {
+    }
 }

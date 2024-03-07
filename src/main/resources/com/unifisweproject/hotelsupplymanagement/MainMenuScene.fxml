@@ -10,6 +10,6 @@
       <Button layoutX="85.0" layoutY="131.0" mnemonicParsing="false" prefHeight="82.0" prefWidth="134.0" text="Ordini" />
       <Button layoutX="361.0" layoutY="131.0" mnemonicParsing="false" onAction="#switchToScene2" prefHeight="88.0" prefWidth="134.0" text="Articoli" />
       <Button layoutX="85.0" layoutY="255.0" mnemonicParsing="false" onAction="#switchToScene3" prefHeight="82.0" prefWidth="134.0" text="Clienti" />
-      <Button layoutX="361.0" layoutY="252.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="134.0" text="Fornitori" />
+      <Button layoutX="361.0" layoutY="252.0" mnemonicParsing="false" onAction="#switchToScene4" prefHeight="88.0" prefWidth="134.0" text="Fornitori" />
    </children>
 </AnchorPane>

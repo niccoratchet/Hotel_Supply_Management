@@ -90,9 +90,7 @@ public class ItemManagementSceneController implements Initializable {
             }
         });
 
-        viewDeleteItemMenu.setOnAction(event -> {
-            deleteRow();
-        });
+        viewDeleteItemMenu.setOnAction(event -> deleteRow());
 
         itemTable.setOnMouseClicked(event -> {
 
@@ -100,7 +98,7 @@ public class ItemManagementSceneController implements Initializable {
                 rightClickMenu.hide();
                 if (event.getClickCount() == 2) {
                     long currentTime = System.currentTimeMillis();
-                    if (currentTime - lastClickTime < 3000)                      // 300 ms Intervallo di tempo per considerare un doppio click
+                    if (currentTime - lastClickTime < 5000)
                     {
                         try {
                             displayItemView(null);
@@ -128,7 +126,7 @@ public class ItemManagementSceneController implements Initializable {
 
         ResultSet resultSet = itemManagement.getRows(true, null);
 
-        try {                                                   // TODO: Far fare il blocco try/catch in ItemManagement (per rispettare MVC)
+        try {
             while (resultSet.next()) {
                 Item item = new Item(resultSet.getInt(1), resultSet.getInt(4),
                         resultSet.getDouble(3), resultSet.getString(2), resultSet.getString(5), resultSet.getString(6));

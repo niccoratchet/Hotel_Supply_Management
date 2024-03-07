@@ -5,10 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class ItemManagement implements Data_Management {
-
     private int nextItemCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
     private final ArrayList<Item> itemList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Articolo
 

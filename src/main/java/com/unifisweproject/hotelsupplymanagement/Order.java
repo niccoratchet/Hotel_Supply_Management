@@ -9,6 +9,17 @@ public class Order {
 
     public Order(int codice_cliente, boolean bolla, String tipo_pagamento, String data_ordine) {
 
+        this.codice_ordine = -1;
+        this.codice_cliente = codice_cliente;
+        this.bolla = bolla;
+        this.tipo_pagamento = tipo_pagamento;
+        this.data_ordine = data_ordine;
+
+    }
+
+    public Order(int codice_ordine, int codice_cliente, boolean bolla, String tipo_pagamento, String data_ordine) {
+
+        this.codice_ordine = codice_ordine;
         this.codice_cliente = codice_cliente;
         this.bolla = bolla;
         this.tipo_pagamento = tipo_pagamento;

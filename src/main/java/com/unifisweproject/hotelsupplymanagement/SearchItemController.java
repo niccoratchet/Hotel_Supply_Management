@@ -72,8 +72,6 @@ public class SearchItemController implements Initializable {
             TextFormatter<String> textFormatterInt = new TextFormatter<>(filterInt);
             amountField.setTextFormatter(textFormatterInt);
 
-            //TODO: Riutilizzare i formatter per i form delle altre finestre
-
         });
 
     }
@@ -180,7 +178,6 @@ public class SearchItemController implements Initializable {
             return null;
 
         }
-        // TODO: Mettere verifica se tutti i campi sono vuoti
 
     }
 
