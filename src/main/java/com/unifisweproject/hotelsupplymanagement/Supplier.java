@@ -7,6 +7,18 @@ public class Supplier {
 
     public Supplier(String data_inserimento, String p_IVA, String ragione_sociale, String indirizzo, String CAP, String civico) {
 
+        this.codice_fornitore = -1;
+        this.data_inserimento = data_inserimento;
+        this.P_IVA = p_IVA;
+        this.ragione_sociale = ragione_sociale;
+        this.indirizzo = indirizzo;
+        this.CAP = CAP;
+        this.civico = civico;
+
+    }
+    public Supplier(int codice_fornitore, String data_inserimento, String p_IVA, String ragione_sociale, String indirizzo, String CAP, String civico) {
+
+        this.codice_fornitore = codice_fornitore;
         this.data_inserimento = data_inserimento;
         P_IVA = p_IVA;
         this.ragione_sociale = ragione_sociale;

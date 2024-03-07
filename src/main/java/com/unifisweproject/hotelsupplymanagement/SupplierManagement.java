@@ -7,6 +7,24 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class SupplierManagement implements Data_Management{
+
+    private int nextSupplierCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
+    private final ArrayList<Supplier> supplierList = new ArrayList<>();
+
+    public SupplierManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
+
+        String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Fornitore'";
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(getCodeQuery);
+            nextSupplierCode = resultSet.getInt(1);
+        }
+        catch(SQLException e) {
+            System.err.println("Errore durante l'estrapolazione dell'ultimo codice fornitore");
+        }
+
+    }
     @Override
     public void add(Object newSupplier) {
 
@@ -130,5 +148,30 @@ public class SupplierManagement implements Data_Management{
             System.err.println(e.getMessage());
         }
 
+    }
+
+    public ResultSet getRows() {
+
+        String query = "SELECT * FROM Fornitore";
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            return statement.executeQuery(query);
+        }
+
+        catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+
+    }
+
+    public ArrayList<Supplier> getSupplierList() {
+        return supplierList;
+    }
+
+    public int getNextSupplierCode() {
+        return nextSupplierCode;
     }
 }

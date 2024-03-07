@@ -19,6 +19,8 @@ public class MainMenuController {
 
     private ItemManagement itemManagement;
     private CustomerManagement customerManagement;
+    private SupplierManagement supplierManagement;
+    private OrderManagement orderManagement;
 
     @FXML
     TextField passwordTextField;
@@ -45,6 +47,36 @@ public class MainMenuController {
 
         CustomerManagementSceneController customerManagementSceneController = loader.getController();
         customerManagementSceneController.setCustomerManagement(customerManagement);
+
+        stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+    }
+
+    public void switchToScene4(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("SupplierManagementScene.fxml"));
+        Parent root = loader.load();
+
+        SupplierManagementSceneController supplierManagementSceneController = loader.getController();
+        supplierManagementSceneController.setSupplierManagement(supplierManagement);
+
+
+        stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+    }
+
+    public void switchToScene5(ActionEvent event) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderManagementScene.fxml"));
+        Parent root = loader.load();
+
+        OrderManagementSceneController orderManagementSceneController = loader.getController();
+        orderManagementSceneController.setOrderManagement(orderManagement);
 
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -89,6 +121,14 @@ public class MainMenuController {
 
     public void setCustomerManagement(CustomerManagement customerManagement) {
         this.customerManagement = customerManagement;
+    }
+
+    public void setSupplierManagement(SupplierManagement supplierManagement) {
+        this.supplierManagement = supplierManagement;
+    }
+
+    public void setOrderManagement(OrderManagement orderManagement) {
+        this.orderManagement = orderManagement;
     }
 
 }

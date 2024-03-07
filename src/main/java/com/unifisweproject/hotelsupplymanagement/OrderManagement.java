@@ -7,6 +7,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class OrderManagement implements Data_Management {
+
+    private int nextOrderCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
+    private final ArrayList<Order> orderList = new ArrayList<>();
     @Override
     public void add(Object newOrder) {
 
@@ -125,4 +128,36 @@ public class OrderManagement implements Data_Management {
 
     }
 
+    public ResultSet getRows(boolean areAllRowsRequested, String inputQuery) {
+
+        String toBeExecutedQuery;
+
+        if (areAllRowsRequested)
+            toBeExecutedQuery = "SELECT * FROM Ordine";
+        else
+            toBeExecutedQuery = inputQuery;
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            return statement.executeQuery(toBeExecutedQuery);
+        }
+
+        catch(SQLException e) {
+            System.err.println("Errore durante l'ultima query: " + e.getMessage());
+            return null;
+        }
+
+    }
+
+    public ArrayList<Order> getOrderList() {
+        return orderList;
+    }
+
+    public int getNextOrderCode() {
+        return nextOrderCode;
+    }
+
+    public void setNextOrderCode(int nextOrderCode) {
+        this.nextOrderCode = nextOrderCode;
+    }
 }
