@@ -5,9 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -17,7 +15,7 @@ import java.util.ResourceBundle;
 
 public abstract class OrderViewController implements Initializable{
     @FXML
-    private TextField BFField;
+    private ChoiceBox BFField;
     @FXML
     private TextField TypeOfPaymentField;
     @FXML

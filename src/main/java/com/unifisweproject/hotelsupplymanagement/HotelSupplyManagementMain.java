@@ -30,17 +30,10 @@ public class HotelSupplyManagementMain extends Application {
             System.out.println(e.getMessage());
         }
 
-        ItemManagement itemManagement = new ItemManagement();
-        CustomerManagement customerManagement = new CustomerManagement();
-
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginScene.fxml"));
             Parent root = loader.load();
-
-            MainMenuController mainMenuController = loader.getController();
-            mainMenuController.setItemManagement(itemManagement);
-            mainMenuController.setCustomerManagement(customerManagement);
 
             Scene scene = new Scene(root);
             stage.setScene(scene);

@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -18,7 +19,7 @@ public class AddOrderViewController implements Initializable {
     @FXML
     private DatePicker datePicker;
     @FXML
-    private TextField BFField;
+    private ChoiceBox BFField;
     @FXML
     private TextField TypeOfPaymentField;
     @FXML

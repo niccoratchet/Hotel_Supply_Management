@@ -41,11 +41,9 @@ public class OrderManagementSceneController implements Initializable{
     private OrderManagement orderManagement;
     ObservableList<Order> orderRows = FXCollections.observableArrayList();
 
-    public void setOrderManagement(OrderManagement orderManagement) { this.orderManagement = orderManagement;
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Cliente
+
         Platform.runLater(this::createRows);
 
         orderTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
@@ -133,4 +131,9 @@ public class OrderManagementSceneController implements Initializable{
         });
 
     }
+
+    public void setOrderManagement(OrderManagement orderManagement) {
+        this.orderManagement = orderManagement;
+    }
+
 }

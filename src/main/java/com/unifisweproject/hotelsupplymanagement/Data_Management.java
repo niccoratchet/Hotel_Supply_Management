@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 public interface Data_Management {

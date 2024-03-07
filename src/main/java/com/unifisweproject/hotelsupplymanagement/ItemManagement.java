@@ -42,7 +42,6 @@ public class ItemManagement implements Data_Management {
             preparedStatement.setString(5, toBeAdded.getData_inserimento());
             preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
             nextItemCode++;
-
         }
 
         catch (SQLException e) {
@@ -55,7 +54,13 @@ public class ItemManagement implements Data_Management {
     public void modifyParameter(int code, String dataType, Object value) {
 
          String modifyQuery = "UPDATE Articolo SET " + getDataTypeForQuery(dataType, value) + " WHERE Codice_Articolo = " + code;
-         executeQuery(modifyQuery, false);
+         try {
+             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
+             executeQuery(false, statement);
+         }
+         catch (SQLException e) {
+             System.err.println("Errore durante la modifica di un parametro: " + e);
+         }
 
     }
 
@@ -63,11 +68,22 @@ public class ItemManagement implements Data_Management {
     public void modify(Object value) {
 
         Item modified = (Item) value;
-        String modifyQuery = "UPDATE Articolo SET " + getDataTypeForQuery("Nome", modified.getNome()) + ", "
-                + getDataTypeForQuery("Prezzo", modified.getPrezzo()) + ", " + getDataTypeForQuery("Quantita", modified.getQuantita()) + ", "
-                + getDataTypeForQuery("Descrizione", modified.getDescrizione()) + ", " + getDataTypeForQuery("Data_Inserimento", modified.getData_inserimento()) +
+        String modifyQuery = "UPDATE Articolo SET " + getDataTypeForQuery("Nome", modified.getNome(), false) + ", "
+                + getDataTypeForQuery("Prezzo", modified.getPrezzo(), false) + ", " + getDataTypeForQuery("Quantita", modified.getQuantita(), false) + ", "
+                + getDataTypeForQuery("Descrizione", modified.getDescrizione(), false) + ", " + getDataTypeForQuery("Data_Inserimento", modified.getData_inserimento(), false) +
                 " WHERE Codice_Articolo = " + modified.getCodice_articolo();
-        executeQuery(modifyQuery, false);
+
+        try {
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
+            statement.setString(1, modified.getNome());
+            statement.setString(2, modified.getDescrizione());
+            System.out.println(statement);
+            executeQuery(false, statement);
+        }
+
+        catch (SQLException e) {
+            System.err.println("Errore di formattazione nella generazione della query di modifica: " + e);
+        }
 
     }
 
@@ -75,7 +91,13 @@ public class ItemManagement implements Data_Management {
     public Object search(String dataType, Object value) {
 
         String searchQuery = "SELECT * FROM Articolo WHERE " + getDataTypeForQuery(dataType, value);
-        executeQuery(searchQuery, true);
+        try {
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(searchQuery);
+            executeQuery(true, statement);
+        }
+        catch (SQLException e) {
+            System.err.println("Errore durante la ricerca di un Item: " + e);
+        }
         return null;
 
     }
@@ -95,7 +117,7 @@ public class ItemManagement implements Data_Management {
             }
         }
         catch (SQLException e) {
-            System.err.println("Errore durante la creazione del risultato di ricerca");
+            System.err.println("Errore durante la creazione del risultato di ricerca: " +e);
             return null;
         }
         return results;
@@ -109,6 +131,8 @@ public class ItemManagement implements Data_Management {
         int numberOfParameters = getNumberOfParameters(item);
         StringBuilder searchQuery = new StringBuilder("SELECT * FROM Articolo WHERE ");
 
+        boolean isNamePresent = false, isDescriptionPresent = false;
+
         int i = 0;
         while (i < 5 && numberOfParameters > 0) {
 
@@ -117,9 +141,10 @@ public class ItemManagement implements Data_Management {
 
                     if(item.getNome() != null) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Nome", item.getNome()));
+                        searchQuery.append(getDataTypeForQuery("Nome", item.getNome(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
+                        isNamePresent = true;
                     }
 
                 }
@@ -127,7 +152,7 @@ public class ItemManagement implements Data_Management {
 
                     if(item.getPrezzo() != -1) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Prezzo", item.getPrezzo()));
+                        searchQuery.append(getDataTypeForQuery("Prezzo", item.getPrezzo(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
@@ -137,7 +162,7 @@ public class ItemManagement implements Data_Management {
 
                     if(item.getQuantita() != -1) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Quantita", item.getQuantita()));
+                        searchQuery.append(getDataTypeForQuery("Quantita", item.getQuantita(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
@@ -147,7 +172,7 @@ public class ItemManagement implements Data_Management {
 
                     if(item.getData_inserimento() != null) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Data_Inserimento", item.getData_inserimento()));
+                        searchQuery.append(getDataTypeForQuery("Data_Inserimento", item.getData_inserimento(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
@@ -158,9 +183,10 @@ public class ItemManagement implements Data_Management {
 
                     if(item.getDescrizione() != null) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Descrizione", item.getDescrizione()));
+                        searchQuery.append(getDataTypeForQuery("Descrizione", item.getDescrizione(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
+                        isDescriptionPresent = true;
                     }
 
                 }
@@ -170,7 +196,32 @@ public class ItemManagement implements Data_Management {
 
         }
 
-        return getSearchResults(getRows(false, searchQuery.toString()));
+        try {
+
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(searchQuery.toString());
+
+            if (isNamePresent) {
+                String nameValue = "%" + item.getNome() + "%";
+                String descriptionValue = "%" + item.getDescrizione() + "%";
+                statement.setString(1, nameValue);
+                if (isDescriptionPresent)
+                    statement.setString(2, descriptionValue);
+
+            }
+            else if (isDescriptionPresent) {
+                String descriptionValue = "%" + item.getDescrizione() + "%";
+                statement.setString(1, descriptionValue);
+            }
+
+            System.out.println(statement);
+
+            return getSearchResults(getRows(false, statement));
+
+        }
+        catch (SQLException e) {
+            System.err.println("Query di ricerca non correttamente formattata");
+            return null;
+        }
 
     }
 
@@ -211,60 +262,77 @@ public class ItemManagement implements Data_Management {
     @Override
     public void printAll() {
 
-        String printQuery = "SELECT * FROM Articolo";
-        executeQuery(printQuery, true);
+        //String printQuery = "SELECT * FROM Articolo";
+        //executeQuery(printQuery, true);
 
     }
 
     @Override
     public void print(int code) {
 
-        String printQuery = "SELECT * FROM Articolo WHERE Codice_Articolo = " + code;
-        executeQuery(printQuery, true);
+        //String printQuery = "SELECT * FROM Articolo WHERE Codice_Articolo = " + code;
+        //executeQuery(printQuery, true);
 
     }
 
     @Override
     public void delete(int code) {
 
-        String deleteQuery = "DELETE FROM Articolo WHERE Codice_Articolo = " + code;
-        executeQuery(deleteQuery, false);
+        //String deleteQuery = "DELETE FROM Articolo WHERE Codice_Articolo = " + code;
+        //executeQuery(deleteQuery, false);
 
     }
 
     @Override
     public String getDataTypeForQuery(String dataType, Object value) {
-
-        return switch (dataType) {
-            case "Codice_Articolo" -> "Codice_Articolo = " + value;
-            case "Prezzo" -> "Prezzo = " + value;
-            case "Quantita" -> "Quantita = " + value;
-            case "Nome" -> "Nome = '" + value + "'";
-            case "Descrizione" -> "Descrizione = '" + value + "'";
-            case "Data_Inserimento" -> "Data_Inserimento = '" + value + "'";
-            default -> " ";
-        };
-
+        return null;
     }
 
     @Override
-    public void executeQuery(String query, boolean isOutput) {              // TODO: Rendi un unico metodo executeQuery e getRows
+    public void executeQuery(String query, boolean isOutput) {
+
+    }
+
+    public String getDataTypeForQuery(String dataType, Object value, boolean isSelect) {
+
+        if (isSelect) {
+            return switch (dataType) {
+                case "Codice_Articolo" -> "Codice_Articolo = " + value;
+                case "Prezzo" -> "Prezzo = " + value;
+                case "Quantita" -> "Quantita = " + value;
+                case "Nome" -> "Nome LIKE ?";                                // '?' verranno poi sostituiti dai valori corretti
+                case "Descrizione" -> "Descrizione LIKE ?";
+                case "Data_Inserimento" -> "Data_Inserimento = '" + value + "'";
+                default -> " ";
+            };
+        }
+        else {
+            return switch (dataType) {
+                case "Codice_Articolo" -> "Codice_Articolo = " + value;
+                case "Prezzo" -> "Prezzo = " + value;
+                case "Quantita" -> "Quantita = " + value;
+                case "Nome" -> "Nome = ?";                                // '?' verranno poi sostituiti dai valori corretti
+                case "Descrizione" -> "Descrizione = ?";
+                case "Data_Inserimento" -> "Data_Inserimento = '" + value + "'";
+                default -> " ";
+            };
+        }
+
+    }
+
+    public void executeQuery(boolean isOutput, PreparedStatement statement) {              // TODO: Rendi un unico metodo executeQuery e getRows
 
         try {
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-
             if (isOutput) {
-                ResultSet resultSet = statement.executeQuery(query);
-
+                ResultSet resultSet = statement.executeQuery();
                 while(resultSet.next()) {
                     System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2) +
                             "\t" + resultSet.getDouble(3) + "\t" + resultSet.getInt(4) + "\t" +
                             resultSet.getString(5) + "\t" + resultSet.getString(6));
                 }
             }
-
             else
-                statement.executeUpdate(query);
+                statement.executeUpdate();
         }
 
         catch (SQLException e) {
@@ -273,23 +341,20 @@ public class ItemManagement implements Data_Management {
 
     }
 
-    public ResultSet getRows(boolean areAllRowsRequested, String inputQuery) {
+    public ResultSet getRows(boolean areAllRowsRequested, PreparedStatement statement) {
 
         String toBeExecutedQuery;
-
-        if (areAllRowsRequested)
-            toBeExecutedQuery = "SELECT * FROM Articolo";
-        else
-            toBeExecutedQuery = inputQuery;
-
         try {
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-            return statement.executeQuery(toBeExecutedQuery);
+            if (areAllRowsRequested) {
+                toBeExecutedQuery = "SELECT * FROM Articolo";
+                PreparedStatement allRowsQuery = HotelSupplyManagementMain.conn.prepareStatement(toBeExecutedQuery);
+                return allRowsQuery.executeQuery();
+            }
+            return statement.executeQuery();
         }
-
-        catch(SQLException e) {
-                System.err.println("Errore durante l'ultima query: " + e.getMessage());
-                return null;
+        catch (SQLException e) {
+            System.err.println("Errore durante il reperimento delle righe dalla tabella Item");
+            return null;
         }
 
     }

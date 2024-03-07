@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.OrderManagementSceneController">
+    <children>
+        <ScrollPane layoutX="115.0" layoutY="46.0" prefHeight="354.0" prefWidth="486.0">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="464.0" prefWidth="493.0">
+                    <children>
+                        <TableView fx:id="orderTable" prefHeight="406.0" prefWidth="504.0">
+                            <columns>
+                                <TableColumn fx:id="IDColumn" prefWidth="109.0" text="Codice_ordine" />
+                                <TableColumn fx:id="BFColumn" prefWidth="70.0" text="B/f" />
+                                <TableColumn fx:id="TypeOfPaymentColumn" prefWidth="84.0" text="Tipo_di_pagamento" />
+                                <TableColumn fx:id="DateColumn" prefWidth="75.0" text="Data_ordine" />
+                                <TableColumn fx:id="CustomerIDColumn" prefWidth="75.0" text="Codice_cliente" />
+                            </columns></TableView>
+                    </children>
+                </AnchorPane>
+            </content>
+        </ScrollPane>
+        <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="Articoli" />
+                <Menu mnemonicParsing="false" text="Fornitori" />
+                <Menu mnemonicParsing="false" text="Clienti" />
+                <Menu mnemonicParsing="false" text="Ordini" />
+            </menus>
+        </MenuBar>
+        <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayAddView" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
+        <Button fx:id="deleteButton" disable="true" layoutX="14.0" layoutY="91.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Elimina" />
+        <Button fx:id="modifyButton" disable="true" layoutX="14.0" layoutY="138.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Modifica" />
+    </children>
+</AnchorPane>
