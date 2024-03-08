@@ -68,7 +68,7 @@ public class SupplierManagementSceneController implements Initializable {
 
     public void createRows()  {
 
-        ResultSet resultSet = supplierManagement.getRows();
+        ResultSet resultSet = supplierManagement.getRows(true, null);
 
         try {
             while (resultSet.next()) {

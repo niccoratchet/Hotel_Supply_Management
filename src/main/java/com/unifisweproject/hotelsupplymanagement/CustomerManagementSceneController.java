@@ -75,7 +75,7 @@ public class CustomerManagementSceneController implements Initializable {
 
     public void createRows()  {
 
-        ResultSet resultSet = customerManagement.getRows();
+        ResultSet resultSet = customerManagement.getRows(true, null);
 
         try {
             while (resultSet.next()) {

@@ -10,6 +10,21 @@ public class OrderManagement implements Data_Management {
 
     private int nextOrderCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
     private final ArrayList<Order> orderList = new ArrayList<>();
+
+    public OrderManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
+
+        String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Ordine'";
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(getCodeQuery);
+            nextOrderCode = resultSet.getInt(1);
+        }
+        catch(SQLException e) {
+            System.err.println("Errore durante l'estrapolazione dell'ultimo codice ordine");
+        }
+
+    }
     @Override
     public void add(Object newOrder) {
 
@@ -26,66 +41,146 @@ public class OrderManagement implements Data_Management {
             preparedStatement.setString(3, toBeAdded.getData_ordine());
             preparedStatement.setInt(4, toBeAdded.getCodice_cliente());
             preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
-
+            nextOrderCode++;
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Errore durante l'aggiunta del nuovo Order: "+ e.getMessage() +" \n Query utilizzata: " + addQuery);
         }
-    }
-
-    @Override
-    public void modifyParameter(int code, String dataType, Object value) {
-
-        String modifyQuery = "UPDATE Ordine SET " + getDataTypeForQuery(dataType, value) + " WHERE Codice_Ordine = " + code;
-        executeQuery(modifyQuery, false);
-
     }
 
     @Override
     public void modify(Object value) {
+        Order modified = (Order) value;
+        String modifyQuery = "UPDATE Ordine SET " + getDataTypeForQuery("Tipo_pagamento", modified.getTipo_pagamento(), false) + ", " + getDataTypeForQuery("Data_ordine", modified.getData_ordine(), false) + ", "
+                + getDataTypeForQuery("Codice_cliente", modified.getCodice_cliente(), false)+
+                " WHERE Codice_Ordine = " + modified.getCodice_ordine();
+        //TODO: gestire attributo booleano ed aggiungere il formatter per tipo di pagamento
+        try {
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
+            System.out.println(statement);
+            executeQuery(false, statement);
+        }
 
+        catch (SQLException e) {
+            System.err.println("Errore di formattazione nella generazione della query di modifica: " + e);
+        }
     }
 
-    @Override
-    public Object search(String dataType, Object value) {
+    public ArrayList<Object> getSearchResults(ResultSet resultSet) {              // dato un oggetto ResultSet (insieme delle righe del risultato di una query) rende un ArrayList di Item che corrispondono alle righe indicate
 
-        String searchQuery = "SELECT * FROM Ordine WHERE " + getDataTypeForQuery(dataType, value);
-        executeQuery(searchQuery, true);
-        return null;
+        ArrayList<Object> results = new ArrayList<>();                // conterrà gli Item che corrispondono ai valori trovati dopo la query
+
+        try {
+            while (resultSet.next()) {
+                for (Order nextOrder : orderList) {
+                    if (nextOrder.getCodice_ordine() == resultSet.getInt(1)) {
+                        results.add(nextOrder);
+                    }
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.err.println("Errore durante la creazione del risultato di ricerca: " +e);
+            return null;
+        }
+        return results;
 
     }
-
     @Override
-    public ArrayList<Item> search(Object toBeSearched) {
-        return null;
+    public ArrayList<Object> search(Object toBeSearched) {
+
+        Order order = (Order) toBeSearched;
+        int numberOfParameters = getNumberOfParameters(order);
+        StringBuilder searchQuery = new StringBuilder("SELECT * FROM Ordine WHERE ");
+        int i = 0;
+        while (i < 4 && numberOfParameters > 0) {
+            switch (i) {
+                case 0 -> {
+                    if(order.getCodice_cliente() != -1) {
+                        numberOfParameters--;
+                        searchQuery.append(getDataTypeForQuery("Codice_cliente", order.getCodice_cliente(), true));
+                        if (numberOfParameters != 0)
+                            searchQuery.append(" AND ");
+                    }
+                }
+                case 1 -> {
+                    //TODO: gestire il caso dell'attributo booleano
+                    numberOfParameters--;
+                    searchQuery.append(getDataTypeForQuery("", order.isBolla(), true));
+                    if (numberOfParameters != 0)
+                        searchQuery.append(" AND ");
+                }
+                case 2 -> {
+                    if(order.getTipo_pagamento() != null) {
+                        numberOfParameters--;
+                        searchQuery.append(getDataTypeForQuery("Tipo_pagamento", order.getTipo_pagamento(), true));
+                        if (numberOfParameters != 0)
+                            searchQuery.append(" AND ");
+                    }
+                }
+                case 3 -> {
+                    if(order.getData_ordine() != null) {
+                        numberOfParameters--;
+                        searchQuery.append(getDataTypeForQuery("Data_ordine", order.getData_ordine(), true));
+                        if (numberOfParameters != 0)
+                            searchQuery.append(" AND ");
+                    }
+                }
+            }
+            i++;
+        }
+        try {
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(searchQuery.toString());
+            return getSearchResults(getRows(false, statement));
+        }
+        catch (SQLException e) {
+            System.err.println("Query di ricerca non correttamente formattata");
+            return null;
+        }
     }
 
-    @Override
-    public void printAll() {
+    private int getNumberOfParameters(Order forCounting) {
+        int i = 0, count = 0;
+        while (i < 4) {
 
-        String printQuery = "SELECT * FROM Ordine";
-        executeQuery(printQuery, true);
+            switch (i) {
+                case 0 -> {
+                    if (forCounting.getCodice_cliente() != -1)
+                        count++;
+                }
+                case 1 -> {
+                    //TODO: gestire attributo booleano
+                }
+                case 2 -> {
+                    if (forCounting.getTipo_pagamento() != null)
+                        count++;
 
-    }
+                }
+                case 3 -> {
+                    if (forCounting.getData_ordine() != null)
+                        count++;
+                }
+            }
+            i++;
+        }
 
-    @Override
-    public void print(int code) {
-
-        String printQuery = "SELECT * FROM Ordine WHERE Codice_Ordine = " + code;
-        executeQuery(printQuery, true);
-
+        return count;
     }
 
     @Override
     public void delete(int code) {
 
-        String deleteQuery = "DELETE FROM Ordine WHERE Codice_Ordine = " + code;
-        executeQuery(deleteQuery, false);
+        try {
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Ordine WHERE Codice_Ordine = " + code);
+            executeQuery(false, statement);
+        } catch (SQLException e) {
+            System.err.println("Errore durante l'eliminazione della riga Order: " + e.getMessage());
+        }
 
     }
 
     @Override
-    public String getDataTypeForQuery(String dataType, Object value) {
+    public String getDataTypeForQuery(String dataType, Object value, boolean isSelect) {
 
         return switch (dataType) {
             case "Codice_Ordine" -> "Codice_Ordine = " + value;
@@ -99,16 +194,11 @@ public class OrderManagement implements Data_Management {
     }
 
     @Override
-    public void executeQuery(String query, boolean isOutput) {
+    public void executeQuery(boolean isOutput, PreparedStatement statement) {
 
         try {
-
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-
             if (isOutput) {
-
-                ResultSet resultSet = statement.executeQuery(query);
-
+                ResultSet resultSet = statement.executeQuery();
                 while(resultSet.next()) {
                     System.out.println(resultSet.getInt(1) + "\t" + resultSet.getBoolean(2) +
                             "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4) + "\t" +
@@ -118,8 +208,7 @@ public class OrderManagement implements Data_Management {
             }
 
             else
-                statement.executeUpdate(query);
-
+                statement.executeUpdate();
         }
 
         catch (SQLException e) {
@@ -128,22 +217,19 @@ public class OrderManagement implements Data_Management {
 
     }
 
-    public ResultSet getRows(boolean areAllRowsRequested, String inputQuery) {
+    public ResultSet getRows(boolean areAllRowsRequested, PreparedStatement statement) {
 
         String toBeExecutedQuery;
-
-        if (areAllRowsRequested)
-            toBeExecutedQuery = "SELECT * FROM Ordine";
-        else
-            toBeExecutedQuery = inputQuery;
-
         try {
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-            return statement.executeQuery(toBeExecutedQuery);
+            if (areAllRowsRequested) {
+                toBeExecutedQuery = "SELECT * FROM Ordine";
+                PreparedStatement allRowsQuery = HotelSupplyManagementMain.conn.prepareStatement(toBeExecutedQuery);
+                return allRowsQuery.executeQuery();
+            }
+            return statement.executeQuery();
         }
-
-        catch(SQLException e) {
-            System.err.println("Errore durante l'ultima query: " + e.getMessage());
+        catch (SQLException e) {
+            System.err.println("Errore durante il reperimento delle righe dalla tabella Order");
             return null;
         }
 
@@ -157,7 +243,4 @@ public class OrderManagement implements Data_Management {
         return nextOrderCode;
     }
 
-    public void setNextOrderCode(int nextOrderCode) {
-        this.nextOrderCode = nextOrderCode;
-    }
 }

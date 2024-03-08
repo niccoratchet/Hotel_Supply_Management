@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class HotelSupplyManagementMain extends Application {
 
@@ -59,6 +60,14 @@ public class HotelSupplyManagementMain extends Application {
             System.out.println("Error during DB closure");
         }
 
+    }
+
+    public static <newType, oldType> ArrayList<newType> castArrayList(ArrayList<oldType> list){             // Il metodo permette di fare il casting di una lista generica di Object in un altro tipo specificato
+        ArrayList<newType> newlyCastedArrayList = new ArrayList<newType>();
+        for(oldType listObject : list){
+            newlyCastedArrayList.add((newType)listObject);
+        }
+        return newlyCastedArrayList;
     }
 
 }

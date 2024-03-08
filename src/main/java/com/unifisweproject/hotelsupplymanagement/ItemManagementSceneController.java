@@ -301,36 +301,48 @@ public class ItemManagementSceneController implements Initializable {
 
     public void searchRow(Item toBeSearched) {
 
-
         results.clear();
-        results = itemManagement.search(toBeSearched);
-        int numberOfResults = results.size();
 
-        searchView = true;
+        try {
 
-        searchResultRows.clear();
+            results = HotelSupplyManagementMain.castArrayList(itemManagement.search(toBeSearched));             // effettuo il cast della lista
+            int numberOfResults = results.size();
 
-        Platform.runLater(() -> {
+            searchView = true;
 
-            searchResultRows.setAll(results);
-            itemTable.getItems().clear();
-            itemTable.setItems(searchResultRows);
+            searchResultRows.clear();
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Risultato ricerca");
-            alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
+            Platform.runLater(() -> {
+
+                searchResultRows.setAll(results);
+                itemTable.getItems().clear();
+                itemTable.setItems(searchResultRows);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Risultato ricerca");
+                alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
+                alert.showAndWait();
+
+            });
+
+            backButton.setDisable(false);
+            backButton.setVisible(true);
+
+            searchButton.setDisable(true);
+            searchButton.setVisible(false);
+
+            addButton.setDisable(true);
+            addButton.setVisible(false);
+
+        }
+        catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
             alert.showAndWait();
 
-        });
-
-        backButton.setDisable(false);
-        backButton.setVisible(true);
-
-        searchButton.setDisable(true);
-        searchButton.setVisible(false);
-
-        addButton.setDisable(true);
-        addButton.setVisible(false);
+        }
 
     }
 
