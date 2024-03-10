@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="757.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.CustomerManagementSceneController">
+<AnchorPane fx:id="tableAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="757.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.CustomerManagementSceneController">
     <children>
         <ScrollPane layoutX="117.0" layoutY="46.0" prefHeight="500.0" prefWidth="640.0">
             <content>
@@ -40,8 +40,10 @@
                 <Menu mnemonicParsing="false" text="Ordini" />
             </menus>
         </MenuBar>
-        <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayAddView" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
+        <Button fx:id="addButton" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayAddView" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
         <Button fx:id="deleteButton" disable="true" layoutX="14.0" layoutY="91.0" mnemonicParsing="false" onAction="#deleteRow" prefHeight="25.0" prefWidth="89.0" text="Elimina" />
         <Button fx:id="modifyButton" disable="true" layoutX="14.0" layoutY="138.0" mnemonicParsing="false" onAction="#displayCustomerView" prefHeight="25.0" prefWidth="89.0" text="Modifica" />
+      <Button fx:id="searchButton" layoutX="14.0" layoutY="183.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Ricerca" />
+      <Button fx:id="backButton" layoutX="14.0" layoutY="487.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Indietro" />
     </children>
 </AnchorPane>

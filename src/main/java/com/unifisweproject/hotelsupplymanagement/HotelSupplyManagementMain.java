@@ -63,7 +63,7 @@ public class HotelSupplyManagementMain extends Application {
     }
 
     public static <newType, oldType> ArrayList<newType> castArrayList(ArrayList<oldType> list){             // Il metodo permette di fare il casting di una lista generica di Object in un altro tipo specificato
-        ArrayList<newType> newlyCastedArrayList = new ArrayList<newType>();
+        ArrayList<newType> newlyCastedArrayList = new ArrayList<>();
         for(oldType listObject : list){
             newlyCastedArrayList.add((newType)listObject);
         }

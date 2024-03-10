@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.SearchOrderController">
+    <children>
+        <Label layoutX="21.0" layoutY="105.0" text="Bolla/Fattura" />
+        <TextField fx:id="typeOfPaymentField" disable="true" layoutX="376.0" layoutY="103.0" />
+        <Label layoutX="282.0" layoutY="105.0" prefHeight="21.0" prefWidth="90.0" text="Tipo pagamento" />
+        <TextField fx:id="customerCodeField" disable="true" layoutX="255.0" layoutY="250.0" prefHeight="17.0" prefWidth="108.0" />
+        <Label layoutX="155.0" layoutY="254.0" text="Codice Cliente" />
+        <TextField fx:id="orderCodeField" disable="true" layoutX="99.0" layoutY="179.0" prefHeight="25.0" prefWidth="108.0" />
+        <Label layoutX="16.0" layoutY="183.0" prefHeight="17.0" prefWidth="77.0" text="Codice Ordine" />
+        <Button fx:id="confirmButton" disable="true" layoutX="451.0" layoutY="334.0" mnemonicParsing="false" onAction="#scanRows" prefHeight="25.0" prefWidth="108.0" text="Conferma" />
+        <Button layoutX="318.0" layoutY="334.0" mnemonicParsing="false" onAction="#closeSearchView" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
+        <DatePicker fx:id="datePicker" disable="true" layoutX="376.0" layoutY="179.0" prefHeight="25.0" prefWidth="149.0" />
+        <Label layoutX="282.0" layoutY="183.0" text="Data Ordine" />
+        <Label fx:id="codeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="35.0" layoutY="32.0" prefHeight="21.0" prefWidth="521.0" text="Ricerca ordine: seleziona i parametri di ricerca">
+            <font>
+                <Font name="SimSun" size="19.0" />
+            </font>
+        </Label>
+        <CheckBox fx:id="enableBFSearch" layoutX="228.0" layoutY="105.0" mnemonicParsing="false" text="BollaFattura" textFill="TRANSPARENT" />
+        <CheckBox fx:id="enableDateSearch" layoutX="543.0" layoutY="183.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="40.0" text="Data_Ordine" textFill="TRANSPARENT" />
+        <CheckBox fx:id="enableOrderSearch" layoutX="228.0" layoutY="183.0" mnemonicParsing="false" text="Codice_Ordine" textFill="TRANSPARENT" />
+        <CheckBox fx:id="enablePaymentSearch" layoutX="543.0" layoutY="107.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="40.0" text="Tipo_Pagamento" textFill="TRANSPARENT" />
+        <CheckBox fx:id="enableCustomerSearch" layoutX="390.0" layoutY="254.0" mnemonicParsing="false" text="Codice_Cliente" textFill="TRANSPARENT" />
+      <ChoiceBox fx:id="BFField" disable="true" layoutX="101.0" layoutY="101.0" prefHeight="25.0" prefWidth="108.0" />
+    </children>
+</AnchorPane>

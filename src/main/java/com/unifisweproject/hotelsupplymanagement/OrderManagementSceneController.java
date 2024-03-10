@@ -3,21 +3,24 @@ package com.unifisweproject.hotelsupplymanagement;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class OrderManagementSceneController implements Initializable{
@@ -37,9 +40,23 @@ public class OrderManagementSceneController implements Initializable{
     private Button modifyButton;
     @FXML
     private Button deleteButton;
-
+    @FXML
+    private Button addButton;
+    @FXML
+    private Button backButton;
+    @FXML
+    private Button searchButton;
+    private AnchorPane tableAnchorPane;
+    private boolean searchView = false;
+    private ArrayList<Order> results = new ArrayList<>();
+    private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
+    private final MenuItem viewOrderMenu = new MenuItem("Visualizza");       //TODO cambiare nome
+    private final MenuItem viewDeleteOrderMenu = new MenuItem("Elimina");    //TODO cambiare nome
     private OrderManagement orderManagement;
-    ObservableList<Order> orderRows = FXCollections.observableArrayList();
+    private ObservableList<Order> orderRows = FXCollections.observableArrayList();
+    private final ObservableList<Order> searchResultRows = FXCollections.observableArrayList();
+
+    private long lastClickTime = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Cliente
@@ -57,6 +74,74 @@ public class OrderManagementSceneController implements Initializable{
             }
         });
 
+        rightClickMenu.getItems().addAll(viewOrderMenu, viewDeleteOrderMenu);
+
+        viewOrderMenu.setOnAction(event -> displayOrderView(null));
+
+        viewDeleteOrderMenu.setOnAction(event -> deleteRow());
+
+        orderTable.setOnMouseClicked(event -> {
+
+            if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
+                rightClickMenu.hide();
+                if (event.getClickCount() == 2) {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastClickTime < 5000)
+                    {
+                        displayOrderView(null);
+                    }
+                    lastClickTime = currentTime;
+                }
+            }
+            else {
+
+                SelectionModel<Order> selectionModel = orderTable.getSelectionModel();        // verifico se è stato cliccato un elemento
+                Order selectedOrder = selectionModel.getSelectedItem();
+                if(selectedOrder != null)
+                    rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
+
+            }
+
+        });
+
+    }
+
+    private void deleteRow() {
+        if (createConfirmDeleteAlert()) {
+            SelectionModel<Order> selectionModel = orderTable.getSelectionModel();
+            Order selectedOrder = selectionModel.getSelectedItem();
+            orderManagement.getOrderList().remove(selectedOrder);
+            orderManagement.delete(selectedOrder.getCodice_ordine());
+
+            if (searchView)
+                results.remove(selectedOrder);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
+
+            updateTable();
+        }
+    }
+
+    public void displayOrderView(ActionEvent ignoredEvent) {
+
+        SelectionModel<Order> selectionModel = orderTable.getSelectionModel();
+        Order selectedOrder = selectionModel.getSelectedItem();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderView.fxml"));
+            Parent root = loader.load();
+            OrderViewController orderViewController = loader.getController();
+            orderViewController.setDisplayedOrder(selectedOrder);
+            orderViewController.setOrderManagementSceneController(this);
+
+            Stage stage = new Stage();
+            stage.setTitle(Integer.toString(selectedOrder.getCodice_ordine()));
+            stage.setScene(new Scene(root, 2000, 400));
+            stage.show();
+
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante l'apertura del file ItemView.fxml: " + e.getMessage());
+        }
+
     }
 
     public void createRows()  {
@@ -73,7 +158,7 @@ public class OrderManagementSceneController implements Initializable{
         }
 
         catch (SQLException e) {
-            System.err.println("Errore");
+            System.err.println("Errore durante il riempimento della tabella");
         }
 
         orderRows.addAll(orderManagement.getOrderList());
@@ -99,7 +184,7 @@ public class OrderManagementSceneController implements Initializable{
 
             Stage stage = new Stage();
             stage.setTitle("Aggiungi ordine");
-            stage.setScene(new Scene(root, 580, 400));
+            stage.setScene(new Scene(root, 10, 400));
             stage.show();
         }
         catch (IOException e) {
@@ -118,22 +203,113 @@ public class OrderManagementSceneController implements Initializable{
     }
 
     public void modifyRow(Order toBeModified) {
+        
         orderManagement.modify(toBeModified);
+        createConfirmedOrderModify();
         updateTable();
+    }
+
+    private void createConfirmedOrderModify() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Modifiche applicate");
+        alert.setContentText("Le modifiche sono state eseguite");
+        alert.showAndWait();
     }
 
     public void updateTable() {
 
         Platform.runLater(() -> {                       // Pulisci e aggiorna la tabella
-            orderTable.getItems().clear();
-            orderRows.setAll(orderManagement.getOrderList());
-            orderTable.setItems(orderRows);
+
+            if(searchView) {
+
+                orderTable.getItems().clear();
+                searchResultRows.clear();
+                searchResultRows.setAll(results);
+                orderTable.setItems(searchResultRows);
+
+            }
+            else {
+
+                orderTable.getItems().clear();
+                orderRows.clear();
+                orderRows.setAll(orderManagement.getOrderList());
+                orderTable.setItems(orderRows);
+
+                addButton.setDisable(false);                // Riattivo bottone di aggiunta
+                addButton.setVisible(true);
+
+                backButton.setDisable(true);                // Disattivo bottone "indietro" quando ho terminato una precedente ricerca
+                backButton.setVisible(false);
+
+            }
+
         });
 
     }
 
     public void setOrderManagement(OrderManagement orderManagement) {
         this.orderManagement = orderManagement;
+    }
+
+    public boolean createConfirmDeleteAlert() {            // crea la finestra di avviso di cancellazione di un Item con richiesta di conferma
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Rimozione ordine");
+        alert.setContentText("Sicuro di procedere con l'eliminazione dell'ordine dalla banca dati?");
+
+        ButtonType buttonTypeYes = new ButtonType("Sì");
+        ButtonType buttonTypeNo = new ButtonType("No");
+        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == buttonTypeYes;
+
+    }
+
+
+    public void searchRow(Order toBeSearched) {
+
+        results.clear();
+
+        try {
+
+            results = HotelSupplyManagementMain.castArrayList(orderManagement.search(toBeSearched));             // effettuo il cast della lista
+            int numberOfResults = results.size();
+            searchView = true;
+            searchResultRows.clear();
+
+            Platform.runLater(() -> {
+
+                searchResultRows.setAll(results);
+                orderTable.getItems().clear();
+                orderTable.setItems(searchResultRows);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Risultato ricerca");
+                alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
+                alert.showAndWait();
+
+            });
+
+            backButton.setDisable(false);
+            backButton.setVisible(true);
+
+            searchButton.setDisable(true);
+            searchButton.setVisible(false);
+
+            addButton.setDisable(true);
+            addButton.setVisible(false);
+
+        }
+        catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
+            alert.showAndWait();
+
+        }
+
     }
 
 }

@@ -253,7 +253,7 @@ public class ItemManagementSceneController implements Initializable {
 
         }
         catch (IOException e) {
-            System.err.println("Errore durante l'apertura del file ItemView.fxml");
+            System.err.println("Errore durante l'apertura del file ItemView.fxml: " + e.getMessage());
         }
 
     }
@@ -307,9 +307,7 @@ public class ItemManagementSceneController implements Initializable {
 
             results = HotelSupplyManagementMain.castArrayList(itemManagement.search(toBeSearched));             // effettuo il cast della lista
             int numberOfResults = results.size();
-
             searchView = true;
-
             searchResultRows.clear();
 
             Platform.runLater(() -> {

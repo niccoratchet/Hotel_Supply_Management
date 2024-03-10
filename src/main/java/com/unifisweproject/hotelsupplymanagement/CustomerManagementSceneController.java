@@ -9,17 +9,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.SelectionModel;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class CustomerManagementSceneController implements Initializable {
@@ -52,12 +53,30 @@ public class CustomerManagementSceneController implements Initializable {
     private Button modifyButton;
     @FXML
     private Button deleteButton;
+    @FXML
+    private Button backButton;
+    @FXML
+    private Button searchButton;
+    @FXML
+    private Button addButton;
+    @FXML
+    private AnchorPane tableAnchorPane;
+    private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
+    private final MenuItem viewCustomerMenu = new MenuItem("Visualizza");
+    private final MenuItem viewDeleteCustomerMenu = new MenuItem("Elimina");
+    private boolean searchView = false;
 
     private CustomerManagement customerManagement;
     ObservableList<Customer> customerRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
+    ObservableList<Customer> searchResultRows = FXCollections.observableArrayList();
+
+    private ArrayList<Customer> results = new ArrayList<>();
+
+    private long lastClickTime = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Cliente
+
         Platform.runLater(this::createRows);
 
         customerTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
@@ -69,6 +88,34 @@ public class CustomerManagementSceneController implements Initializable {
                 modifyButton.setDisable(true);
                 deleteButton.setDisable(true);
             }
+        });
+
+        rightClickMenu.getItems().addAll(viewCustomerMenu, viewDeleteCustomerMenu);
+
+        viewCustomerMenu.setOnAction(event -> displayCustomerView(null));
+
+        viewDeleteCustomerMenu.setOnAction(event -> deleteRow());
+
+        customerTable.setOnMouseClicked(event -> {
+
+            if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
+                rightClickMenu.hide();
+                if (event.getClickCount() == 2) {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastClickTime < 5000)
+                       displayCustomerView(null);
+                    lastClickTime = currentTime;
+                }
+            }
+            else {
+
+                SelectionModel<Customer> selectionModel = customerTable.getSelectionModel();        // verifico se è stato cliccato un elemento
+                Customer selectedCostumer = selectionModel.getSelectedItem();
+                if(selectedCostumer != null)
+                    rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
+
+            }
+
         });
 
     }
@@ -86,11 +133,9 @@ public class CustomerManagementSceneController implements Initializable {
                 customerManagement.getCustomerList().add(customer);
             }
         }
-
         catch (SQLException e) {
-            System.err.println("Errore");
+            System.err.println("Errore durante il riempimento della tabella");
         }
-
         customerRows.addAll(customerManagement.getCustomerList());
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_cliente"));
@@ -139,17 +184,46 @@ public class CustomerManagementSceneController implements Initializable {
     }
 
     public void modifyRow(Customer toBeModified) {
+
         customerManagement.modify(toBeModified);
+        createConfirmedItemModify();
         updateTable();
+
     }
 
     public void updateTable() {
 
-        Platform.runLater(() -> {                       // Pulisci e aggiorna la tabella
-            customerTable.getItems().clear();
-            customerRows.setAll(customerManagement.getCustomerList());
-            customerTable.setItems(customerRows);
+        Platform.runLater(() -> {
+
+           if(searchView) {
+               customerTable.getItems().clear();
+               searchResultRows.clear();
+               searchResultRows.setAll(results);
+               customerTable.setItems(searchResultRows);
+           }
+           else {
+               customerTable.getItems().clear();
+               customerRows.clear();
+               customerRows.setAll(customerManagement.getCustomerList());
+               customerTable.setItems(customerRows);
+
+               addButton.setDisable(false);
+               addButton.setVisible(true);
+
+               backButton.setVisible(true);
+               backButton.setVisible(false);
+           }
+
         });
+
+    }
+
+    public void exitSearch() {
+
+        searchButton.setDisable(false);             // Riattivo bottone di ricerca
+        searchButton.setVisible(true);
+        searchView = false;
+        updateTable();
 
     }
 
@@ -157,22 +231,96 @@ public class CustomerManagementSceneController implements Initializable {
         this.customerManagement = customerManagement;
     }
 
-    public void displayCustomerView(ActionEvent event) throws IOException {
+    public void displayCustomerView(ActionEvent ignoredEvent) {
 
         SelectionModel<Customer> selectionModel = customerTable.getSelectionModel();
         Customer selectedCustomer = selectionModel.getSelectedItem();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerView.fxml"));
-        Parent root = loader.load();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerView.fxml"));
+            Parent root = loader.load();
 
-        CustomerViewController customerViewController = loader.getController();
-        customerViewController.setDisplayedCustomer(selectedCustomer);
-        customerViewController.setCustomerManagementSceneController(this);
+            CustomerViewController customerViewController = loader.getController();
+            customerViewController.setDisplayedCustomer(selectedCustomer);
+            customerViewController.setCustomerManagementSceneController(this);
 
-        Stage stage = new Stage();
-        stage.setTitle(selectedCustomer.getNome());
-        stage.setScene(new Scene(root, 580, 400));
-        stage.show();
+            Stage stage = new Stage();
+            stage.setTitle(selectedCustomer.getNome());
+            stage.setScene(new Scene(root, 580, 400));
+            stage.show();
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante l'apertura del file CustomerView.fxml: " + e.getMessage());
+        }
+
+    }
+
+    public boolean createConfirmDeleteAlert() {            // crea la finestra di avviso di cancellazione di un Item con richiesta di conferma
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Rimozione cliente");
+        alert.setContentText("Sicuro di procedere con l'eliminazione del cliente dalla banca dati?");
+
+        ButtonType buttonTypeYes = new ButtonType("Sì");
+        ButtonType buttonTypeNo = new ButtonType("No");
+        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == buttonTypeYes;
+
+    }
+
+    public void createConfirmedItemModify() {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Modifiche applicate");
+        alert.setContentText("Le modifiche sono state eseguite");
+        alert.showAndWait();
+
+    }
+
+    public void searchRow(Customer toBeSearched) {
+
+        results.clear();
+
+        try {
+
+            results = HotelSupplyManagementMain.castArrayList(customerManagement.search(toBeSearched));             // effettuo il cast della lista
+            int numberOfResults = results.size();
+            searchView = true;
+            searchResultRows.clear();
+
+            Platform.runLater(() -> {
+
+                searchResultRows.setAll(results);
+                customerTable.getItems().clear();
+                customerTable.setItems(searchResultRows);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Risultato ricerca");
+                alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
+                alert.showAndWait();
+
+            });
+
+            backButton.setDisable(false);
+            backButton.setVisible(true);
+
+            searchButton.setDisable(true);
+            searchButton.setVisible(false);
+
+            addButton.setDisable(true);
+            addButton.setVisible(false);
+
+        }
+        catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
+            alert.showAndWait();
+
+        }
 
     }
 
@@ -182,6 +330,28 @@ public class CustomerManagementSceneController implements Initializable {
         customerManagement.getCustomerList().remove(selectedCustomer);                      /////////////////////////////////////////////////////////////////////
         customerManagement.delete(selectedCustomer.getCodice_cliente());           // TODO: Mettere avviso prima della cancellazione
         updateTable();
+    }
+
+    public void displaySearchItemView(ActionEvent ignoredEvent) {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
+            Parent root = loader.load();
+
+            SearchCustomerController searchCustomerController = loader.getController();
+            searchCustomerController.setCustomerManagementSceneController(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Ricerca cliente");
+            stage.setScene(new Scene(root, 580, 400));
+            stage.show();
+
+        }
+        catch(IOException e) {
+            System.out.println("Errore durante il caricamento di CustomerView: " + e);
+        }
+
     }
 
 }
