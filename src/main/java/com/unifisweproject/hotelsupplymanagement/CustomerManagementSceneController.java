@@ -65,14 +65,14 @@ public class CustomerManagementSceneController implements Initializable {
     private final MenuItem viewCustomerMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteCustomerMenu = new MenuItem("Elimina");
     private boolean searchView = false;
-    private MainMenuController mainMenuController;
 
+    private MainMenuController mainMenuController;
     private CustomerManagement customerManagement;
+
     ObservableList<Customer> customerRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
     ObservableList<Customer> searchResultRows = FXCollections.observableArrayList();
 
     private ArrayList<Customer> results = new ArrayList<>();
-
     private long lastClickTime = 0;
 
     @Override
@@ -92,13 +92,10 @@ public class CustomerManagementSceneController implements Initializable {
         });
 
         rightClickMenu.getItems().addAll(viewCustomerMenu, viewDeleteCustomerMenu);
-
         viewCustomerMenu.setOnAction(event -> displayCustomerView(null));
-
         viewDeleteCustomerMenu.setOnAction(event -> deleteRow());
 
         customerTable.setOnMouseClicked(event -> {
-
             if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
                 rightClickMenu.hide();
                 if (event.getClickCount() == 2) {
@@ -109,14 +106,11 @@ public class CustomerManagementSceneController implements Initializable {
                 }
             }
             else {
-
                 SelectionModel<Customer> selectionModel = customerTable.getSelectionModel();        // verifico se è stato cliccato un elemento
                 Customer selectedCostumer = selectionModel.getSelectedItem();
                 if(selectedCostumer != null)
                     rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
-
             }
-
         });
 
     }
@@ -145,9 +139,9 @@ public class CustomerManagementSceneController implements Initializable {
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_cliente"));
         BusinessNameColumn.setCellValueFactory(new PropertyValueFactory<>("Ragione_sociale"));
-        PivaColumn.setCellValueFactory(new PropertyValueFactory<>("P_iva"));
+        PivaColumn.setCellValueFactory(new PropertyValueFactory<>("P_IVA"));
         AddressColumn.setCellValueFactory(new PropertyValueFactory<>("Indirizzo"));
-        CapColumn.setCellValueFactory(new PropertyValueFactory<>("Cap"));
+        CapColumn.setCellValueFactory(new PropertyValueFactory<>("CAP"));
         CivicNumberColumn.setCellValueFactory(new PropertyValueFactory<>("Civico"));
         NameColumn.setCellValueFactory(new PropertyValueFactory<>("Nome"));
         SurnameColumn.setCellValueFactory(new PropertyValueFactory<>("Cognome"));

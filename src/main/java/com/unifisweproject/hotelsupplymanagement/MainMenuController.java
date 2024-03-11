@@ -20,7 +20,7 @@ public class MainMenuController {
     private boolean isMenuButton = false;               // Utile a conoscere se il cambio di area lavorativa (ad es.Item) avviene dalla pressione del bottone nel menù principale oppure tramite il MenuBar
     private final ArrayList<Boolean> isNotFirstTimeLoad = new ArrayList<>(4);       // Serve a capire quali delle 4 sezioni sono state aperte per la prima volta o meno ai fini di effettuare una singola interrogazione
 
-    public MainMenuController() {
+    public MainMenuController() {               // Inizializza il contenuto del vettore isNotFirstTimeLoad con tutti valori false
         for (int i = 0; i < 4; i++)
             isNotFirstTimeLoad.add(false);
     }
@@ -115,7 +115,7 @@ public class MainMenuController {
 
     }
 
-    public void verifyIsMenuButton(ActionEvent event) {                         // Verifica e aggiorna la variabile isMenuButton per cambiare modalità di apertura nuovo Managament
+    public void verifyIsMenuButton(ActionEvent event) {                         // Verifica e aggiorna la variabile isMenuButton per cambiare modalità di apertura nuovo Management
         if (!isMenuButton)
             stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         else

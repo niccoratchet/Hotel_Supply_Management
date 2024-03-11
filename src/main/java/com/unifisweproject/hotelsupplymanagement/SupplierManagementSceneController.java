@@ -147,10 +147,10 @@ public class SupplierManagementSceneController implements Initializable {
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_fornitore"));
         BusinessNameColumn.setCellValueFactory(new PropertyValueFactory<>("Ragione_sociale"));
-        PivaColumn.setCellValueFactory(new PropertyValueFactory<>("P_iva"));
+        PivaColumn.setCellValueFactory(new PropertyValueFactory<>("P_IVA"));
         AddressColumn.setCellValueFactory(new PropertyValueFactory<>("Indirizzo"));
         CivicColumn.setCellValueFactory(new PropertyValueFactory<>("Civico"));
-        CapColumn.setCellValueFactory(new PropertyValueFactory<>("Cap"));
+        CapColumn.setCellValueFactory(new PropertyValueFactory<>("CAP"));
         DateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_inserimento"));
 
         supplierTable.setItems(supplierRows);                       // Inserisce nella tabella tutte le righe degli Item presenti nel DB

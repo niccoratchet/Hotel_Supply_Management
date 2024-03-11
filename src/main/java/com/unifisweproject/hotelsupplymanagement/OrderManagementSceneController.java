@@ -170,7 +170,7 @@ public class OrderManagementSceneController implements Initializable{
         orderRows.addAll(orderManagement.getOrderList());
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_ordine"));
-        BFColumn.setCellValueFactory(new PropertyValueFactory<>("B/f"));
+        BFColumn.setCellValueFactory(new PropertyValueFactory<>("bolla"));
         TypeOfPaymentColumn.setCellValueFactory(new PropertyValueFactory<>("Tipo_pagamento"));
         DateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_ordine"));
         CustomerIDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_cliente"));
