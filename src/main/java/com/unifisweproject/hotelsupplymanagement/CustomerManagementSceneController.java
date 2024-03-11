@@ -65,6 +65,7 @@ public class CustomerManagementSceneController implements Initializable {
     private final MenuItem viewCustomerMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteCustomerMenu = new MenuItem("Elimina");
     private boolean searchView = false;
+    private MainMenuController mainMenuController;
 
     private CustomerManagement customerManagement;
     ObservableList<Customer> customerRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
@@ -122,20 +123,24 @@ public class CustomerManagementSceneController implements Initializable {
 
     public void createRows()  {
 
-        ResultSet resultSet = customerManagement.getRows(true, null);
+        if (!mainMenuController.getIsNotFirstTimeLoad().get(1)) {
+            ResultSet resultSet = customerManagement.getRows(true, null);
 
-        try {
-            while (resultSet.next()) {
-                Customer customer = new Customer(resultSet.getInt(1), resultSet.getInt(3),
-                        resultSet.getString(4), resultSet.getString(5), resultSet.getString(2), resultSet.getString(6),
-                        resultSet.getString(7), resultSet.getString(8), resultSet.getString(9), resultSet.getString(11),
-                        resultSet.getString(10));
-                customerManagement.getCustomerList().add(customer);
+            try {
+                while (resultSet.next()) {
+                    Customer customer = new Customer(resultSet.getInt(1), resultSet.getInt(3),
+                            resultSet.getString(4), resultSet.getString(5), resultSet.getString(2), resultSet.getString(6),
+                            resultSet.getString(7), resultSet.getString(8), resultSet.getString(9), resultSet.getString(11),
+                            resultSet.getString(10));
+                    customerManagement.getCustomerList().add(customer);
+                }
+                mainMenuController.getIsNotFirstTimeLoad().set(1, true);
+            }
+            catch (SQLException e) {
+                System.err.println("Errore durante il riempimento della tabella");
             }
         }
-        catch (SQLException e) {
-            System.err.println("Errore durante il riempimento della tabella");
-        }
+
         customerRows.addAll(customerManagement.getCustomerList());
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_cliente"));
@@ -325,11 +330,13 @@ public class CustomerManagementSceneController implements Initializable {
     }
 
     public void deleteRow() {
+
         SelectionModel<Customer> selectionModel = customerTable.getSelectionModel();
         Customer selectedCustomer = selectionModel.getSelectedItem();
         customerManagement.getCustomerList().remove(selectedCustomer);                      /////////////////////////////////////////////////////////////////////
         customerManagement.delete(selectedCustomer.getCodice_cliente());           // TODO: Mettere avviso prima della cancellazione
         updateTable();
+
     }
 
     public void displaySearchItemView(ActionEvent ignoredEvent) {
@@ -352,6 +359,18 @@ public class CustomerManagementSceneController implements Initializable {
             System.out.println("Errore durante il caricamento di CustomerView: " + e);
         }
 
+    }
+
+    public void openDifferentManagement(ActionEvent event) {
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        String menuName = ((MenuItem) event.getSource()).getParentMenu().getText();
+        mainMenuController.getStageFromMenuBar(event, stage, menuName);
+
+    }
+
+    public void setMainMenuController(MainMenuController mainMenuController) {
+        this.mainMenuController = mainMenuController;
     }
 
 }

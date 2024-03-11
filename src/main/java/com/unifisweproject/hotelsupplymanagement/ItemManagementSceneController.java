@@ -57,6 +57,8 @@ public class ItemManagementSceneController implements Initializable {
     private final MenuItem viewDeleteItemMenu = new MenuItem("Elimina");
 
     private ItemManagement itemManagement;
+
+    private MainMenuController mainMenuController;
     private final ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
 
     private final ObservableList<Item> searchResultRows = FXCollections.observableArrayList();
@@ -124,18 +126,21 @@ public class ItemManagementSceneController implements Initializable {
 
     public void createRows()  {
 
-        ResultSet resultSet = itemManagement.getRows(true, null);
+        if (!mainMenuController.getIsNotFirstTimeLoad().get(0)) {
+            ResultSet resultSet = itemManagement.getRows(true, null);
 
-        try {
-            while (resultSet.next()) {
-                Item item = new Item(resultSet.getInt(1), resultSet.getInt(4),
-                        resultSet.getDouble(3), resultSet.getString(2), resultSet.getString(5), resultSet.getString(6));
-                itemManagement.getItemList().add(item);
+            try {
+                while (resultSet.next()) {
+                    Item item = new Item(resultSet.getInt(1), resultSet.getInt(4),
+                            resultSet.getDouble(3), resultSet.getString(2), resultSet.getString(5), resultSet.getString(6));
+                    itemManagement.getItemList().add(item);
+                }
+                mainMenuController.getIsNotFirstTimeLoad().set(0, true);
             }
-        }
 
-        catch (SQLException e) {
-            System.err.println("Errore durante il riempimento della tabella");
+            catch (SQLException e) {
+                System.err.println("Errore durante il riempimento della tabella");
+            }
         }
 
         itemRows.addAll(itemManagement.getItemList());
@@ -364,6 +369,18 @@ public class ItemManagementSceneController implements Initializable {
             System.out.println("Errore durante il caricamento di SearchItemView: " + e);
         }
 
+    }
+
+    public void openDifferentManagement(ActionEvent event) {
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        String menuName = ((MenuItem) event.getSource()).getParentMenu().getText();
+        mainMenuController.getStageFromMenuBar(event, stage, menuName);
+
+    }
+
+    public void setMainMenuController(MainMenuController mainMenuController) {
+        this.mainMenuController = mainMenuController;
     }
 
 }

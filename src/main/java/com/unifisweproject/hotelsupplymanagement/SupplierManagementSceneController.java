@@ -58,6 +58,7 @@ public class SupplierManagementSceneController implements Initializable {
     private final MenuItem viewSupplierMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteSupplierMenu = new MenuItem("Elimina");
     private SupplierManagement supplierManagement;
+    private MainMenuController mainMenuController;
     private final ObservableList<Supplier> supplierRows = FXCollections.observableArrayList();
 
     private final ObservableList<Supplier> searchResultRows = FXCollections.observableArrayList();
@@ -124,19 +125,22 @@ public class SupplierManagementSceneController implements Initializable {
 
     public void createRows()  {
 
-        ResultSet resultSet = supplierManagement.getRows(true, null);
+        if(!mainMenuController.getIsNotFirstTimeLoad().get(2)) {
+            ResultSet resultSet = supplierManagement.getRows(true, null);
 
-        try {
-            while (resultSet.next()) {
-                Supplier supplier = new Supplier(resultSet.getInt(1), resultSet.getString(7),
-                        resultSet.getString(3), resultSet.getString(2), resultSet.getString(4),
-                        resultSet.getString(5),resultSet.getString(6));
-                supplierManagement.getSupplierList().add(supplier);
+            try {
+                while (resultSet.next()) {
+                    Supplier supplier = new Supplier(resultSet.getInt(1), resultSet.getString(7),
+                            resultSet.getString(3), resultSet.getString(2), resultSet.getString(4),
+                            resultSet.getString(5),resultSet.getString(6));
+                    supplierManagement.getSupplierList().add(supplier);
+                }
+                mainMenuController.getIsNotFirstTimeLoad().set(2, true);
             }
-        }
 
-        catch (SQLException e) {
-            System.err.println("Errore durante il riempimento della tabella");
+            catch (SQLException e) {
+                System.err.println("Errore durante il riempimento della tabella");
+            }
         }
 
         supplierRows.addAll(supplierManagement.getSupplierList());
@@ -348,4 +352,17 @@ public class SupplierManagementSceneController implements Initializable {
         }
 
     }
+
+    public void openDifferentManagement(ActionEvent event) {
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        String menuName = ((MenuItem) event.getSource()).getParentMenu().getText();
+        mainMenuController.getStageFromMenuBar(event, stage, menuName);
+
+    }
+
+    public void setMainMenuController(MainMenuController mainMenuController) {
+        this.mainMenuController = mainMenuController;
+    }
+
 }

@@ -53,7 +53,8 @@ public class OrderManagementSceneController implements Initializable{
     private final MenuItem viewOrderMenu = new MenuItem("Visualizza");       //TODO cambiare nome
     private final MenuItem viewDeleteOrderMenu = new MenuItem("Elimina");    //TODO cambiare nome
     private OrderManagement orderManagement;
-    private ObservableList<Order> orderRows = FXCollections.observableArrayList();
+    private MainMenuController mainMenuController;
+    private final ObservableList<Order> orderRows = FXCollections.observableArrayList();
     private final ObservableList<Order> searchResultRows = FXCollections.observableArrayList();
 
     private long lastClickTime = 0;
@@ -107,6 +108,7 @@ public class OrderManagementSceneController implements Initializable{
     }
 
     private void deleteRow() {
+
         if (createConfirmDeleteAlert()) {
             SelectionModel<Order> selectionModel = orderTable.getSelectionModel();
             Order selectedOrder = selectionModel.getSelectedItem();
@@ -118,6 +120,7 @@ public class OrderManagementSceneController implements Initializable{
 
             updateTable();
         }
+
     }
 
     public void displayOrderView(ActionEvent ignoredEvent) {
@@ -146,19 +149,22 @@ public class OrderManagementSceneController implements Initializable{
 
     public void createRows()  {
 
-        ResultSet resultSet = orderManagement.getRows(true, null);
+        if(!mainMenuController.getIsNotFirstTimeLoad().get(3)) {
+            ResultSet resultSet = orderManagement.getRows(true, null);
 
-        try {
-            while (resultSet.next()) {
-                Order order = new Order(resultSet.getInt(1), resultSet.getInt(5),
-                        resultSet.getBoolean(2), resultSet.getString(3),
-                        resultSet.getString(4));
-                orderManagement.getOrderList().add(order);
+            try {
+                while (resultSet.next()) {
+                    Order order = new Order(resultSet.getInt(1), resultSet.getInt(5),
+                            resultSet.getBoolean(2), resultSet.getString(3),
+                            resultSet.getString(4));
+                    orderManagement.getOrderList().add(order);
+                }
+                mainMenuController.getIsNotFirstTimeLoad().set(3, true);
             }
-        }
 
-        catch (SQLException e) {
-            System.err.println("Errore durante il riempimento della tabella");
+            catch (SQLException e) {
+                System.err.println("Errore durante il riempimento della tabella");
+            }
         }
 
         orderRows.addAll(orderManagement.getOrderList());
@@ -310,6 +316,18 @@ public class OrderManagementSceneController implements Initializable{
 
         }
 
+    }
+
+    public void openDifferentManagement(ActionEvent event) {
+
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        String menuName = ((MenuItem) event.getSource()).getParentMenu().getText();
+        mainMenuController.getStageFromMenuBar(event, stage, menuName);
+
+    }
+
+    public void setMainMenuController(MainMenuController mainMenuController) {
+        this.mainMenuController = mainMenuController;
     }
 
 }

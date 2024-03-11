@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.MenuItem?>
 
 <AnchorPane fx:id="tableAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="757.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.CustomerManagementSceneController">
     <children>
@@ -32,12 +33,24 @@
                 </AnchorPane>
             </content>
         </ScrollPane>
-        <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="757.0">
+        <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
             <menus>
-                <Menu mnemonicParsing="false" text="Articoli" />
-                <Menu mnemonicParsing="false" text="Fornitori" />
-                <Menu mnemonicParsing="false" text="Clienti" />
-                <Menu mnemonicParsing="false" text="Ordini" />
+                <Menu mnemonicParsing="false" text="Articoli">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Visualizza" />
+                    </items></Menu>
+                <Menu mnemonicParsing="false" text="Fornitori">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Visualizza" />
+                    </items></Menu>
+                <Menu disable="true" mnemonicParsing="false" text="Clienti">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Visualizza" />
+                    </items></Menu>
+                <Menu mnemonicParsing="false" text="Ordini">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Visualizza" />
+                    </items></Menu>
             </menus>
         </MenuBar>
         <Button fx:id="addButton" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayAddView" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
