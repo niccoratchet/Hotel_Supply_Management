@@ -95,7 +95,6 @@ public class SupplierManagementSceneController implements Initializable {
         viewDeleteSupplierMenu.setOnAction(event -> deleteRow());
 
         supplierTable.setOnMouseClicked(event -> {
-
             if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
                 rightClickMenu.hide();
                 if (event.getClickCount() == 2) {
@@ -112,14 +111,11 @@ public class SupplierManagementSceneController implements Initializable {
                 }
             }
             else {
-
                 SelectionModel<Supplier> selectionModel = supplierTable.getSelectionModel();        // verifico se è stato cliccato un elemento
                 Supplier selectedSupplier = selectionModel.getSelectedItem();
                 if(selectedSupplier != null)
                     rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
-
             }
-
         });
     }
 
@@ -195,15 +191,12 @@ public class SupplierManagementSceneController implements Initializable {
 
         Platform.runLater(() -> {                       // Pulisci e aggiorna la tabella
             if(searchView) {
-
                 supplierTable.getItems().clear();
                 searchResultRows.clear();
                 searchResultRows.setAll(results);
                 supplierTable.setItems(searchResultRows);
-
             }
             else {
-
                 supplierTable.getItems().clear();
                 supplierRows.clear();
                 supplierRows.setAll(supplierManagement.getSupplierList());
@@ -214,7 +207,6 @@ public class SupplierManagementSceneController implements Initializable {
 
                 backButton.setDisable(true);                // Disattivo bottone "indietro" quando ho terminato una precedente ricerca
                 backButton.setVisible(false);
-
             }
         });
 
@@ -233,18 +225,15 @@ public class SupplierManagementSceneController implements Initializable {
         this.supplierManagement = supplierManagement;
     }
 
-    public void displaySupplierView(ActionEvent event) throws IOException {
+    public void displaySupplierView(ActionEvent ignoredEvent) throws IOException {
 
         SelectionModel<Supplier> selectionModel = supplierTable.getSelectionModel();
         Supplier selectedSupplier = selectionModel.getSelectedItem();
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SupplierView.fxml"));
         Parent root = loader.load();
-
         SupplierViewController supplierViewController = loader.getController();
         supplierViewController.setDisplayedSupplier(selectedSupplier);
         supplierViewController.setSupplierManagementSceneController(this);
-
         Stage stage = new Stage();
         stage.setTitle(selectedSupplier.getRagione_sociale());
         stage.setScene(new Scene(root, 580, 400));
@@ -257,11 +246,9 @@ public class SupplierManagementSceneController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Rimozione fornitore");
         alert.setContentText("Sicuro di procedere con l'eliminazione del fornitore dalla banca dati?");
-
         ButtonType buttonTypeYes = new ButtonType("Sì");
         ButtonType buttonTypeNo = new ButtonType("No");
         alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == buttonTypeYes;
 
@@ -277,28 +264,25 @@ public class SupplierManagementSceneController implements Initializable {
     }
 
     public void deleteRow() {
+
         SelectionModel<Supplier> selectionModel = supplierTable.getSelectionModel();
         Supplier selectedSupplier = selectionModel.getSelectedItem();
         supplierManagement.getSupplierList().remove(selectedSupplier);
         supplierManagement.delete(selectedSupplier.getCodice_fornitore());           // TODO: Mettere avviso prima della cancellazione
         updateTable();
+
     }
 
     public void searchRow(Supplier toBeSearched) {
 
         results.clear();
-
         try {
-
             results = HotelSupplyManagementMain.castArrayList(supplierManagement.search(toBeSearched));             // effettuo il cast della lista
             int numberOfResults = results.size();
-
             searchView = true;
-
             searchResultRows.clear();
 
             Platform.runLater(() -> {
-
                 searchResultRows.setAll(results);
                 supplierTable.getItems().clear();
                 supplierTable.setItems(searchResultRows);
@@ -307,26 +291,21 @@ public class SupplierManagementSceneController implements Initializable {
                 alert.setTitle("Risultato ricerca");
                 alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
                 alert.showAndWait();
-
             });
 
             backButton.setDisable(false);
             backButton.setVisible(true);
-
             searchButton.setDisable(true);
             searchButton.setVisible(false);
-
             addButton.setDisable(true);
             addButton.setVisible(false);
 
         }
         catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
-
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
             alert.showAndWait();
-
         }
 
     }
@@ -334,18 +313,14 @@ public class SupplierManagementSceneController implements Initializable {
     public void displaySearchItemView(ActionEvent ignoredEvent) {
 
         try {
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchSupplierView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
             Parent root = loader.load();
-
             SearchSupplierController searchSupplierController = loader.getController();
             searchSupplierController.setSupplierManagementSceneController(this);
-
             Stage stage = new Stage();
             stage.setTitle("Ricerca fornitore");
             stage.setScene(new Scene(root, 580, 400));
             stage.show();
-
         }
         catch(IOException e) {
             System.out.println("Errore durante il caricamento di SearchSupplierView: " + e);

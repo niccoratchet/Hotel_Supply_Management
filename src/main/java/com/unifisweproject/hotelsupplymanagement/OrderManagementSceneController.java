@@ -29,7 +29,7 @@ public class OrderManagementSceneController implements Initializable{
     @FXML
     private TableColumn<Order, Integer> IDColumn;
     @FXML
-    private TableColumn<Order, Boolean> BFColumn; //TODO: gestire la colonna booleana
+    private TableColumn<Order, Boolean> BFColumn;                           //TODO: gestire la colonna booleana
     @FXML
     private TableColumn<Order, String> TypeOfPaymentColumn;
     @FXML
@@ -50,8 +50,8 @@ public class OrderManagementSceneController implements Initializable{
     private boolean searchView = false;
     private ArrayList<Order> results = new ArrayList<>();
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
-    private final MenuItem viewOrderMenu = new MenuItem("Visualizza");       //TODO cambiare nome
-    private final MenuItem viewDeleteOrderMenu = new MenuItem("Elimina");    //TODO cambiare nome
+    private final MenuItem viewOrderMenu = new MenuItem("Visualizza");              //TODO cambiare nome
+    private final MenuItem viewDeleteOrderMenu = new MenuItem("Elimina");           //TODO cambiare nome
     private OrderManagement orderManagement;
     private MainMenuController mainMenuController;
     private final ObservableList<Order> orderRows = FXCollections.observableArrayList();
@@ -76,13 +76,10 @@ public class OrderManagementSceneController implements Initializable{
         });
 
         rightClickMenu.getItems().addAll(viewOrderMenu, viewDeleteOrderMenu);
-
         viewOrderMenu.setOnAction(event -> displayOrderView(null));
-
         viewDeleteOrderMenu.setOnAction(event -> deleteRow());
 
         orderTable.setOnMouseClicked(event -> {
-
             if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
                 rightClickMenu.hide();
                 if (event.getClickCount() == 2) {
@@ -102,7 +99,6 @@ public class OrderManagementSceneController implements Initializable{
                     rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
 
             }
-
         });
 
     }
@@ -117,7 +113,6 @@ public class OrderManagementSceneController implements Initializable{
 
             if (searchView)
                 results.remove(selectedOrder);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
-
             updateTable();
         }
 
@@ -151,7 +146,6 @@ public class OrderManagementSceneController implements Initializable{
 
         if(!mainMenuController.getIsNotFirstTimeLoad().get(3)) {
             ResultSet resultSet = orderManagement.getRows(true, null);
-
             try {
                 while (resultSet.next()) {
                     Order order = new Order(resultSet.getInt(1), resultSet.getInt(5),
@@ -161,12 +155,10 @@ public class OrderManagementSceneController implements Initializable{
                 }
                 mainMenuController.getIsNotFirstTimeLoad().set(3, true);
             }
-
             catch (SQLException e) {
                 System.err.println("Errore durante il riempimento della tabella");
             }
         }
-
         orderRows.addAll(orderManagement.getOrderList());
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_ordine"));
@@ -184,10 +176,8 @@ public class OrderManagementSceneController implements Initializable{
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddOrderView.fxml"));
             Parent root = loader.load();
-
             AddOrderViewController addOrderController = loader.getController();
             addOrderController.setOrderManagementSceneController(this);
-
             Stage stage = new Stage();
             stage.setTitle("Aggiungi ordine");
             stage.setScene(new Scene(root, 10, 400));
@@ -225,17 +215,13 @@ public class OrderManagementSceneController implements Initializable{
     public void updateTable() {
 
         Platform.runLater(() -> {                       // Pulisci e aggiorna la tabella
-
             if(searchView) {
-
                 orderTable.getItems().clear();
                 searchResultRows.clear();
                 searchResultRows.setAll(results);
                 orderTable.setItems(searchResultRows);
-
             }
             else {
-
                 orderTable.getItems().clear();
                 orderRows.clear();
                 orderRows.setAll(orderManagement.getOrderList());
@@ -246,9 +232,7 @@ public class OrderManagementSceneController implements Initializable{
 
                 backButton.setDisable(true);                // Disattivo bottone "indietro" quando ho terminato una precedente ricerca
                 backButton.setVisible(false);
-
             }
-
         });
 
     }
@@ -276,16 +260,13 @@ public class OrderManagementSceneController implements Initializable{
     public void searchRow(Order toBeSearched) {
 
         results.clear();
-
         try {
-
             results = HotelSupplyManagementMain.castArrayList(orderManagement.search(toBeSearched));             // effettuo il cast della lista
             int numberOfResults = results.size();
             searchView = true;
             searchResultRows.clear();
 
             Platform.runLater(() -> {
-
                 searchResultRows.setAll(results);
                 orderTable.getItems().clear();
                 orderTable.setItems(searchResultRows);
@@ -294,26 +275,20 @@ public class OrderManagementSceneController implements Initializable{
                 alert.setTitle("Risultato ricerca");
                 alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
                 alert.showAndWait();
-
             });
 
             backButton.setDisable(false);
             backButton.setVisible(true);
-
             searchButton.setDisable(true);
             searchButton.setVisible(false);
-
             addButton.setDisable(true);
             addButton.setVisible(false);
-
         }
         catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
-
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
             alert.showAndWait();
-
         }
 
     }

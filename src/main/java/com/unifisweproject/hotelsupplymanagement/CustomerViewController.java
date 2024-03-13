@@ -8,11 +8,13 @@ import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 public class CustomerViewController implements Initializable {
 
@@ -20,7 +22,7 @@ public class CustomerViewController implements Initializable {
     @FXML
     private TextField BusinessNameField;
     @FXML
-    private TextField PivaField;
+    private TextField P_IVAField;
     @FXML
     private TextField NameField;
     @FXML
@@ -46,14 +48,41 @@ public class CustomerViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         Platform.runLater(this::addCustomerInfo);
+
+        int maxFiscalCodeCharacters = 16, maxDiscountCharacters = 2;
+
+        TextFormatter<String> fiscalCodeFormatter = new TextFormatter<>(change -> {         // Formatter per il codice fiscale per impedire inserimento caratteri speciali e una lunghezza maggiore di 16 caratteri
+            if (change.isDeleted()) {
+                return change;
+            }
+
+            if (!change.getControlNewText().matches("[a-zA-Z0-9]*") && change.getControlNewText().length() <= maxFiscalCodeCharacters) {
+                return null;
+            }
+
+            return change;
+        });
+        FiscalCodeField.setTextFormatter(fiscalCodeFormatter);
+
+        UnaryOperator<TextFormatter.Change> filterDiscount = change -> {             // Creazione del Formatter per lo sconto: contiene unicamente numeri ed al massimo 2 cifre
+            String text = change.getText();
+            if (text.matches("[0-9]*") && change.getControlNewText().length() <= maxDiscountCharacters) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> discountFormatter = new TextFormatter<>(filterDiscount);
+        DiscountField.setTextFormatter(discountFormatter);
+
     }
 
     public void addCustomerInfo() {
 
         codeLabel.setText("Dati cliente n°" + displayedCustomer.getCodice_cliente());         // TODO: Modifica deve essere possibile premerlo SOLO se è stata selezionata una riga
         BusinessNameField.setText(displayedCustomer.getRagione_sociale());
-        PivaField.setText(displayedCustomer.getP_IVA());
+        P_IVAField.setText(displayedCustomer.getP_IVA());
         NameField.setText(displayedCustomer.getNome());
         SurnameField.setText(displayedCustomer.getCognome());
         FiscalCodeField.setText(displayedCustomer.getCodice_fiscale());
@@ -71,29 +100,16 @@ public class CustomerViewController implements Initializable {
 
     public void modifyCustomer(ActionEvent event) {
 
-        boolean error = false;
-        int discount = 0;
-
-        try {
-            discount = Integer.parseInt(DiscountField.getText());
-        }
-        catch (NumberFormatException e) {
-            System.err.println("Inserire un valore di sconto valido");
-            error = true;
-        }
-
-        if (!error) {
             displayedCustomer.setRagione_sociale(BusinessNameField.getText());
-            displayedCustomer.setP_IVA(PivaField.getText());
+            displayedCustomer.setP_IVA(P_IVAField.getText());
             displayedCustomer.setNome(NameField.getText());
             displayedCustomer.setCognome(SurnameField.getText());
             displayedCustomer.setCodice_fiscale(FiscalCodeField.getText());
-            displayedCustomer.setSconto(discount);
+            displayedCustomer.setSconto(Integer.parseInt(DiscountField.getText()));
             displayedCustomer.setIndirizzo(AddressField.getText());
             displayedCustomer.setCAP(CapField.getText());
             displayedCustomer.setCivico(CivicNumberField.getText());
             displayedCustomer.setData_inserimento(datePicker.getValue().toString());
-        }
 
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
 
