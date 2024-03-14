@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -64,6 +65,7 @@ public class CustomerManagementSceneController implements Initializable {
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
     private final MenuItem viewCustomerMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteCustomerMenu = new MenuItem("Elimina");
+    private Stage addStage;
     private boolean searchView = false;
 
     private MainMenuController mainMenuController;
@@ -162,10 +164,11 @@ public class CustomerManagementSceneController implements Initializable {
             AddCustomerViewController addCustomerController = loader.getController();
             addCustomerController.setCustomerManagementSceneController(this);
 
-            Stage stage = new Stage();
-            stage.setTitle("Aggiungi cliente");
-            stage.setScene(new Scene(root, 580, 400));
-            stage.show();
+            addStage = new Stage();
+            addStage.setTitle("Aggiungi cliente");
+            addStage.initModality(Modality.APPLICATION_MODAL);
+            addStage.setScene(new Scene(root));
+            addStage.show();
         }
         catch (IOException e) {
             System.err.println(e.getMessage());

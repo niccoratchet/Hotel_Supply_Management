@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -57,6 +58,7 @@ public class SupplierManagementSceneController implements Initializable {
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
     private final MenuItem viewSupplierMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteSupplierMenu = new MenuItem("Elimina");
+    private Stage addStage;
     private SupplierManagement supplierManagement;
     private MainMenuController mainMenuController;
     private final ObservableList<Supplier> supplierRows = FXCollections.observableArrayList();
@@ -126,9 +128,9 @@ public class SupplierManagementSceneController implements Initializable {
 
             try {
                 while (resultSet.next()) {
-                    Supplier supplier = new Supplier(resultSet.getInt(1), resultSet.getString(7),
-                            resultSet.getString(3), resultSet.getString(2), resultSet.getString(4),
-                            resultSet.getString(5),resultSet.getString(6));
+                    Supplier supplier = new Supplier(resultSet.getInt(1), resultSet.getString(2),
+                            resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
+                            resultSet.getString(7),resultSet.getString(6));
                     supplierManagement.getSupplierList().add(supplier);
                 }
                 mainMenuController.getIsNotFirstTimeLoad().set(2, true);
@@ -162,10 +164,11 @@ public class SupplierManagementSceneController implements Initializable {
             AddSupplierViewController addSupplierController = loader.getController();
             addSupplierController.setSupplierManagementSceneController(this);
 
-            Stage stage = new Stage();
-            stage.setTitle("Aggiungi fornitore");
-            stage.setScene(new Scene(root, 580, 400));
-            stage.show();
+            addStage = new Stage();
+            addStage.setTitle("Aggiungi fornitore");
+            addStage.initModality(Modality.APPLICATION_MODAL);
+            addStage.setScene(new Scene(root));
+            addStage.show();
         }
         catch (IOException e) {
             System.err.println(e.getMessage());

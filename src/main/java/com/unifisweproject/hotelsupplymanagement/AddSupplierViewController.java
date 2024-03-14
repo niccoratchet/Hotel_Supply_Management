@@ -8,7 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,27 +23,15 @@ public class AddSupplierViewController implements Initializable {
 
     @FXML
     private DatePicker datePicker;
-    @FXML
-    private TextField businessNameField;
-    @FXML
-    private TextField pivaField;
-    @FXML
-    private TextField addressField;
-    @FXML
-    private TextField civicField;
-    @FXML
-    private TextField capField;
 
     private SupplierManagementSceneController supplierManagementSceneController;
-    private AddContactDetails addContactDetails = null;         // TODO: Implementare collegamento tra le due view in modo da garantire la comunicazione
+    private AddContactDetails addContactDetails = null;
     private AddCompanyDetails addCompanyDetails = null;
 
     private final ArrayList<String> companyDetails = new ArrayList<>();
     private final ArrayList<String> contactDetails = new ArrayList<>();
     private Stage contactDetailsStage;
     private Stage companyDetailsStage;
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -70,8 +58,9 @@ public class AddSupplierViewController implements Initializable {
         Parent contactDetailsRoot = loader.load();
         AddContactDetails addContactDetails = loader.getController();
         this.addContactDetails = addContactDetails;
-        //addContactDetails.setAddCustomerViewController(this);
+        addContactDetails.setAddSupplierViewController(this);
         contactDetailsStage = new Stage();
+        contactDetailsStage.initModality(Modality.APPLICATION_MODAL);
         contactDetailsStage.setTitle("Aggiungi info su indirizzo e recapito");
         contactDetailsStage.setScene(new Scene(contactDetailsRoot));
 
@@ -83,8 +72,9 @@ public class AddSupplierViewController implements Initializable {
         Parent companyDetailsRoot = loader.load();
         AddCompanyDetails addCompanyDetails = loader.getController();
         this.addCompanyDetails = addCompanyDetails;
-        //addCompanyDetails.setAddCustomerViewController(this);
+        addCompanyDetails.setAddSupplierViewController(this);
         companyDetailsStage = new Stage();
+        companyDetailsStage.initModality(Modality.APPLICATION_MODAL);
         companyDetailsStage.setTitle("Aggiungi i dettagli dell'azienda");
         companyDetailsStage.setScene(new Scene(companyDetailsRoot));
 
@@ -95,17 +85,28 @@ public class AddSupplierViewController implements Initializable {
     }
 
     public void createSupplier(ActionEvent event) {
-        Supplier newSupplier = new Supplier(datePicker.getValue().toString(), pivaField.getText(), businessNameField.getText(), addressField.getText(), civicField.getText(), capField.getText());
-        supplierManagementSceneController.addRow(newSupplier);
 
-        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
+        try {
+            verifyEmptyFields();
+            Supplier newSupplier = new Supplier(datePicker.getValue().toString(), companyDetails.get(0), companyDetails.get(1), contactDetails.get(0),
+                    contactDetails.get(1), contactDetails.get(2));
+            addContactDetails.executeQuery();
+            addCompanyDetails.executeQuery();
+            supplierManagementSceneController.addRow(newSupplier);
+            clearCompanyDetails();
+            clearContactDetails();
+            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+
+        }
+        catch (RuntimeException errorWithParameters) {
+            System.err.println("Errore con alcuni parametri: " + errorWithParameters.getMessage());
+        }
 
     }
 
-    public Supplier verifyIfCompanyInfoNull() {             // Controlla se sono state inserite info sull'azienda o meno (nel caso di privati)
-
-        return new Supplier(datePicker.getValue().toString(), companyDetails.get(0), companyDetails.get(1), contactDetails.get(0), contactDetails.get(1), contactDetails.get(2));
-
+    public void verifyEmptyFields() throws RuntimeException {
+        if(datePicker.getValue() == null)
+            throw new RuntimeException("Data mancante");
     }
 
     public void setSupplierManagementSceneController(SupplierManagementSceneController supplierManagementSceneController) {
@@ -139,7 +140,7 @@ public class AddSupplierViewController implements Initializable {
         contactDetails.clear();
     }
 
-    public void clearCompanyDetailsView() {
+    public void clearCompanyDetails() {
         companyDetails.clear();
     }
 }

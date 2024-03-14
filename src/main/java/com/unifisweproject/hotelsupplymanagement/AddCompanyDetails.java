@@ -18,6 +18,7 @@ import java.util.function.UnaryOperator;
 public class AddCompanyDetails implements Initializable {
 
     private AddCustomerViewController addCustomerViewController = null;
+    private AddSupplierViewController addSupplierViewController = null;
     @FXML
     private TextField P_IVAField;
     @FXML
@@ -48,6 +49,8 @@ public class AddCompanyDetails implements Initializable {
                     throw new RuntimeException();
                 if (addCustomerViewController != null)
                     addCustomerViewController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());           // TODO: A proposito di renderlo generale, fare in modo che si possa utilizzare un'unica istruzione con un solo riferimento a controller generico
+                if (addSupplierViewController != null)
+                    addSupplierViewController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
                 ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
             }
             catch (RuntimeException emptyRagioneSociale) {
@@ -104,6 +107,10 @@ public class AddCompanyDetails implements Initializable {
 
     public void setAddCustomerViewController(AddCustomerViewController addCustomerViewController) {
         this.addCustomerViewController = addCustomerViewController;
+    }
+
+    public void setAddSupplierViewController(AddSupplierViewController addSupplierViewController) {
+        this.addSupplierViewController = addSupplierViewController;
     }
 
 }

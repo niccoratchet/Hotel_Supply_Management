@@ -4,30 +4,22 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="tableAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.OrderManagementSceneController">
+<AnchorPane fx:id="tableAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="586.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.OrderManagementSceneController">
     <children>
-        <ScrollPane layoutX="115.0" layoutY="46.0" prefHeight="354.0" prefWidth="486.0">
-            <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="464.0" prefWidth="493.0">
-                    <children>
-                        <TableView fx:id="orderTable" prefHeight="406.0" prefWidth="504.0">
-                            <columns>
-                                <TableColumn fx:id="IDColumn" prefWidth="109.0" text="Codice_ordine" />
-                                <TableColumn fx:id="BFColumn" prefWidth="70.0" text="B/f" />
-                                <TableColumn fx:id="TypeOfPaymentColumn" prefWidth="84.0" text="Tipo_di_pagamento" />
-                                <TableColumn fx:id="DateColumn" prefWidth="75.0" text="Data_ordine" />
-                                <TableColumn fx:id="CustomerIDColumn" prefWidth="75.0" text="Codice_cliente" />
-                            </columns></TableView>
-                    </children>
-                </AnchorPane>
-            </content>
-        </ScrollPane>
-        <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
+            <TableView fx:id="orderTable" layoutX="119.0" layoutY="46.0" prefHeight="344.0" prefWidth="459.0">
+                <columns>
+                    <TableColumn fx:id="IDColumn" prefWidth="141.0" text="Codice_ordine" />
+                    <TableColumn fx:id="BFColumn" prefWidth="38.0" text="B/f" />
+                    <TableColumn fx:id="TypeOfPaymentColumn" prefWidth="74.0" text="Tipo_di_pagamento" />
+                    <TableColumn fx:id="DateColumn" prefWidth="85.0" text="Data_ordine" />
+                    <TableColumn fx:id="CustomerIDColumn" prefWidth="117.0" text="Codice_cliente" />
+                </columns>
+      </TableView>
+        <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="586.0">
             <menus>
                 <Menu mnemonicParsing="false" text="Articoli">
                <items>

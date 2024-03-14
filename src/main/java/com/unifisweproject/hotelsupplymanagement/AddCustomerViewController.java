@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class AddCustomerViewController implements Initializable {
         privateCheckBox.setOnAction(event -> disableCompanyData());
         int maxFiscalCodeCharacters = 16, maxDiscountCharacters = 2;
 
-        UnaryOperator<TextFormatter.Change> filterFiscalCodeFormatter = change -> {             // Creazione del Formatter per lo sconto: contiene unicamente numeri ed al massimo 2 cifre
+        UnaryOperator<TextFormatter.Change> filterFiscalCodeFormatter = change -> {             // Creazione del Formatter per lo sconto: contiene unicamente numeri e al massimo 2 cifre
             String newText = change.getControlNewText().toUpperCase();
             change.setText(newText);
             change.setRange(0, change.getControlText().length());
@@ -63,7 +64,7 @@ public class AddCustomerViewController implements Initializable {
         TextFormatter<String> fiscalCodeFormatter = new TextFormatter<>(filterFiscalCodeFormatter);
         fiscalCodeField.setTextFormatter(fiscalCodeFormatter);
 
-        UnaryOperator<TextFormatter.Change> filterDiscount = change -> {             // Creazione del Formatter per lo sconto: contiene unicamente numeri ed al massimo 2 cifre
+        UnaryOperator<TextFormatter.Change> filterDiscount = change -> {             // Creazione del Formatter per lo sconto: contiene unicamente numeri e al massimo 2 cifre
             String text = change.getText();
             if (text.matches("[0-9]*") && change.getControlNewText().length() <= maxDiscountCharacters) {
                 return change;
@@ -96,6 +97,7 @@ public class AddCustomerViewController implements Initializable {
         this.addContactDetails = addContactDetails;
         addContactDetails.setAddCustomerViewController(this);
         contactDetailsStage = new Stage();
+        contactDetailsStage.initModality(Modality.APPLICATION_MODAL);
         contactDetailsStage.setTitle("Aggiungi info su indirizzo e recapito");
         contactDetailsStage.setScene(new Scene(contactDetailsRoot));
 
@@ -109,6 +111,7 @@ public class AddCustomerViewController implements Initializable {
         this.addCompanyDetails = addCompanyDetails;
         addCompanyDetails.setAddCustomerViewController(this);
         companyDetailsStage = new Stage();
+        companyDetailsStage.initModality(Modality.APPLICATION_MODAL);
         companyDetailsStage.setTitle("Aggiungi i dettagli dell'azienda");
         companyDetailsStage.setScene(new Scene(companyDetailsRoot));
 
@@ -136,7 +139,7 @@ public class AddCustomerViewController implements Initializable {
             addContactDetails.executeQuery();
             addCompanyDetails.executeQuery();
             customerManagementSceneController.addRow(newCustomer);
-            clearCompanyDetailsView();
+            clearCompanyDetails();
             clearContactDetails();
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
         }
@@ -225,7 +228,7 @@ public class AddCustomerViewController implements Initializable {
         contactDetails.clear();
     }
 
-    public void clearCompanyDetailsView() {
+    public void clearCompanyDetails() {
         companyDetails.clear();
     }
 

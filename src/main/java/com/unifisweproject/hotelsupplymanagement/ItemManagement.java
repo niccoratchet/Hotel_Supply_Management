@@ -179,20 +179,6 @@ public class ItemManagement implements Data_Management {
                 i++;
             }
 
-            /*if (isNamePresent) {
-                String nameValue = "%" + item.getNome() + "%";
-                statement.setString(1, nameValue);
-                if (isDescriptionPresent) {
-                    String descriptionValue = "%" + item.getDescrizione() + "%";
-                    statement.setString(2, descriptionValue);
-                }
-            }
-            else if (isDescriptionPresent) {
-                String descriptionValue = "%" + item.getDescrizione() + "%";
-                statement.setString(1, descriptionValue);
-            }
-
-             */
             return getSearchResults(getRows(false, statement));
         }
         catch (SQLException e) {

@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
@@ -34,6 +33,7 @@ public class AddContactDetails implements Initializable {
     @FXML
     private TextField mailField;
     private AddCustomerViewController addCustomerViewController = null;
+    private AddSupplierViewController addSupplierViewController = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -94,6 +94,8 @@ public class AddContactDetails implements Initializable {
             }
             if (addCustomerViewController != null)                                                                                          // Serve per capire quale finestra ha richiamato quella di aggiunta dei dettagli sul recapito
                 addCustomerViewController.setContactDetails(addressField.getText(), CAPField.getText(), civicNumberField.getText());
+            if (addSupplierViewController != null)
+                addSupplierViewController.setContactDetails(addressField.getText(), CAPField.getText(), civicNumberField.getText());
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
         }
         catch (RuntimeException emptyFields) {
@@ -203,6 +205,10 @@ public class AddContactDetails implements Initializable {
 
     public void setAddCustomerViewController(AddCustomerViewController addCustomerViewController) {
         this.addCustomerViewController = addCustomerViewController;
+    }
+
+    public void setAddSupplierViewController(AddSupplierViewController addSupplierViewController) {
+        this.addSupplierViewController = addSupplierViewController;
     }
 
 

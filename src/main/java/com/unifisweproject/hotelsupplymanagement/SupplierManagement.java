@@ -40,8 +40,8 @@ public class SupplierManagement implements Data_Management{
             preparedStatement.setString(2, toBeAdded.getP_IVA());
             preparedStatement.setString(3, toBeAdded.getRagione_sociale());
             preparedStatement.setString(4, toBeAdded.getIndirizzo());
-            preparedStatement.setString(4, toBeAdded.getCAP());
-            preparedStatement.setString(4, toBeAdded.getCivico());
+            preparedStatement.setString(5, toBeAdded.getCAP());
+            preparedStatement.setString(6, toBeAdded.getCivico());
             preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
             nextSupplierCode++;
         }
@@ -54,9 +54,9 @@ public class SupplierManagement implements Data_Management{
     public void modify(Object value) {
 
         Supplier modified = (Supplier) value;
-        String modifyQuery = "UPDATE Fornitore SET " + getDataTypeForQuery("Ragione_sociale", modified.getRagione_sociale(), false) + ", "
-                + getDataTypeForQuery("P_iva", modified.getP_IVA(), false) + ", " + getDataTypeForQuery("Indirizzo", modified.getIndirizzo(), false) + ", "
-                + getDataTypeForQuery("Civico", modified.getCivico(), false) + ", " + getDataTypeForQuery("Cap", modified.getCAP(), false)+ ", "
+        String modifyQuery = "UPDATE Fornitore SET " + getDataTypeForQuery("Ragione_Sociale", modified.getRagione_sociale(), false) + ", "
+                + getDataTypeForQuery("P_IVA", modified.getP_IVA(), false) + ", " + getDataTypeForQuery("Indirizzo", modified.getIndirizzo(), false) + ", "
+                + getDataTypeForQuery("Civico", modified.getCivico(), false) + ", " + getDataTypeForQuery("CAP", modified.getCAP(), false)+ ", "
                 + getDataTypeForQuery("Data_Inserimento", modified.getData_inserimento(), false) +
                 " WHERE Codice_Fornitore = " + modified.getCodice_fornitore();
 
