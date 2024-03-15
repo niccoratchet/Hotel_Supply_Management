@@ -44,6 +44,7 @@ public class SupplierManagement implements Data_Management{
             preparedStatement.setString(6, toBeAdded.getCivico());
             preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
             nextSupplierCode++;
+
         }
         catch (SQLException e) {
             System.out.println("Errore durante l'aggiunta del nuovo Supplier: "+ e.getMessage() +" \n Query utilizzata: " + addQuery);
@@ -64,6 +65,7 @@ public class SupplierManagement implements Data_Management{
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
             statement.setString(1, modified.getRagione_sociale());
             statement.setString(2, modified.getIndirizzo());
+            System.out.println(statement);
             executeQuery(false, statement);
         }
 

@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -137,7 +138,7 @@ public class OrderManagementSceneController implements Initializable{
 
         }
         catch (IOException e) {
-            System.err.println("Errore durante l'apertura del file ItemView.fxml: " + e.getMessage());
+            System.err.println("Errore durante l'apertura del file OrderView.fxml: " + e.getMessage());
         }
 
     }
@@ -178,9 +179,10 @@ public class OrderManagementSceneController implements Initializable{
             Parent root = loader.load();
             AddOrderViewController addOrderController = loader.getController();
             addOrderController.setOrderManagementSceneController(this);
+            addOrderController.setMainMenuController(mainMenuController);
             Stage stage = new Stage();
             stage.setTitle("Aggiungi ordine");
-            stage.setScene(new Scene(root, 10, 400));
+            stage.setScene(new Scene(root));
             stage.show();
         }
         catch (IOException e) {
@@ -199,7 +201,6 @@ public class OrderManagementSceneController implements Initializable{
     }
 
     public void modifyRow(Order toBeModified) {
-        
         orderManagement.modify(toBeModified);
         createConfirmedOrderModify();
         updateTable();

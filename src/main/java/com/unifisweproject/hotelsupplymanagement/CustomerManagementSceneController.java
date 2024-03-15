@@ -328,11 +328,17 @@ public class CustomerManagementSceneController implements Initializable {
 
     public void deleteRow() {
 
-        SelectionModel<Customer> selectionModel = customerTable.getSelectionModel();
-        Customer selectedCustomer = selectionModel.getSelectedItem();
-        customerManagement.getCustomerList().remove(selectedCustomer);                      /////////////////////////////////////////////////////////////////////
-        customerManagement.delete(selectedCustomer.getCodice_cliente());           // TODO: Mettere avviso prima della cancellazione
-        updateTable();
+        if (createConfirmDeleteAlert()) {
+            SelectionModel<Customer> selectionModel = customerTable.getSelectionModel();
+            Customer selectedCustomer = selectionModel.getSelectedItem();
+            customerManagement.getCustomerList().remove(selectedCustomer);                      /////////////////////////////////////////////////////////////////////
+            customerManagement.delete(selectedCustomer.getCodice_cliente());           // TODO: Mettere avviso prima della cancellazione
+
+            if (searchView)
+                results.remove(selectedCustomer);
+
+            updateTable();
+        }
 
     }
 

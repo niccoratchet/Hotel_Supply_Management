@@ -5,7 +5,7 @@ public class Order {
     private int codice_ordine, codice_cliente;
     private boolean bolla;      // bolla = true, fattura = false;
 
-    private String tipo_pagamento, data_ordine;         // TODO: enumerazione tipo pagamento
+    private String tipo_pagamento, data_ordine;
 
     public Order(int codice_cliente, boolean bolla, String tipo_pagamento, String data_ordine) {
 

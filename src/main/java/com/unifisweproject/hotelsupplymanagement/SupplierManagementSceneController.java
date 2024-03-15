@@ -86,13 +86,7 @@ public class SupplierManagementSceneController implements Initializable {
 
         rightClickMenu.getItems().addAll(viewSupplierMenu, viewDeleteSupplierMenu);
 
-        viewSupplierMenu.setOnAction(event -> {
-            try {
-                displaySupplierView(null);
-            } catch (IOException e) {
-                System.out.println("Non è stato possibile visualizzare il supplier selezionato");
-            }
-        });
+        viewSupplierMenu.setOnAction(event -> displaySupplierView(null));
 
         viewDeleteSupplierMenu.setOnAction(event -> deleteRow());
 
@@ -103,11 +97,7 @@ public class SupplierManagementSceneController implements Initializable {
                     long currentTime = System.currentTimeMillis();
                     if (currentTime - lastClickTime < 5000)
                     {
-                        try {
-                            displaySupplierView(null);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        displaySupplierView(null);
                     }
                     lastClickTime = currentTime;
                 }
@@ -160,10 +150,8 @@ public class SupplierManagementSceneController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddSupplierView.fxml"));
             Parent root = loader.load();
-
             AddSupplierViewController addSupplierController = loader.getController();
             addSupplierController.setSupplierManagementSceneController(this);
-
             addStage = new Stage();
             addStage.setTitle("Aggiungi fornitore");
             addStage.initModality(Modality.APPLICATION_MODAL);
@@ -228,19 +216,26 @@ public class SupplierManagementSceneController implements Initializable {
         this.supplierManagement = supplierManagement;
     }
 
-    public void displaySupplierView(ActionEvent ignoredEvent) throws IOException {
+    public void displaySupplierView(ActionEvent ignoredEvent) {
 
         SelectionModel<Supplier> selectionModel = supplierTable.getSelectionModel();
         Supplier selectedSupplier = selectionModel.getSelectedItem();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("SupplierView.fxml"));
-        Parent root = loader.load();
-        SupplierViewController supplierViewController = loader.getController();
-        supplierViewController.setDisplayedSupplier(selectedSupplier);
-        supplierViewController.setSupplierManagementSceneController(this);
-        Stage stage = new Stage();
-        stage.setTitle(selectedSupplier.getRagione_sociale());
-        stage.setScene(new Scene(root, 580, 400));
-        stage.show();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SupplierView.fxml"));
+            Parent root = loader.load();
+            SupplierViewController supplierViewController = loader.getController();
+            supplierViewController.setDisplayedSupplier(selectedSupplier);
+            supplierViewController.setSupplierManagementSceneController(this);
+            Stage stage = new Stage();
+            stage.setTitle(selectedSupplier.getRagione_sociale());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante il caricamento della pagina SupplierView.fxml: " + e.getMessage());
+        }
 
     }
 
@@ -268,11 +263,17 @@ public class SupplierManagementSceneController implements Initializable {
 
     public void deleteRow() {
 
-        SelectionModel<Supplier> selectionModel = supplierTable.getSelectionModel();
-        Supplier selectedSupplier = selectionModel.getSelectedItem();
-        supplierManagement.getSupplierList().remove(selectedSupplier);
-        supplierManagement.delete(selectedSupplier.getCodice_fornitore());           // TODO: Mettere avviso prima della cancellazione
-        updateTable();
+        if (createConfirmDeleteAlert()) {
+            SelectionModel<Supplier> selectionModel = supplierTable.getSelectionModel();
+            Supplier selectedSupplier = selectionModel.getSelectedItem();
+            supplierManagement.getSupplierList().remove(selectedSupplier);
+            supplierManagement.delete(selectedSupplier.getCodice_fornitore());           // TODO: Mettere avviso prima della cancellazione
+
+            if (searchView)
+                results.remove(selectedSupplier);
+
+            updateTable();
+        }
 
     }
 

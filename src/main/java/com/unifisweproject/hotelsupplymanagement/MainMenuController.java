@@ -126,4 +126,8 @@ public class MainMenuController {
         return isNotFirstTimeLoad;
     }
 
+    public ItemManagement getItemManagement() {
+        return itemManagement;
+    }
+
 }

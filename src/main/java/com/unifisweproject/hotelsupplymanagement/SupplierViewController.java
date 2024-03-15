@@ -3,53 +3,85 @@ package com.unifisweproject.hotelsupplymanagement;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class SupplierViewController implements Initializable {
 
-
     @FXML
     private DatePicker datePicker;
-    @FXML
-    private TextField businessNameField;
-    @FXML
-    private TextField pivaField;
-    @FXML
-    private TextField addressField;
-    @FXML
-    private TextField civicField;
-    @FXML
-    private TextField capField;
-    @FXML
-    private Label codeLabel;
+    private Stage companyDetailsStage;
+    private Stage contactDetailsStage;
     private Supplier displayedSupplier;
     private SupplierManagementSceneController supplierManagementSceneController;
+    private ModifyCompanyDetails modifyCompanyDetails;
+    private ModifyContactDetails modifyContactDetails;
+    private final ArrayList<String> companyDetails = new ArrayList<>();
+    private final ArrayList<String> contactDetails = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Platform.runLater(this::addItemInfo);
+
+        Platform.runLater(() -> {
+            addSupplierInfo();
+            try {
+                loadContactDetailsView();
+            }
+            catch (IOException e) {
+                System.err.println("Errore durante l'apertura del file ModifyContactDetails.fxml: " + e.getMessage());
+            }
+            try {
+                loadCompanyDetailsView();
+            }
+            catch (IOException e) {
+                System.err.println("Errore durante l'apertura del file ModifyCompanyDetails.fxml: " + e.getMessage());
+            }
+        });
+
     }
 
-    public void addItemInfo() {
+    public void loadContactDetailsView() throws IOException {
 
-        codeLabel.setText("Dati fornitore n°" + displayedSupplier.getCodice_fornitore());         // TODO: Modifica deve essere possibile premerlo SOLO se è stata selezionata una riga
-        businessNameField.setText(displayedSupplier.getRagione_sociale());
-        pivaField.setText(displayedSupplier.getP_IVA());
-        addressField.setText(displayedSupplier.getIndirizzo());
-        civicField.setText(displayedSupplier.getCivico());
-        capField.setText(displayedSupplier.getCAP());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ModifyContactDetails.fxml"));
+        Parent contactDetailsRoot = loader.load();
+        ModifyContactDetails modifyContactDetails = loader.getController();
+        this.modifyContactDetails = modifyContactDetails;
+        modifyContactDetails.setSupplierViewController(this);
+        contactDetailsStage = new Stage();
+        contactDetailsStage.initModality(Modality.APPLICATION_MODAL);
+        contactDetailsStage.setTitle("Modifica info su indirizzo e recapito");
+        contactDetailsStage.setScene(new Scene(contactDetailsRoot));
+
+    }
+
+    public void loadCompanyDetailsView() throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ModifyCompanyDetails.fxml"));
+        Parent companyDetailsRoot = loader.load();
+        ModifyCompanyDetails modifyCompanyDetails = loader.getController();
+        this.modifyCompanyDetails = modifyCompanyDetails;
+        modifyCompanyDetails.setSupplierViewController(this);
+        companyDetailsStage = new Stage();
+        companyDetailsStage.initModality(Modality.APPLICATION_MODAL);
+        companyDetailsStage.setTitle("Modifica i dettagli dell'azienda");
+        companyDetailsStage.setScene(new Scene(companyDetailsRoot));
+
+    }
+
+    public void addSupplierInfo() {
         datePicker.setValue(LocalDate.parse(displayedSupplier.getData_inserimento()));
-
     }
 
     public void setDisplayedSupplier(Supplier displayedSupplier) {
@@ -58,16 +90,37 @@ public class SupplierViewController implements Initializable {
 
     public void modifySupplier(ActionEvent event) {
 
-        displayedSupplier.setRagione_sociale(businessNameField.getText());
-        displayedSupplier.setP_IVA(pivaField.getText());
-        displayedSupplier.setIndirizzo(addressField.getText());
-        displayedSupplier.setCivico(civicField.getText());
-        displayedSupplier.setCAP(capField.getText());
-        displayedSupplier.setData_inserimento(datePicker.getValue().toString());
-        supplierManagementSceneController.modifyRow(displayedSupplier);
+        try {
+            verifyEmptyFields();
+            modifyCompanyDetails.executeQuery();
+            modifyContactDetails.executeQuery(displayedSupplier.getIndirizzo(), displayedSupplier.getCivico(), displayedSupplier.getCAP());
 
-        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
+            if (!contactDetails.isEmpty()) {
+                displayedSupplier.setIndirizzo(contactDetails.get(0));
+                displayedSupplier.setCivico(contactDetails.get(2));         // NOTA! Qui si inserisce prima il 2 per via di una discrepanza tra l'ordine delle colonne CAP e Civico inverso tra Fornitore e Recapito
+                displayedSupplier.setCAP(contactDetails.get(1));
+            }
+            if (!companyDetails.isEmpty()) {
+                displayedSupplier.setRagione_sociale(companyDetails.get(1));
+                displayedSupplier.setP_IVA(companyDetails.get(0));
+            }
 
+
+
+            displayedSupplier.setData_inserimento(datePicker.getValue().toString());
+            supplierManagementSceneController.modifyRow(displayedSupplier);
+            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
+
+        }
+        catch (RuntimeException errorWithParameters) {
+            System.err.println("Errore con alcuni parametri: "+ errorWithParameters.getMessage());
+        }
+
+    }
+
+    public void verifyEmptyFields() throws RuntimeException {
+        if(datePicker.getValue() == null)
+            throw new RuntimeException("Data mancante");
     }
 
     public void closeSupplierView(ActionEvent event) {
@@ -77,4 +130,32 @@ public class SupplierViewController implements Initializable {
     public void setSupplierManagementSceneController(SupplierManagementSceneController supplierManagementSceneController) {
         this.supplierManagementSceneController = supplierManagementSceneController;
     }
+
+    public void setCompanyDetails(String P_IVA, String Ragione_Sociale) {
+
+        companyDetails.clear();                     // Prima di effettuare la modifica rendo di nuovo vuota la lista di parametri
+        companyDetails.add(P_IVA);
+        companyDetails.add(Ragione_Sociale);
+
+    }
+
+    public void setContactDetails(String address, String CAP, String civicNumber) {
+
+        contactDetails.clear();
+        contactDetails.add(address);
+        contactDetails.add(CAP);
+        contactDetails.add(civicNumber);
+
+    }
+    public Supplier getDisplayedSupplier() {
+        return displayedSupplier;
+    }
+    public void viewModifyCompanyDetails(ActionEvent ignoredEvent) {              // Apre la finestra di aggiunta dati sull'azienda
+        companyDetailsStage.show();
+    }
+
+    public void viewModifyContactDetails(ActionEvent ignoredEvent) {
+        contactDetailsStage.show();
+    }
+
 }
