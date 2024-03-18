@@ -78,7 +78,7 @@ public class SupplierManagement implements Data_Management{
     public ArrayList<Object> search(Object toBeSearched) {
 
         Supplier supplier = (Supplier) toBeSearched;
-        int numberOfParameters = getNumberOfParameters(supplier);
+        int numberOfParameters = getNumberOfParameters(supplier), numQuestionMarks = 0;
         StringBuilder searchQuery = new StringBuilder("SELECT * FROM Fornitore WHERE ");
         boolean isRagioneSocialePresent = false, isIndirizzoPresent = false;
 
@@ -92,6 +92,7 @@ public class SupplierManagement implements Data_Management{
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                         isRagioneSocialePresent = true;
+                        numQuestionMarks++;
                     }
                 }
                 case 1 -> {
@@ -109,6 +110,7 @@ public class SupplierManagement implements Data_Management{
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                         isIndirizzoPresent = true;
+                        numQuestionMarks++;
                     }
                 }
                 case 3 -> {
