@@ -65,7 +65,6 @@ public class SupplierManagement implements Data_Management{
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
             statement.setString(1, modified.getRagione_sociale());
             statement.setString(2, modified.getIndirizzo());
-            System.out.println(statement);
             executeQuery(false, statement);
         }
 
@@ -89,7 +88,7 @@ public class SupplierManagement implements Data_Management{
                 case 0 -> {
                     if(supplier.getRagione_sociale() != null) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Ragione_sociale", supplier.getRagione_sociale(), true));
+                        searchQuery.append(getDataTypeForQuery("Ragione_Sociale", supplier.getRagione_sociale(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                         isRagioneSocialePresent = true;
@@ -98,7 +97,7 @@ public class SupplierManagement implements Data_Management{
                 case 1 -> {
                     if(supplier.getP_IVA() != null) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("P_iva", supplier.getP_IVA(), true));
+                        searchQuery.append(getDataTypeForQuery("P_IVA", supplier.getP_IVA(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
@@ -124,15 +123,15 @@ public class SupplierManagement implements Data_Management{
                 case 4 -> {
                     if(supplier.getCAP() != null) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Cap", supplier.getCAP(), true));
+                        searchQuery.append(getDataTypeForQuery("CAP", supplier.getCAP(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
                 }
                 case 5 -> {
-                    if(supplier.getData_inserimento() != null) {
+                    if(supplier.getCodice_fornitore() != -1) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Data_Inserimento", supplier.getData_inserimento(), true));
+                        searchQuery.append(getDataTypeForQuery("Codice_Fornitore", supplier.getCodice_fornitore(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
@@ -142,11 +141,34 @@ public class SupplierManagement implements Data_Management{
         }
         try {
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(searchQuery.toString());
-
+            i = 0;
+            int parameterIndex = 1;
+            while (i < 2 && numQuestionMarks > 0) {
+                switch (i) {
+                    case 0 -> {
+                        if (isRagioneSocialePresent) {
+                            String ragioneSocialeValue = "%" + supplier.getRagione_sociale() + "%";
+                            statement.setString(parameterIndex, ragioneSocialeValue);
+                            numQuestionMarks--;
+                            parameterIndex++;
+                        }
+                    }
+                    case 1 -> {
+                        if (isIndirizzoPresent) {
+                            String addressValue = "%" + supplier.getIndirizzo() + "%";
+                            statement.setString(parameterIndex, addressValue);
+                            numQuestionMarks--;
+                            parameterIndex++;
+                        }
+                    }
+                }
+                i++;
+            }
+            System.out.println(statement);
             return getSearchResults(getRows(false, statement));
         }
         catch (SQLException e) {
-            System.err.println("Query di ricerca non correttamente formattata");
+            System.err.println("Query di ricerca non correttamente formattata: " + e.getMessage());
             return null;
         }
 
@@ -155,12 +177,11 @@ public class SupplierManagement implements Data_Management{
     public ArrayList<Object> getSearchResults(ResultSet resultSet) {              // dato un oggetto ResultSet (insieme delle righe del risultato di una query) rende un ArrayList di Item che corrispondono alle righe indicate
 
         ArrayList<Object> results = new ArrayList<>();                // conterrà gli Item che corrispondono ai valori trovati dopo la query
-
         try {
             while (resultSet.next()) {
-                for (Supplier nextItem : supplierList) {
-                    if (nextItem.getCodice_fornitore() == resultSet.getInt(1)) {
-                        results.add(nextItem);
+                for (Supplier nextSupplier : supplierList) {
+                    if (nextSupplier.getCodice_fornitore() == resultSet.getInt(1)) {
+                        results.add(nextSupplier);
                     }
                 }
             }
@@ -200,7 +221,7 @@ public class SupplierManagement implements Data_Management{
                         count++;
                 }
                 case 5 -> {
-                    if(forCounting.getData_inserimento() != null)
+                    if(forCounting.getCodice_fornitore() != -1)
                         count++;
                 }
             }

@@ -76,8 +76,6 @@ public class ModifyContactDetails implements Initializable {
             TextFormatter<String> phoneNumberFormatter = new TextFormatter<>(filterPhoneNumber);
             phoneNumberField.setTextFormatter(phoneNumberFormatter);
 
-            System.out.println(supplierViewController.getDisplayedSupplier().getCAP() + " " + supplierViewController.getDisplayedSupplier().getCivico());
-
             setInitialFields(supplierViewController.getDisplayedSupplier().getIndirizzo(), supplierViewController.getDisplayedSupplier().getCivico(), supplierViewController.getDisplayedSupplier().getCAP());
 
         });
@@ -92,19 +90,13 @@ public class ModifyContactDetails implements Initializable {
             statement.setString(1, address);
             statement.setString(2, cap);
             statement.setString(3, civicNumber);
-            System.out.println(statement);
             ResultSet resultset = statement.executeQuery();
-            addressField.setText(resultset.getString(1));
-            civicNumberField.setText(resultset.getString(3));
-            CAPField.setText(resultset.getString(2));
-            locationField.setText(resultset.getString(4));
-            provinceField.setText(resultset.getString(5));
-            phoneNumberField.setText(resultset.getString(6));
-            mailField.setText(resultset.getString(7));
+            updateText(resultset);
         }
         catch (SQLException e){
             System.err.println("Errore durante la query di estrapolazione informazioni su Recapito: " + e.getMessage());
         }
+
     }
 
     private boolean isValidEmail(String email) {                // una volta confermate delle modifiche viene effettuato il controllo sulla mail
@@ -112,6 +104,18 @@ public class ModifyContactDetails implements Initializable {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
         return pattern.matcher(email).matches();
+
+    }
+
+    private void updateText(ResultSet resultSet) throws SQLException {
+
+        addressField.setText(resultSet.getString(1));
+        civicNumberField.setText(resultSet.getString(3));
+        CAPField.setText(resultSet.getString(2));
+        locationField.setText(resultSet.getString(4));
+        provinceField.setText(resultSet.getString(5));
+        phoneNumberField.setText(resultSet.getString(6));
+        mailField.setText(resultSet.getString(7));
 
     }
 

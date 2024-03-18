@@ -105,8 +105,6 @@ public class SupplierViewController implements Initializable {
                 displayedSupplier.setP_IVA(companyDetails.get(0));
             }
 
-
-
             displayedSupplier.setData_inserimento(datePicker.getValue().toString());
             supplierManagementSceneController.modifyRow(displayedSupplier);
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form

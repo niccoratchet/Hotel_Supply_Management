@@ -297,7 +297,7 @@ public class SupplierManagementSceneController implements Initializable {
                 alert.showAndWait();
             });
 
-            backButton.setDisable(false);
+            backButton.setDisable(false);                   // Disattivazione dei bottoni per entrare in modalità ricerca e quindi visualizzare solo i risultati
             backButton.setVisible(true);
             searchButton.setDisable(true);
             searchButton.setVisible(false);
@@ -314,7 +314,7 @@ public class SupplierManagementSceneController implements Initializable {
 
     }
 
-    public void displaySearchItemView(ActionEvent ignoredEvent) {
+    public void displaySearchSupplierView(ActionEvent ignoredEvent) {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchSupplierView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
@@ -323,7 +323,7 @@ public class SupplierManagementSceneController implements Initializable {
             searchSupplierController.setSupplierManagementSceneController(this);
             Stage stage = new Stage();
             stage.setTitle("Ricerca fornitore");
-            stage.setScene(new Scene(root, 580, 400));
+            stage.setScene(new Scene(root));
             stage.show();
         }
         catch(IOException e) {
