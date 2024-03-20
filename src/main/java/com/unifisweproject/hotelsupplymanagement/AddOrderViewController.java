@@ -16,7 +16,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -50,6 +55,9 @@ public class AddOrderViewController implements Initializable {
 
     private OrderManagementSceneController orderManagementSceneController;
     private MainMenuController mainMenuController;
+    private int lastOrderCode;
+    public ItemInOrder itemInOrder = new ItemInOrder();
+    public ArrayList<Integer> newAmount = new ArrayList<Integer>();
 
 
     @Override
@@ -64,10 +72,15 @@ public class AddOrderViewController implements Initializable {
     }
 
     public void createOrder(ActionEvent event) {
-        boolean bolla = BFField.getValue().equals("Bolla");
 
-        Order newSupplier = new Order(Integer.parseInt(customerCodeField.getText()), bolla , typeOfPaymentField.getValue(), datePicker.getValue().toString());
-        orderManagementSceneController.addRow(newSupplier);
+        boolean bolla;
+        bolla = BFField.getValue().equals("Bolla");
+
+        Order newOrder = new Order(Integer.parseInt(customerCodeField.getText()), bolla, typeOfPaymentField.getValue(), datePicker.getValue().toString());
+        orderManagementSceneController.addRow(newOrder);
+
+        updateAmount();
+        updateItemInOrder();
 
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
 
@@ -113,6 +126,60 @@ public class AddOrderViewController implements Initializable {
 
         itemTableView.setItems(itemList);
         itemTableView.getColumns().setAll(itemCodeColumn, itemNameColumn, itemQuantityColumn, itemPriceColumn, itemDescriptionColumn);
+
+    }
+
+    public void updateItemInOrder(){        //Inserisce nel database gli articoli inerenti all'ordine
+        String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Ordine'";
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(getCodeQuery);
+            lastOrderCode = resultSet.getInt(1);
+        }
+        catch(SQLException e) {
+            System.err.println("Errore durante l'estrapolazione dell'ultimo codice ordine");
+        }
+
+        itemInOrder.setCodice_Ordine(lastOrderCode);
+
+        for(int i=0; i<itemInOrder.getNumberOfItems(); i++){
+
+            String addQuery = "INSERT INTO ArticoloInOrdine (Codice_Ordine, Codice_Articolo, Quantita) \n" +       // creazione della query di inserimento
+                    "VALUES (?, ?, ?)";
+
+            try {
+
+                PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(addQuery);
+                preparedStatement.setInt(1, itemInOrder.getCodice_Ordine());
+                preparedStatement.setInt(2, itemInOrder.getCodice_Articolo(i));
+                preparedStatement.setInt(3, itemInOrder.getQuantita(i));
+                preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
+            }
+            catch (SQLException e) {
+                System.out.println("Errore durante l'aggiunta di un item all'order: "+ e.getMessage() +" \n Query utilizzata: " + addQuery);
+            }
+
+        }
+    }
+
+
+    public void updateAmount(){
+        for(int i=0; i<itemInOrder.getNumberOfItems(); i++){
+            String modifyQuery = "UPDATE Articolo SET Quantita = ? WHERE Codice_Articolo = " + itemInOrder.getCodice_Articolo(i);       //Istruzioni per aggiornare la quantita dell'item del DB
+
+            try {
+                PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
+                statement.setInt(1, newAmount.get(i));
+
+                statement.executeUpdate();
+            }
+
+            catch (SQLException e) {
+                System.err.println("Errore di formattazione nella generazione della query di modifica: " + e.getMessage());
+            }
+        }
+
 
     }
 

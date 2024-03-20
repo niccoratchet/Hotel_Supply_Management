@@ -295,10 +295,8 @@ public class ItemManagementSceneController implements Initializable {
             Item selectedItem = selectionModel.getSelectedItem();
             itemManagement.getItemList().remove(selectedItem);
             itemManagement.delete(selectedItem.getCodice_articolo());
-
             if (searchView)
                 results.remove(selectedItem);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
-
             updateTable();
         }
 

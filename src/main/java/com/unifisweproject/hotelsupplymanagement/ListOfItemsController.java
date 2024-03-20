@@ -14,9 +14,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 public class ListOfItemsController implements Initializable {
 
@@ -40,10 +42,8 @@ public class ListOfItemsController implements Initializable {
 
     private MainMenuController mainMenuController;
 
-    Item item = new Item(10, 2, "colabrodo", "in polvere", "2024-03-14"); //articolo di prova       //TODO: Generalizzare con item del database
-
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {        //TODO: aggiungere controllo sulla correttezza del campo quantità
+    public void initialize(URL url, ResourceBundle resourceBundle) {
 
         Platform.runLater(this::createRows);
 
@@ -71,14 +71,24 @@ public class ListOfItemsController implements Initializable {
 
         });
 
-        itemList.add(item);
-
         itemCodeColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_articolo"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("Nome"));
         itemQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("Quantita"));
 
         itemTableView.setItems(itemList);
         itemTableView.getColumns().setAll(itemCodeColumn, itemNameColumn, itemQuantityColumn);
+
+
+        UnaryOperator<TextFormatter.Change> filterInt = change -> {             // Creazione del Formatter per inserimento delle quantità
+            String text = change.getText();
+            if (text.matches("[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+
+        TextFormatter<String> textFormatterInt = new TextFormatter<>(filterInt);
+        quantityField.setTextFormatter(textFormatterInt);
 
     }
 
@@ -94,15 +104,33 @@ public class ListOfItemsController implements Initializable {
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
-    public void addItemToOrder(ActionEvent event){      //TODO: gestire caso quantità negativa
+    public void addItemToOrder(ActionEvent event){
 
         Item selectedItem = itemTableView.getSelectionModel().getSelectedItem();
-        Item itemToAdd = new Item(selectedItem.getCodice_articolo(), Integer.parseInt(quantityField.getText()), selectedItem.getPrezzo(), selectedItem.getNome(), selectedItem.getDescrizione(), selectedItem.getData_inserimento());
+        int newAmount = selectedItem.getQuantita() - Integer.parseInt(quantityField.getText());
+
+        if(newAmount<0) {
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setContentText("Non ci sono abbastanza articoli in magazzino, inserire una quantita' valida");
+            alert.showAndWait();
+
+        } else{
+
+            Item itemToAdd = new Item(selectedItem.getCodice_articolo(), Integer.parseInt(quantityField.getText()), selectedItem.getPrezzo(), selectedItem.getNome(), selectedItem.getDescrizione(), selectedItem.getData_inserimento());
+
+            addOrderViewController.addRow(itemToAdd);
+            addOrderViewController.newAmount.add(newAmount);
+
+            addOrderViewController.itemInOrder.addCodice_Articolo(selectedItem.getCodice_articolo());
+            addOrderViewController.itemInOrder.addQuantita(Integer.parseInt(quantityField.getText()));
 
 
-        //Item itemToAdd = new Item(item.getCodice_articolo(), Integer.parseInt(quantityField.getText()), item.getPrezzo(), item.getNome(), item.getDescrizione(), item.getData_inserimento());
-        addOrderViewController.addRow(itemToAdd);
-        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
+            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
+
+        }
+
     }
 
 
@@ -134,6 +162,5 @@ public class ListOfItemsController implements Initializable {
         itemTableView.setItems(itemList);                       // Inserisce nella tabella tutte le righe degli Item presenti nel DB
 
     }
-
 
 }

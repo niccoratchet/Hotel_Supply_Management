@@ -1,6 +1,7 @@
 package com.unifisweproject.hotelsupplymanagement;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,11 +31,9 @@ public class OrderManagementSceneController implements Initializable{
     @FXML
     private TableColumn<Order, Integer> IDColumn;
     @FXML
-    private TableColumn<Order, Boolean> BFColumn;                           //TODO: gestire la colonna booleana
-    @FXML
     private TableColumn<Order, String> TypeOfPaymentColumn;
     @FXML
-    private TableColumn<Customer, String> DateColumn;
+    private TableColumn<Order, String> DateColumn;
     @FXML
     private TableColumn<Order, Integer> CustomerIDColumn;
     @FXML
@@ -161,10 +160,10 @@ public class OrderManagementSceneController implements Initializable{
                 System.err.println("Errore durante il riempimento della tabella");
             }
         }
+
         orderRows.addAll(orderManagement.getOrderList());
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_ordine"));
-        BFColumn.setCellValueFactory(new PropertyValueFactory<>("bolla"));
         TypeOfPaymentColumn.setCellValueFactory(new PropertyValueFactory<>("Tipo_pagamento"));
         DateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_ordine"));
         CustomerIDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_cliente"));

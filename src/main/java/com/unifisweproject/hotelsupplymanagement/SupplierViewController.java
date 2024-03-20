@@ -80,9 +80,7 @@ public class SupplierViewController implements Initializable {
 
     }
 
-    public void addSupplierInfo() {
-        datePicker.setValue(LocalDate.parse(displayedSupplier.getData_inserimento()));
-    }
+    public void addSupplierInfo() {datePicker.setValue(LocalDate.parse(displayedSupplier.getData_inserimento())); }
 
     public void setDisplayedSupplier(Supplier displayedSupplier) {
         this.displayedSupplier = displayedSupplier;

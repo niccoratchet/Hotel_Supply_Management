@@ -41,6 +41,7 @@ public class SearchSupplierController implements Initializable {
     @FXML
     private Button confirmButton;
     private SupplierManagementSceneController supplierManagementSceneController;
+    private boolean isBadFormatted = false;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -112,7 +113,20 @@ public class SearchSupplierController implements Initializable {
             supplierManagementSceneController.searchRow(toBeSearched);
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
         }
-
+        else if(isBadFormatted){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Errore di formattazione");
+            alert.setContentText("Valore del parametro 'Codice fornitore' non valido. \nRiprovare.");
+            alert.showAndWait();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Parametri assenti");
+            alert.setContentText("Hai spuntato dei parametri ma non hai inserito i valori corrispondenti. \nRiprovare.");
+            alert.showAndWait();
+        }
     }
 
     public Supplier getSearchFilters() {
@@ -123,45 +137,63 @@ public class SearchSupplierController implements Initializable {
             while (i < 6) {
                 switch (i) {
                     case 0 -> {
-                        if (!ragioneSocialeField.isDisabled() && ! "".equals(ragioneSocialeField.getText()))
-                            searchSupplier.setRagione_sociale(ragioneSocialeField.getText());
+                        if (!ragioneSocialeField.isDisabled())
+                            if(! "".equals(ragioneSocialeField.getText()))
+                                searchSupplier.setRagione_sociale(ragioneSocialeField.getText());
+                            else
+                                return null;
                     }
                     case 1 -> {
-                        if (!PIVAField.isDisabled() && ! "".equals(PIVAField.getText()))
-                            searchSupplier.setP_IVA(PIVAField.getText());
+                        if (!PIVAField.isDisabled())
+                            if(! "".equals(PIVAField.getText()))
+                                searchSupplier.setP_IVA(PIVAField.getText());
+                            else
+                                return null;
                     }
                     case 2 -> {
-                        if (!addressField.isDisabled() && ! "".equals(addressField.getText())) {
-                            searchSupplier.setIndirizzo(addressField.getText());
-                        }
+                        if (!addressField.isDisabled())
+                            if(! "".equals(addressField.getText()))
+                                searchSupplier.setIndirizzo(addressField.getText());
+                            else
+                                return null;
                     }
                     case 3 -> {
-                        if (!codeField.isDisabled() && ! "".equals(codeField.getText()))
-                            searchSupplier.setCodice_fornitore(Integer.parseInt(codeField.getText()));
+                        if (!codeField.isDisabled())
+                            if(! "".equals(codeField.getText()))
+                                searchSupplier.setCodice_fornitore(Integer.parseInt(codeField.getText()));
+                            else
+                                return null;
                     }
                     case 4 -> {
-                        if (!civicNumberField.isDisabled() && ! "".equals(civicNumberField.getText()))
-                            searchSupplier.setCivico(civicNumberField.getText());
+                        if (!civicNumberField.isDisabled())
+                            if(! "".equals(civicNumberField.getText()))
+                                searchSupplier.setCivico(civicNumberField.getText());
+                            else
+                                return null;
                     }
                     case 5 -> {
-                        if (!CAPField.isDisabled() && ! "".equals(CAPField.getText()))
-                            searchSupplier.setCAP(CAPField.getText());
+                        if (!CAPField.isDisabled())
+                            if(! "".equals(CAPField.getText()))
+                                searchSupplier.setCAP(CAPField.getText());
+                            else
+                                return null;
                     }
                 }
                 i++;
             }
             return searchSupplier;
-
         }
-
         catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.showAndWait();
+            isBadFormatted = true;
             return null;
         }
 
     }
+
+    public void closeSearchView(ActionEvent event) {                                        // TODO: Metodo uguali tra le diverse aree (possibile generalizzazione)
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+    }
+
 
     public void setSupplierManagementSceneController(SupplierManagementSceneController supplierManagementSceneController) {
         this.supplierManagementSceneController = supplierManagementSceneController;

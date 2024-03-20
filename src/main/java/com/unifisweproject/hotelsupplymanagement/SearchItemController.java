@@ -38,6 +38,7 @@ public class SearchItemController implements Initializable {
     @FXML
     private Button confirmButton;
     private ItemManagementSceneController itemManagementSceneController;
+    private boolean isBadFormatted = false;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -128,7 +129,20 @@ public class SearchItemController implements Initializable {
             itemManagementSceneController.searchRow(toBeSearched);
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
         }
-
+        else if(isBadFormatted){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Errore di formattazione");
+            alert.setContentText("Valore del parametro 'Codice articolo' non valido. \nRiprovare.");
+            alert.showAndWait();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Parametri assenti");
+            alert.setContentText("Hai spuntato dei parametri ma non hai inserito i valori corrispondenti. \nRiprovare.");
+            alert.showAndWait();
+        }
     }
 
     public Item getSearchFilters() {
@@ -141,40 +155,48 @@ public class SearchItemController implements Initializable {
             while (i < 5) {
                 switch (i) {
                     case 0 -> {
-                        if (!nameField.isDisabled() && ! "".equals(nameField.getText()))
-                            searchItem.setNome(nameField.getText());
+                        if (!nameField.isDisabled())
+                            if(! "".equals(nameField.getText()))
+                                searchItem.setNome(nameField.getText());
+                            else
+                                return null;
                     }
                     case 1 -> {
-                        if (!priceField.isDisabled() && ! "".equals(priceField.getText()))
-                            searchItem.setPrezzo(Double.parseDouble(priceField.getText()));
+                        if (!priceField.isDisabled())
+                            if(! "".equals(priceField.getText()))
+                                searchItem.setPrezzo(Double.parseDouble(priceField.getText()));
+                            else
+                                return null;
                     }
                     case 2 -> {
-                        if (!amountField.isDisabled() && ! "".equals(amountField.getText())) {
-                            searchItem.setQuantita(Integer.parseInt(amountField.getText()));
-                        }
+                        if (!amountField.isDisabled())
+                            if(! "".equals(amountField.getText()))
+                                searchItem.setQuantita(Integer.parseInt(amountField.getText()));
+                            else
+                                return null;
                     }
                     case 3 -> {
-                        if (!datePicker.isDisabled() && datePicker.getValue() != null)
-                            searchItem.setData_inserimento(datePicker.getValue().toString());
+                        if (!datePicker.isDisabled())
+                            if(datePicker.getValue() != null)
+                                searchItem.setData_inserimento(datePicker.getValue().toString());
+                            else
+                                return null;
                     }
                     case 4 -> {
-                        if (!descriptionField.isDisabled() && ! "".equals(descriptionField.getText()))
-                            searchItem.setDescrizione(descriptionField.getText());
+                        if (!descriptionField.isDisabled())
+                            if(! "".equals(descriptionField.getText()))
+                                searchItem.setDescrizione(descriptionField.getText());
+                            else
+                                return null;
                     }
                 }
                 i++;
             }
             return searchItem;
-
         }
-
         catch (NumberFormatException e) {
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.setHeaderText("Errore di formattazione");
-            alert.setContentText("Valore del parametro 'Prezzo' non valido. \nRiprovare.");
-            alert.showAndWait();
+            isBadFormatted = true;
             return null;
 
         }

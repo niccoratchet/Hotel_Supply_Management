@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class OrderManagement implements Data_Management {
 
-    private int nextOrderCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
+    private int nextOrderCode;               // Tiene traccia del codice dell'ultimo Ordine nel DB
     private final ArrayList<Order> orderList = new ArrayList<>();
 
     public OrderManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode

@@ -13,10 +13,9 @@
             <TableView fx:id="orderTable" layoutX="119.0" layoutY="46.0" prefHeight="344.0" prefWidth="459.0">
                 <columns>
                     <TableColumn fx:id="IDColumn" prefWidth="141.0" text="Codice_ordine" />
-                    <TableColumn fx:id="BFColumn" prefWidth="38.0" text="B/f" />
                     <TableColumn fx:id="TypeOfPaymentColumn" prefWidth="74.0" text="Tipo_di_pagamento" />
                     <TableColumn fx:id="DateColumn" prefWidth="85.0" text="Data_ordine" />
-                    <TableColumn fx:id="CustomerIDColumn" prefWidth="117.0" text="Codice_cliente" />
+                    <TableColumn fx:id="CustomerIDColumn" prefWidth="117.0" text="Codice_Cliente" />
                 </columns>
       </TableView>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="586.0">

@@ -173,6 +173,7 @@ public class SupplierManagementSceneController implements Initializable {
     public void modifyRow(Supplier toBeModified) {
 
         supplierManagement.modify(toBeModified);
+        createConfirmedSupplierModify();
         updateTable();
 
     }
@@ -248,7 +249,7 @@ public class SupplierManagementSceneController implements Initializable {
 
     }
 
-    public void createConfirmedItemModify() {
+    public void createConfirmedSupplierModify() {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Modifiche applicate");
