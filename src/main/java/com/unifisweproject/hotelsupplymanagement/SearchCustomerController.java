@@ -56,6 +56,7 @@ public class SearchCustomerController implements Initializable {
     private Button confirmButton;
 
     private CustomerManagementSceneController customerManagementSceneController;
+    private boolean isBadFormatted = false;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -149,9 +150,23 @@ public class SearchCustomerController implements Initializable {
     public void scanRows(ActionEvent event) {
 
         Customer toBeSearched = getSearchFilters();
-        if (toBeSearched != null) {
+        if (toBeSearched != null && !isBadFormatted) {
             customerManagementSceneController.searchRow(toBeSearched);
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+        }
+        else if (isBadFormatted) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Errore di formattazione");
+            alert.setContentText("Valore del parametro 'Codice cliente' non valido. \nRiprovare.");
+            alert.showAndWait();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Parametri assenti");
+            alert.setContentText("Hai spuntato dei parametri ma non hai inserito i valori corrispondenti. \nRiprovare.");
+            alert.showAndWait();
         }
 
     }
@@ -161,22 +176,29 @@ public class SearchCustomerController implements Initializable {
         Customer searchCustomer = new Customer(-1, null, null, null, null,
                 null, null, null, null, null);                                          // NOTA: è un oggetto item fittizio utile alla ricerca
         int i = 0;
-
         try {
             while (i < 10) {
                 switch (i) {
                     case 0 -> {
-                        if (!nameField.isDisabled() && ! "".equals(nameField.getText()))
-                            searchCustomer.setNome(nameField.getText());
+                        if (!nameField.isDisabled())
+                            if (! "".equals(nameField.getText()))
+                                searchCustomer.setNome(nameField.getText());
+                            else
+                                return null;
                     }
                     case 1 -> {
-                        if (!discountField.isDisabled() && ! "".equals(discountField.getText()))
-                            searchCustomer.setSconto(Integer.parseInt(discountField.getText()));            // TODO: Verificare se vengono inseriti valori sensati di sconto
+                        if (!discountField.isDisabled())
+                            if(! "".equals(discountField.getText()))
+                                searchCustomer.setSconto(Integer.parseInt(discountField.getText()));            // TODO: Verificare se vengono inseriti valori sensati di sconto
+                            else
+                                return null;
                     }
                     case 2 -> {
-                        if (!surnameField.isDisabled() && ! "".equals(surnameField.getText())) {
-                            searchCustomer.setCognome(surnameField.getText());
-                        }
+                        if (!surnameField.isDisabled())
+                            if(! "".equals(surnameField.getText()))
+                                searchCustomer.setCognome(surnameField.getText());
+                            else
+                                return null;
                     }
                     case 3 -> {
                         if (!datePicker.isDisabled() && datePicker.getValue() != null)
@@ -187,40 +209,47 @@ public class SearchCustomerController implements Initializable {
                             searchCustomer.setCodice_fiscale(fiscalCodeField.getText());
                     }
                     case 5 -> {
-                        if (!PIVAField.isDisabled() && ! "".equals(PIVAField.getText()))
-                            searchCustomer.setCodice_fiscale(PIVAField.getText());
+                        if (!PIVAField.isDisabled())
+                            if(! "".equals(PIVAField.getText()))
+                                searchCustomer.setP_IVA(PIVAField.getText());
+                            else
+                                return null;
                     }
                     case 6 -> {
                         if (!ragioneSocialeField.isDisabled() && ! "".equals(ragioneSocialeField.getText()))
                             searchCustomer.setRagione_sociale(ragioneSocialeField.getText());
                     }
                     case 7 -> {
-                        if (!indirizzoField.isDisabled() && ! "".equals(indirizzoField.getText()))
-                            searchCustomer.setIndirizzo(indirizzoField.getText());
+                        if (!indirizzoField.isDisabled())
+                            if (! "".equals(indirizzoField.getText()))
+                                searchCustomer.setIndirizzo(indirizzoField.getText());
+                            else
+                                return null;
                     }
                     case 8 -> {
-                        if (!CAPField.isDisabled() && ! "".equals(CAPField.getText()))
-                            searchCustomer.setCAP(CAPField.getText());
+                        if (!CAPField.isDisabled())
+                            if(! "".equals(CAPField.getText()))
+                                searchCustomer.setCAP(CAPField.getText());
+                            else
+                                return null;
                     }
                     case 9 -> {
-                        if (!civicNumberField.isDisabled() && ! "".equals(civicNumberField.getText()))
-                            searchCustomer.setCivico(civicNumberField.getText());
+                        if (!civicNumberField.isDisabled())
+                            if (! "".equals(civicNumberField.getText()))
+                                searchCustomer.setCivico(civicNumberField.getText());
+                            else
+                                return null;
                     }
                 }
                 i++;
             }
             return searchCustomer;
-
         }
-
         catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.setHeaderText("Errore di formattazione");
-            alert.setContentText("Valore del parametro 'Prezzo' non valido. \nRiprovare.");
-            alert.showAndWait();
+            isBadFormatted = true;
             return null;
         }
+
     }
 
     public void closeSearchView(ActionEvent event) {                                        // TODO: Metodo uguali tra le diverse aree (possibile generalizzazione)

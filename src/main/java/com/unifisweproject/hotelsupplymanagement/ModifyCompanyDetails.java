@@ -23,6 +23,7 @@ public class ModifyCompanyDetails implements Initializable {
     @FXML
     private TextField ragioneSocialeField;
     private SupplierViewController supplierViewController;
+    private CustomerViewController customerViewController;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -39,9 +40,14 @@ public class ModifyCompanyDetails implements Initializable {
             };
             TextFormatter<String> p_IVAFormatter = new TextFormatter<>(filterP_IVA);
             P_IVAField.setTextFormatter(p_IVAFormatter);
-            setInitialFields(supplierViewController.getDisplayedSupplier().getP_IVA(), supplierViewController.getDisplayedSupplier().getRagione_sociale());
+            if (supplierViewController != null)
+                setInitialFields(supplierViewController.getDisplayedSupplier().getP_IVA(), supplierViewController.getDisplayedSupplier().getRagione_sociale());
+            if (customerViewController != null)
+                setInitialFields(customerViewController.getDisplayedCustomer().getP_IVA(), customerViewController.getDisplayedCustomer().getRagione_sociale());
 
         });
+
+
 
     }
 
@@ -58,6 +64,8 @@ public class ModifyCompanyDetails implements Initializable {
                     throw new RuntimeException();
                 if (supplierViewController != null)
                     supplierViewController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
+                if (customerViewController != null)
+                    customerViewController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
                 ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
             }
             catch (RuntimeException emptyRagioneSociale) {
@@ -96,8 +104,15 @@ public class ModifyCompanyDetails implements Initializable {
             preparedStatement.setString(1, P_IVAField.getText());
             preparedStatement.setString(2, ragioneSocialeField.getText());
 
-            preparedStatement.setString(3, supplierViewController.getDisplayedSupplier().getP_IVA());               // Parte dei parametri "vecchi" e quindi da cambiare
-            preparedStatement.setString(4, supplierViewController.getDisplayedSupplier().getRagione_sociale());
+            if (supplierViewController != null)
+                preparedStatement.setString(3, supplierViewController.getDisplayedSupplier().getP_IVA()); // Parte dei parametri "vecchi" e quindi da cambiare
+            if (customerViewController != null)
+                preparedStatement.setString(3, customerViewController.getDisplayedCustomer().getP_IVA());
+
+            if (supplierViewController != null)
+                preparedStatement.setString(4, supplierViewController.getDisplayedSupplier().getRagione_sociale());
+            if (customerViewController != null)
+                preparedStatement.setString(4, customerViewController.getDisplayedCustomer().getRagione_sociale());
 
             try {
                 preparedStatement.executeUpdate();
@@ -114,6 +129,10 @@ public class ModifyCompanyDetails implements Initializable {
     }
     public void setSupplierViewController(SupplierViewController supplierViewController) {
         this.supplierViewController = supplierViewController;
+    }
+
+    public void setCustomerViewController(CustomerViewController customerViewController) {
+        this.customerViewController = customerViewController;
     }
 
 }

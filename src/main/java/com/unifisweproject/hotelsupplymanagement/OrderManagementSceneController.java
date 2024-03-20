@@ -47,6 +47,7 @@ public class OrderManagementSceneController implements Initializable{
     private Button backButton;
     @FXML
     private Button searchButton;
+    @FXML
     private AnchorPane tableAnchorPane;
     private boolean searchView = false;
     private ArrayList<Order> results = new ArrayList<>();

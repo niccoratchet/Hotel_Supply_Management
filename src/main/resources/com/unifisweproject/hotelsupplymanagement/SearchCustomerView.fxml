@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -20,21 +19,18 @@
     <Label layoutX="36.0" layoutY="158.0" text="Sconto" />
     <Button fx:id="confirmButton" disable="true" layoutX="407.0" layoutY="416.0" mnemonicParsing="false" onAction="#scanRows" prefHeight="25.0" prefWidth="108.0" text="Conferma" />
     <Button layoutX="262.0" layoutY="416.0" mnemonicParsing="false" onAction="#closeSearchView" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
-    <DatePicker fx:id="datePicker" disable="true" layoutX="351.0" layoutY="154.0" prefHeight="25.0" prefWidth="149.0" />
-    <Label layoutX="250.0" layoutY="158.0" text="Data inserimento" />
     <Label fx:id="codeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="35.0" layoutY="32.0" prefHeight="21.0" prefWidth="506.0" text="Ricerca cliente: seleziona i parametri di ricerca">
         <font>
-            <Font name="SimSun" size="19.0" />
+            <Font name="System Bold" size="18.0" />
         </font>
     </Label>
     <CheckBox fx:id="enableNameSearch" layoutX="217.0" layoutY="105.0" mnemonicParsing="false" text="Nome" textFill="TRANSPARENT" />
     <CheckBox fx:id="enableSurnameSearch" layoutX="513.0" layoutY="105.0" mnemonicParsing="false" text="Cognome" textFill="TRANSPARENT" />
     <CheckBox fx:id="enableDiscountSearch" layoutX="165.0" layoutY="158.0" mnemonicParsing="false" text="Sconto" textFill="TRANSPARENT" />
-    <CheckBox fx:id="enableDateSearch" layoutX="515.0" layoutY="158.0" mnemonicParsing="false" text="Data" textFill="TRANSPARENT" />
     <CheckBox fx:id="enableIndirizzoSearch" layoutX="514.0" layoutY="309.0" mnemonicParsing="false" text="Indirizzo" textFill="TRANSPARENT" />
       <TextField fx:id="fiscalCodeField" disable="true" layoutX="130.0" layoutY="206.0" prefHeight="25.0" prefWidth="166.0" />
       <Label layoutX="36.0" layoutY="210.0" text="Codice Fiscale" />
-      <CheckBox fx:id="enableCodeSearch" layoutX="322.0" layoutY="210.0" mnemonicParsing="false" text="Codice Fiscale" textFill="TRANSPARENT" />
+      <CheckBox fx:id="enableFiscalCodeSearch" layoutX="322.0" layoutY="210.0" mnemonicParsing="false" text="Codice Fiscale" textFill="TRANSPARENT" />
       <TextField fx:id="PIVAField" disable="true" layoutX="95.0" layoutY="254.0" prefHeight="25.0" prefWidth="108.0" />
       <Label layoutX="39.0" layoutY="258.0" text="P_IVA" />
       <CheckBox fx:id="enablePIVASearch" layoutX="213.0" layoutY="258.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="22.0" text="P_IVA" textFill="TRANSPARENT" />
@@ -47,5 +43,8 @@
       <TextField fx:id="civicNumberField" disable="true" layoutX="333.0" layoutY="354.0" prefHeight="25.0" prefWidth="66.0" />
       <CheckBox fx:id="enableCivicSearch" layoutX="418.0" layoutY="358.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="31.0" text="Civico" textFill="TRANSPARENT" />
       <CheckBox fx:id="enableRagioneSocialeSearch" layoutX="513.0" layoutY="258.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="22.0" text="Ragione Sociale" textFill="TRANSPARENT" />
+      <TextField fx:id="customerCodeField" disable="true" layoutX="351.0" layoutY="154.0" />
+      <Label layoutX="261.0" layoutY="159.0" text="Codice cliente" />
+      <CheckBox fx:id="enableCustomerCodeSearch" layoutX="513.0" layoutY="159.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="45.0" text="Codice" textFill="TRANSPARENT" />
 </children>
 </AnchorPane>

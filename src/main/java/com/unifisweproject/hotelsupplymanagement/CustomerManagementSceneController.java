@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.CountDownLatch;
 
 public class CustomerManagementSceneController implements Initializable {
 
@@ -65,7 +66,6 @@ public class CustomerManagementSceneController implements Initializable {
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
     private final MenuItem viewCustomerMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteCustomerMenu = new MenuItem("Elimina");
-    private Stage addStage;
     private boolean searchView = false;
 
     private MainMenuController mainMenuController;
@@ -138,6 +138,12 @@ public class CustomerManagementSceneController implements Initializable {
         }
 
         customerRows.addAll(customerManagement.getCustomerList());
+        setCellValueFactory();
+        customerTable.setItems(customerRows);                       // Inserisce nella tabella tutte le righe dei Customer presenti nel DB
+
+    }
+
+    public void setCellValueFactory() {
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_cliente"));
         BusinessNameColumn.setCellValueFactory(new PropertyValueFactory<>("Ragione_sociale"));
@@ -151,8 +157,6 @@ public class CustomerManagementSceneController implements Initializable {
         DiscountColumn.setCellValueFactory(new PropertyValueFactory<>("Sconto"));
         DateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_inserimento"));
 
-        customerTable.setItems(customerRows);                       // Inserisce nella tabella tutte le righe dei Customer presenti nel DB
-
     }
 
     public void displayAddView() {
@@ -160,11 +164,9 @@ public class CustomerManagementSceneController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddCustomerView.fxml"));
             Parent root = loader.load();
-
             AddCustomerViewController addCustomerController = loader.getController();
             addCustomerController.setCustomerManagementSceneController(this);
-
-            addStage = new Stage();
+            Stage addStage = new Stage();
             addStage.setTitle("Aggiungi cliente");
             addStage.initModality(Modality.APPLICATION_MODAL);
             addStage.setScene(new Scene(root));
@@ -188,7 +190,7 @@ public class CustomerManagementSceneController implements Initializable {
     public void modifyRow(Customer toBeModified) {
 
         customerManagement.modify(toBeModified);
-        createConfirmedItemModify();
+        createConfirmedCustomerModify();
         updateTable();
 
     }
@@ -208,10 +210,8 @@ public class CustomerManagementSceneController implements Initializable {
                customerRows.clear();
                customerRows.setAll(customerManagement.getCustomerList());
                customerTable.setItems(customerRows);
-
                addButton.setDisable(false);
                addButton.setVisible(true);
-
                backButton.setVisible(true);
                backButton.setVisible(false);
            }
@@ -241,18 +241,17 @@ public class CustomerManagementSceneController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerView.fxml"));
             Parent root = loader.load();
-
             CustomerViewController customerViewController = loader.getController();
             customerViewController.setDisplayedCustomer(selectedCustomer);
             customerViewController.setCustomerManagementSceneController(this);
-
-            Stage stage = new Stage();
-            stage.setTitle(selectedCustomer.getNome());
-            stage.setScene(new Scene(root, 580, 400));
-            stage.show();
+            Stage viewStage = new Stage();
+            viewStage.setTitle(selectedCustomer.getNome());
+            viewStage.initModality(Modality.APPLICATION_MODAL);
+            viewStage.setScene(new Scene(root));
+            viewStage.show();
         }
         catch (IOException e) {
-            System.err.println("Errore durante l'apertura del file CustomerView.fxml: " + e.getMessage());
+            System.err.println("Errore durante il caricamento della pagina CustomerView.fxml: " + e.getMessage());
         }
 
     }
@@ -262,17 +261,15 @@ public class CustomerManagementSceneController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Rimozione cliente");
         alert.setContentText("Sicuro di procedere con l'eliminazione del cliente dalla banca dati?");
-
         ButtonType buttonTypeYes = new ButtonType("Sì");
         ButtonType buttonTypeNo = new ButtonType("No");
         alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == buttonTypeYes;
 
     }
 
-    public void createConfirmedItemModify() {
+    public void createConfirmedCustomerModify() {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Modifiche applicate");
@@ -281,19 +278,29 @@ public class CustomerManagementSceneController implements Initializable {
 
     }
 
+    public void deleteRow() {
+
+        if (createConfirmDeleteAlert()) {
+            SelectionModel<Customer> selectionModel = customerTable.getSelectionModel();
+            Customer selectedCustomer = selectionModel.getSelectedItem();
+            customerManagement.getCustomerList().remove(selectedCustomer);
+            customerManagement.delete(selectedCustomer.getCodice_cliente());
+            if (searchView)
+                results.remove(selectedCustomer);
+            updateTable();
+        }
+
+    }
+
     public void searchRow(Customer toBeSearched) {
 
         results.clear();
-
         try {
-
             results = HotelSupplyManagementMain.castArrayList(customerManagement.search(toBeSearched));             // effettuo il cast della lista
             int numberOfResults = results.size();
             searchView = true;
             searchResultRows.clear();
-
             Platform.runLater(() -> {
-
                 searchResultRows.setAll(results);
                 customerTable.getItems().clear();
                 customerTable.setItems(searchResultRows);
@@ -302,15 +309,11 @@ public class CustomerManagementSceneController implements Initializable {
                 alert.setTitle("Risultato ricerca");
                 alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
                 alert.showAndWait();
-
             });
-
             backButton.setDisable(false);
             backButton.setVisible(true);
-
             searchButton.setDisable(true);
             searchButton.setVisible(false);
-
             addButton.setDisable(true);
             addButton.setVisible(false);
 
@@ -326,36 +329,21 @@ public class CustomerManagementSceneController implements Initializable {
 
     }
 
-    public void deleteRow() {
-
-        if (createConfirmDeleteAlert()) {
-            SelectionModel<Customer> selectionModel = customerTable.getSelectionModel();
-            Customer selectedCustomer = selectionModel.getSelectedItem();
-            customerManagement.getCustomerList().remove(selectedCustomer);                      /////////////////////////////////////////////////////////////////////
-            customerManagement.delete(selectedCustomer.getCodice_cliente());           // TODO: Mettere avviso prima della cancellazione
-
-            if (searchView)
-                results.remove(selectedCustomer);
-
-            updateTable();
-        }
-
-    }
-
-    public void displaySearchItemView(ActionEvent ignoredEvent) {
+    public void displaySearchCustomerView(ActionEvent ignoredEvent) {
 
         try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchCustomerView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
             Parent root = loader.load();
 
             SearchCustomerController searchCustomerController = loader.getController();
             searchCustomerController.setCustomerManagementSceneController(this);
 
-            Stage stage = new Stage();
-            stage.setTitle("Ricerca cliente");
-            stage.setScene(new Scene(root, 580, 400));
-            stage.show();
+            Stage searchStage = new Stage();
+            searchStage.setTitle("Ricerca cliente");
+            searchStage.initModality(Modality.APPLICATION_MODAL);
+            searchStage.setScene(new Scene(root));
+            searchStage.show();
 
         }
         catch(IOException e) {

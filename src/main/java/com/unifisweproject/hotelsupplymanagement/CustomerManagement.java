@@ -62,10 +62,12 @@ public class CustomerManagement implements Data_Management {
         Customer modified = (Customer) value;
         String modifyQuery = "UPDATE Cliente SET " + getDataTypeForQuery("Data_Inserimento", modified.getData_inserimento(), false) + ", "
                 + getDataTypeForQuery("Sconto", modified.getSconto(), false) + ", " + getDataTypeForQuery("Nome", modified.getNome(), false) + ", "
-                + getDataTypeForQuery("Cognome", modified.getCognome(), false) + ", " + getDataTypeForQuery("Codice_Fiscale", modified.getCodice_fiscale(), false)
-                + getDataTypeForQuery("P_IVA", modified.getP_IVA(), false) + getDataTypeForQuery("Ragione_Sociale", modified.getRagione_sociale(), false)
-                + getDataTypeForQuery("Indirizzo", modified.getIndirizzo(), false) + getDataTypeForQuery("Civico", modified.getCivico(), false)
+                + getDataTypeForQuery("Cognome", modified.getCognome(), false) + ", " + getDataTypeForQuery("Codice_Fiscale", modified.getCodice_fiscale(), false) + ", "
+                + getDataTypeForQuery("P_IVA", modified.getP_IVA(), false) + ", " + getDataTypeForQuery("Ragione_Sociale", modified.getRagione_sociale(), false) + ", "
+                + getDataTypeForQuery("Indirizzo", modified.getIndirizzo(), false) + ", " + getDataTypeForQuery("Civico", modified.getCivico(), false) + ", "
                 + getDataTypeForQuery("CAP", modified.getCAP(), false) + " WHERE Codice_Cliente = " + modified.getCodice_cliente();
+
+        System.out.println(modifyQuery);
 
         try {
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
@@ -76,7 +78,7 @@ public class CustomerManagement implements Data_Management {
             executeQuery(false, statement);
         }
         catch (SQLException e) {
-            System.err.println("Errore di formattazione nella generazione della query di modifica: " + e.getMessage());
+            System.err.println("Errore di formattazione nella generazione della query di modifica del cliente: " + e.getMessage());
         }
 
     }
@@ -92,9 +94,9 @@ public class CustomerManagement implements Data_Management {
         while (i < 10 && numberOfParameters > 0) {
             switch (i) {
                 case 0 -> {
-                    if(customer.getData_inserimento() != null) {
+                    if(customer.getCodice_cliente() != -1) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Data_Inserimento", customer.getData_inserimento(), true));
+                        searchQuery.append(getDataTypeForQuery("Codice_Cliente", customer.getCodice_cliente(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
@@ -120,23 +122,21 @@ public class CustomerManagement implements Data_Management {
                 case 3 -> {
                     if(customer.getCognome() != null) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Cognome ", customer.getCognome(), true));
+                        searchQuery.append(getDataTypeForQuery("Cognome", customer.getCognome(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                         isSurnamePresent = true;
                         numQuestionMarks++;
                     }
                 }
-
                 case 4 -> {
                     if(customer.getCodice_fiscale() != null) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Descrizione", customer.getCodice_fiscale(), true));
+                        searchQuery.append(getDataTypeForQuery("Codice_Fiscale", customer.getCodice_fiscale(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
                 }
-
                 case 5 -> {
                     if(customer.getP_IVA() != null) {
                         numberOfParameters--;
@@ -145,7 +145,6 @@ public class CustomerManagement implements Data_Management {
                             searchQuery.append(" AND ");
                     }
                 }
-
                 case 6 -> {
                     if(customer.getRagione_sociale() != null) {
                         numberOfParameters--;
@@ -156,7 +155,6 @@ public class CustomerManagement implements Data_Management {
                         numQuestionMarks++;
                     }
                 }
-
                 case 7 -> {
                     if(customer.getIndirizzo() != null) {
                         numberOfParameters--;
@@ -167,7 +165,6 @@ public class CustomerManagement implements Data_Management {
                         numQuestionMarks++;
                     }
                 }
-
                 case 8 -> {
                     if(customer.getCivico() != null) {
                         numberOfParameters--;
@@ -184,14 +181,11 @@ public class CustomerManagement implements Data_Management {
                             searchQuery.append(" AND ");
                     }
                 }
-
             }
             i++;
         }
         try {
-
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(searchQuery.toString());
-
             i = 0;
             int parameterIndex = 1;
             while (i < 4 && numQuestionMarks > 0) {
@@ -235,7 +229,7 @@ public class CustomerManagement implements Data_Management {
             return getSearchResults(getRows(false, statement));
         }
         catch (SQLException e) {
-            System.err.println("Query di ricerca non correttamente formattata");
+            System.err.println("Query di ricerca del cliente non correttamente formattata: " + e.getMessage());
             return null;
         }
 
@@ -269,7 +263,7 @@ public class CustomerManagement implements Data_Management {
 
             switch (i) {
                 case 0 -> {
-                    if (forCounting.getData_inserimento() != null)
+                    if (forCounting.getCodice_cliente() != -1)
                         count++;
                 }
                 case 1 -> {

@@ -36,6 +36,7 @@ public class ModifyContactDetails implements Initializable {
     private TextField mailField;
 
     private SupplierViewController supplierViewController;
+    private CustomerViewController customerViewController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -75,8 +76,10 @@ public class ModifyContactDetails implements Initializable {
             };
             TextFormatter<String> phoneNumberFormatter = new TextFormatter<>(filterPhoneNumber);
             phoneNumberField.setTextFormatter(phoneNumberFormatter);
-
-            setInitialFields(supplierViewController.getDisplayedSupplier().getIndirizzo(), supplierViewController.getDisplayedSupplier().getCivico(), supplierViewController.getDisplayedSupplier().getCAP());
+            if (supplierViewController != null)
+                setInitialFields(supplierViewController.getDisplayedSupplier().getIndirizzo(), supplierViewController.getDisplayedSupplier().getCivico(), supplierViewController.getDisplayedSupplier().getCAP());
+            if (customerViewController != null)
+                setInitialFields(customerViewController.getDisplayedCustomer().getIndirizzo(), customerViewController.getDisplayedCustomer().getCivico(), customerViewController.getDisplayedCustomer().getCAP());
 
         });
 
@@ -129,7 +132,10 @@ public class ModifyContactDetails implements Initializable {
             }
             if (supplierViewController != null)                                                                                          // Serve per capire quale finestra ha richiamato quella di aggiunta dei dettagli sul recapito
                 supplierViewController.setContactDetails(addressField.getText(), CAPField.getText(), civicNumberField.getText());
+            if (customerViewController != null)
+                customerViewController.setContactDetails(addressField.getText(), CAPField.getText(), civicNumberField.getText());
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+
         }
         catch (RuntimeException emptyFields) {
             generateAlert(emptyFields.getMessage());
@@ -180,7 +186,7 @@ public class ModifyContactDetails implements Initializable {
             }
         }
         catch (SQLException e) {
-            System.err.println("Errore durante la generazione della query di inserimento in Recapito: " + e.getMessage());
+            System.err.println("Errore durante la generazione della query di modifica in Recapito: " + e.getMessage());
         }
 
     }
@@ -243,6 +249,10 @@ public class ModifyContactDetails implements Initializable {
 
     public void setSupplierViewController(SupplierViewController supplierViewController) {
         this.supplierViewController = supplierViewController;
+    }
+
+    public void setCustomerViewController(CustomerViewController customerViewController) {
+        this.customerViewController = customerViewController;
     }
 
 }

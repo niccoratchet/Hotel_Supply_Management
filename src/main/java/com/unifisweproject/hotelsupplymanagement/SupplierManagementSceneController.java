@@ -54,7 +54,6 @@ public class SupplierManagementSceneController implements Initializable {
     private Button addButton;
     @FXML
     private AnchorPane tableAnchorPane;
-
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
     private final MenuItem viewSupplierMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteSupplierMenu = new MenuItem("Elimina");
@@ -62,9 +61,7 @@ public class SupplierManagementSceneController implements Initializable {
     private SupplierManagement supplierManagement;
     private MainMenuController mainMenuController;
     private final ObservableList<Supplier> supplierRows = FXCollections.observableArrayList();
-
     private final ObservableList<Supplier> searchResultRows = FXCollections.observableArrayList();
-
     private boolean searchView = false;
     private ArrayList<Supplier> results = new ArrayList<>();
     private long lastClickTime = 0;
@@ -85,9 +82,7 @@ public class SupplierManagementSceneController implements Initializable {
         });
 
         rightClickMenu.getItems().addAll(viewSupplierMenu, viewDeleteSupplierMenu);
-
         viewSupplierMenu.setOnAction(event -> displaySupplierView(null));
-
         viewDeleteSupplierMenu.setOnAction(event -> deleteRow());
 
         supplierTable.setOnMouseClicked(event -> {
@@ -109,13 +104,13 @@ public class SupplierManagementSceneController implements Initializable {
                     rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
             }
         });
+
     }
 
     public void createRows()  {
 
         if(!mainMenuController.getIsNotFirstTimeLoad().get(2)) {
             ResultSet resultSet = supplierManagement.getRows(true, null);
-
             try {
                 while (resultSet.next()) {
                     Supplier supplier = new Supplier(resultSet.getInt(1), resultSet.getString(2),
@@ -125,13 +120,17 @@ public class SupplierManagementSceneController implements Initializable {
                 }
                 mainMenuController.getIsNotFirstTimeLoad().set(2, true);
             }
-
             catch (SQLException e) {
                 System.err.println("Errore durante il riempimento della tabella");
             }
         }
-
         supplierRows.addAll(supplierManagement.getSupplierList());
+        setCellValueFactory();
+        supplierTable.setItems(supplierRows);                       // Inserisce nella tabella tutte le righe degli Item presenti nel DB
+
+    }
+
+    public void setCellValueFactory() {
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_fornitore"));
         BusinessNameColumn.setCellValueFactory(new PropertyValueFactory<>("Ragione_sociale"));
@@ -140,8 +139,6 @@ public class SupplierManagementSceneController implements Initializable {
         CivicColumn.setCellValueFactory(new PropertyValueFactory<>("Civico"));
         CapColumn.setCellValueFactory(new PropertyValueFactory<>("CAP"));
         DateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_inserimento"));
-
-        supplierTable.setItems(supplierRows);                       // Inserisce nella tabella tutte le righe degli Item presenti nel DB
 
     }
 
@@ -174,8 +171,10 @@ public class SupplierManagementSceneController implements Initializable {
     }
 
     public void modifyRow(Supplier toBeModified) {
+
         supplierManagement.modify(toBeModified);
         updateTable();
+
     }
 
     public void updateTable() {
@@ -192,10 +191,8 @@ public class SupplierManagementSceneController implements Initializable {
                 supplierRows.clear();
                 supplierRows.setAll(supplierManagement.getSupplierList());
                 supplierTable.setItems(supplierRows);
-
                 addButton.setDisable(false);                // Riattivo bottone di aggiunta
                 addButton.setVisible(true);
-
                 backButton.setDisable(true);                // Disattivo bottone "indietro" quando ho terminato una precedente ricerca
                 backButton.setVisible(false);
             }
@@ -220,7 +217,6 @@ public class SupplierManagementSceneController implements Initializable {
 
         SelectionModel<Supplier> selectionModel = supplierTable.getSelectionModel();
         Supplier selectedSupplier = selectionModel.getSelectedItem();
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SupplierView.fxml"));
             Parent root = loader.load();
@@ -267,11 +263,9 @@ public class SupplierManagementSceneController implements Initializable {
             SelectionModel<Supplier> selectionModel = supplierTable.getSelectionModel();
             Supplier selectedSupplier = selectionModel.getSelectedItem();
             supplierManagement.getSupplierList().remove(selectedSupplier);
-            supplierManagement.delete(selectedSupplier.getCodice_fornitore());           // TODO: Mettere avviso prima della cancellazione
-
+            supplierManagement.delete(selectedSupplier.getCodice_fornitore());
             if (searchView)
                 results.remove(selectedSupplier);
-
             updateTable();
         }
 
@@ -285,7 +279,6 @@ public class SupplierManagementSceneController implements Initializable {
             int numberOfResults = results.size();
             searchView = true;
             searchResultRows.clear();
-
             Platform.runLater(() -> {
                 searchResultRows.setAll(results);
                 supplierTable.getItems().clear();
@@ -296,14 +289,12 @@ public class SupplierManagementSceneController implements Initializable {
                 alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
                 alert.showAndWait();
             });
-
             backButton.setDisable(false);                   // Disattivazione dei bottoni per entrare in modalità ricerca e quindi visualizzare solo i risultati
             backButton.setVisible(true);
             searchButton.setDisable(true);
             searchButton.setVisible(false);
             addButton.setDisable(true);
             addButton.setVisible(false);
-
         }
         catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
             Alert alert = new Alert(Alert.AlertType.ERROR);
