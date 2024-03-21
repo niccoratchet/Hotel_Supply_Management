@@ -180,10 +180,11 @@ public class OrderManagementSceneController implements Initializable{
             AddOrderViewController addOrderController = loader.getController();
             addOrderController.setOrderManagementSceneController(this);
             addOrderController.setMainMenuController(mainMenuController);
-            Stage stage = new Stage();
-            stage.setTitle("Aggiungi ordine");
-            stage.setScene(new Scene(root));
-            stage.show();
+            Stage addStage = new Stage();
+            addStage.initModality(Modality.APPLICATION_MODAL);
+            addStage.setTitle("Aggiungi ordine");
+            addStage.setScene(new Scene(root));
+            addStage.show();
         }
         catch (IOException e) {
             System.err.println(e.getMessage());

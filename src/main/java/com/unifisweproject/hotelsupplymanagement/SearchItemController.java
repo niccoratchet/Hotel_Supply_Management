@@ -18,6 +18,8 @@ public class SearchItemController implements Initializable {
     @FXML
     private TextField nameField;
     @FXML
+    private TextField codeField;
+    @FXML
     private TextField amountField;
     @FXML
     private TextField priceField;
@@ -27,6 +29,8 @@ public class SearchItemController implements Initializable {
     private TextField descriptionField;
     @FXML
     private CheckBox enableNameSearch;
+    @FXML
+    private CheckBox enableCodeSearch;
     @FXML
     private CheckBox enablePriceSearch;
     @FXML
@@ -44,36 +48,42 @@ public class SearchItemController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         Platform.runLater(() -> {
-
-            enableNameSearch.setOnAction(event -> handleCheckBoxAction(enableNameSearch));
-            enablePriceSearch.setOnAction(event -> handleCheckBoxAction(enablePriceSearch));
-            enableAmountSearch.setOnAction(event -> handleCheckBoxAction(enableAmountSearch));
-            enableDateSearch.setOnAction(event -> handleCheckBoxAction(enableDateSearch));
-            enableDescriptionSearch.setOnAction(event -> handleCheckBoxAction(enableDescriptionSearch));
-
-            UnaryOperator<TextFormatter.Change> filterDouble = change -> {              // Creazione del Formatter per inserimento del prezzo
-                String text = change.getText();
-                if (text.matches("[0-9]*\\.?[0-9]*")) {
-                    return change;
-                }
-                return null;
-            };
-
-            UnaryOperator<TextFormatter.Change> filterInt = change -> {             // Creazione del Formatter per inserimento delle quantità
-                String text = change.getText();
-                if (text.matches("[0-9]*")) {
-                    return change;
-                }
-                return null;
-            };
-
-            TextFormatter<String> textFormatterDouble = new TextFormatter<>(filterDouble);
-            priceField.setTextFormatter(textFormatterDouble);
-
-            TextFormatter<String> textFormatterInt = new TextFormatter<>(filterInt);
-            amountField.setTextFormatter(textFormatterInt);
-
+            setOnActionCheckBox();
+            setFormatters();
         });
+
+    }
+    public void setFormatters() {
+
+        UnaryOperator<TextFormatter.Change> filterDouble = change -> {              // Creazione del Formatter per inserimento del prezzo
+            String text = change.getText();
+            if (text.matches("[0-9]*\\.?[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+        UnaryOperator<TextFormatter.Change> filterInt = change -> {             // Creazione del Formatter per inserimento delle quantità
+            String text = change.getText();
+            if (text.matches("[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> textFormatterDouble = new TextFormatter<>(filterDouble);
+        priceField.setTextFormatter(textFormatterDouble);
+        TextFormatter<String> textFormatterInt = new TextFormatter<>(filterInt);
+        amountField.setTextFormatter(textFormatterInt);
+
+    }
+
+    public void setOnActionCheckBox() {
+
+        enableNameSearch.setOnAction(event -> handleCheckBoxAction(enableNameSearch));
+        enableCodeSearch.setOnAction(event -> handleCheckBoxAction(enableCodeSearch));
+        enablePriceSearch.setOnAction(event -> handleCheckBoxAction(enablePriceSearch));
+        enableAmountSearch.setOnAction(event -> handleCheckBoxAction(enableAmountSearch));
+        enableDateSearch.setOnAction(event -> handleCheckBoxAction(enableDateSearch));
+        enableDescriptionSearch.setOnAction(event -> handleCheckBoxAction(enableDescriptionSearch));
 
     }
 
@@ -113,18 +123,22 @@ public class SearchItemController implements Initializable {
                 descriptionField.setDisable(hasToBeEnabled);
                 descriptionField.setText("");
             }
+            case "Codice" -> {
+                codeField.setDisable(hasToBeEnabled);
+                codeField.setText("");
+            }
         }
 
     }
 
     public void enableConfirmButton() {
-        confirmButton.setDisable(nameField.isDisabled() && priceField.isDisabled() && amountField.isDisabled() && datePicker.isDisabled() && descriptionField.isDisabled());
+        confirmButton.setDisable(nameField.isDisabled() && priceField.isDisabled() && amountField.isDisabled()
+                && datePicker.isDisabled() && descriptionField.isDisabled() && codeField.isDisabled());
     }
 
     public void scanRows(ActionEvent event) {
 
         Item toBeSearched = getSearchFilters();
-
         if (toBeSearched != null) {
             itemManagementSceneController.searchRow(toBeSearched);
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
@@ -148,11 +162,9 @@ public class SearchItemController implements Initializable {
     public Item getSearchFilters() {
 
         Item searchItem = new Item(-1, -1, null, null, null);   // NOTA: è un oggetto item fittizio utile alla ricerca
-
         int i = 0;
-
         try {
-            while (i < 5) {
+            while (i < 6) {
                 switch (i) {
                     case 0 -> {
                         if (!nameField.isDisabled())
@@ -189,16 +201,21 @@ public class SearchItemController implements Initializable {
                             else
                                 return null;
                     }
+                    case 5 -> {
+                        if(!codeField.isDisabled())
+                            if(! "".equals(codeField.getText()))
+                                searchItem.setCodice_articolo(Integer.parseInt(codeField.getText()));
+                            else
+                                return null;
+                    }
                 }
                 i++;
             }
             return searchItem;
         }
         catch (NumberFormatException e) {
-
             isBadFormatted = true;
             return null;
-
         }
 
     }

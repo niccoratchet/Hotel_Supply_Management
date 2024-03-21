@@ -23,7 +23,7 @@
         <Label layoutX="300.0" layoutY="157.0" text="Data" />
         <Label fx:id="codeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="35.0" layoutY="32.0" prefHeight="17.0" prefWidth="499.0">
             <font>
-                <Font name="SimSun" size="19.0" />
+                <Font name="System Bold" size="18.0" />
             </font>
         </Label>
     </children>

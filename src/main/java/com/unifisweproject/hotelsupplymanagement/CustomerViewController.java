@@ -79,16 +79,13 @@ public class CustomerViewController implements Initializable {
     public void setFormatters() {
 
         int maxFiscalCodeCharacters = 16, maxDiscountCharacters = 2;
-
         TextFormatter<String> fiscalCodeFormatter = new TextFormatter<>(change -> {         // Formatter per il codice fiscale per impedire inserimento caratteri speciali e una lunghezza maggiore di 16 caratteri
             if (change.isDeleted()) {
                 return change;
             }
-
             if (!change.getControlNewText().matches("[a-zA-Z0-9]*") && change.getControlNewText().length() <= maxFiscalCodeCharacters) {
                 return null;
             }
-
             return change;
         });
         fiscalCodeField.setTextFormatter(fiscalCodeFormatter);
@@ -178,9 +175,7 @@ public class CustomerViewController implements Initializable {
             displayedCustomer.setCodice_fiscale(fiscalCodeField.getText());
             displayedCustomer.setSconto(Integer.parseInt(discountField.getText()));
             displayedCustomer.setData_inserimento(datePicker.getValue().toString());
-
             customerManagementSceneController.modifyRow(displayedCustomer);
-
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
         }
         catch (RuntimeException emptyFields) {
@@ -194,7 +189,7 @@ public class CustomerViewController implements Initializable {
 
     }
 
-    public void verifyEmptyFields() {
+    public void verifyEmptyFields() {                   // TODO: Riportare questa implementazione anche da altre parti del codice
         if ("".equals(nameField.getText()) || "".equals(surnameField.getText()) || "".equals(fiscalCodeField.getText()) || "".equals(discountField.getText()) || datePicker.getValue() == null) {
             throw new RuntimeException("Campi vuoti");
         }

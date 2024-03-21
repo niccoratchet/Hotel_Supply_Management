@@ -76,7 +76,6 @@ public class ItemManagement implements Data_Management {
     public ArrayList<Object> getSearchResults(ResultSet resultSet) {              // dato un oggetto ResultSet (insieme delle righe del risultato di una query) rende un ArrayList di Item che corrispondono alle righe indicate
 
         ArrayList<Object> results = new ArrayList<>();                // conterrà gli Item che corrispondono ai valori trovati dopo la query
-
         try {
             while (resultSet.next()) {
                 for (Item nextItem : itemList) {
@@ -102,7 +101,7 @@ public class ItemManagement implements Data_Management {
         StringBuilder searchQuery = new StringBuilder("SELECT * FROM Articolo WHERE ");
         boolean isNamePresent = false, isDescriptionPresent = false;
         int i = 0;
-        while (i < 5 && numberOfParameters > 0) {
+        while (i < 6 && numberOfParameters > 0) {
             switch (i) {
                 case 0 -> {
                     if(item.getNome() != null) {
@@ -138,7 +137,6 @@ public class ItemManagement implements Data_Management {
                             searchQuery.append(" AND ");
                     }
                 }
-
                 case 4 -> {
                     if(item.getDescrizione() != null) {
                         numberOfParameters--;
@@ -149,12 +147,19 @@ public class ItemManagement implements Data_Management {
                         numQuestionMarks++;
                     }
                 }
+                case 5 -> {
+                    if(item.getCodice_articolo() != -1) {
+                        numberOfParameters--;
+                        searchQuery.append(getDataTypeForQuery("Codice_Articolo", item.getCodice_articolo(), true));
+                        if (numberOfParameters != 0)
+                            searchQuery.append(" AND ");
+                    }
+                }
             }
             i++;
         }
         try {
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(searchQuery.toString());
-
             i = 0;
             int parameterIndex = 1;
             while (i < 2 && numQuestionMarks > 0) {
@@ -178,7 +183,6 @@ public class ItemManagement implements Data_Management {
                 }
                 i++;
             }
-
             return getSearchResults(getRows(false, statement));
         }
         catch (SQLException e) {
@@ -191,8 +195,7 @@ public class ItemManagement implements Data_Management {
     public int getNumberOfParameters(Item forCounting) {
 
         int i = 0, count = 0;
-        while (i < 5) {
-
+        while (i < 6) {
             switch (i) {
                 case 0 -> {
                     if (forCounting.getNome() != null)
@@ -214,10 +217,13 @@ public class ItemManagement implements Data_Management {
                     if(forCounting.getDescrizione() != null)
                         count++;
                 }
+                case 5 -> {
+                    if(forCounting.getCodice_articolo() != -1)
+                        count++;
+                }
             }
             i++;
         }
-
         return count;
 
     }
@@ -275,7 +281,6 @@ public class ItemManagement implements Data_Management {
             else
                 statement.executeUpdate();
         }
-
         catch (SQLException e) {
             System.err.println(e.getMessage());
         }

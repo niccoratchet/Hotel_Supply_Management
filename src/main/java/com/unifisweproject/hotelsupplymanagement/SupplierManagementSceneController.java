@@ -306,17 +306,18 @@ public class SupplierManagementSceneController implements Initializable {
 
     }
 
-    public void displaySearchSupplierView(ActionEvent ignoredEvent) {
+    public void displaySearchView(ActionEvent ignoredEvent) {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchSupplierView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
             Parent root = loader.load();
             SearchSupplierController searchSupplierController = loader.getController();
             searchSupplierController.setSupplierManagementSceneController(this);
-            Stage stage = new Stage();
-            stage.setTitle("Ricerca fornitore");
-            stage.setScene(new Scene(root));
-            stage.show();
+            Stage searchStage = new Stage();
+            searchStage.initModality(Modality.APPLICATION_MODAL);
+            searchStage.setTitle("Ricerca fornitore");
+            searchStage.setScene(new Scene(root));
+            searchStage.show();
         }
         catch(IOException e) {
             System.out.println("Errore durante il caricamento di SearchSupplierView: " + e);

@@ -23,7 +23,7 @@
       <Label layoutX="306.0" layoutY="158.0" text="Data" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="35.0" layoutY="32.0" prefHeight="17.0" prefWidth="536.0" text="Inserisci i dati del prodotto">
          <font>
-            <Font name="SimSun" size="19.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
       </Label>
       <Label layoutX="41.0" layoutY="338.0" prefHeight="17.0" prefWidth="168.0" text="* : dati obbligatori">

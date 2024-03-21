@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -159,18 +160,15 @@ public class ItemManagementSceneController implements Initializable {
     public void displayAddView() {
 
         try {
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddItemView.fxml"));
             Parent root = loader.load();
-
             AddItemViewController addItemController = loader.getController();
             addItemController.setItemManagementSceneController(this);
-
-            Stage stage = new Stage();
-            stage.setTitle("Aggiungi prodotto");
-            stage.setScene(new Scene(root, 580, 400));
-            stage.show();
-
+            Stage addStage = new Stage();
+            addStage.initModality(Modality.APPLICATION_MODAL);
+            addStage.setTitle("Aggiungi prodotto");
+            addStage.setScene(new Scene(root));
+            addStage.show();
         }
         catch (IOException e) {
             System.err.println(e.getMessage());
@@ -243,19 +241,17 @@ public class ItemManagementSceneController implements Initializable {
 
         SelectionModel<Item> selectionModel = itemTable.getSelectionModel();
         Item selectedItem = selectionModel.getSelectedItem();
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemView.fxml"));
             Parent root = loader.load();
             ItemViewController itemViewController = loader.getController();
             itemViewController.setDisplayedItem(selectedItem);
             itemViewController.setItemManagementSceneController(this);
-
-            Stage stage = new Stage();
-            stage.setTitle(selectedItem.getNome());
-            stage.setScene(new Scene(root, 580, 400));
-            stage.show();
-
+            Stage displayStage = new Stage();
+            displayStage.initModality(Modality.APPLICATION_MODAL);
+            displayStage.setTitle(selectedItem.getNome());
+            displayStage.setScene(new Scene(root));
+            displayStage.show();
         }
         catch (IOException e) {
             System.err.println("Errore durante l'apertura del file ItemView.fxml: " + e.getMessage());
@@ -305,16 +301,12 @@ public class ItemManagementSceneController implements Initializable {
     public void searchRow(Item toBeSearched) {
 
         results.clear();
-
         try {
-
             results = HotelSupplyManagementMain.castArrayList(itemManagement.search(toBeSearched));             // effettuo il cast della lista
             int numberOfResults = results.size();
             searchView = true;
             searchResultRows.clear();
-
             Platform.runLater(() -> {
-
                 searchResultRows.setAll(results);
                 itemTable.getItems().clear();
                 itemTable.setItems(searchResultRows);
@@ -323,45 +315,35 @@ public class ItemManagementSceneController implements Initializable {
                 alert.setTitle("Risultato ricerca");
                 alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
                 alert.showAndWait();
-
             });
-
             backButton.setDisable(false);
             backButton.setVisible(true);
-
             searchButton.setDisable(true);
             searchButton.setVisible(false);
-
             addButton.setDisable(true);
             addButton.setVisible(false);
-
         }
         catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
-
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
             alert.showAndWait();
-
         }
 
     }
 
-    public void displaySearchItemView(ActionEvent ignoredEvent) {
+    public void displaySearchView(ActionEvent ignoredEvent) {
 
         try {
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchItemView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
             Parent root = loader.load();
-
             SearchItemController searchItemController = loader.getController();
             searchItemController.setItemManagementSceneController(this);
-
-            Stage stage = new Stage();
-            stage.setTitle("Ricerca articolo");
-            stage.setScene(new Scene(root, 580, 400));
-            stage.show();
-
+            Stage searchStage = new Stage();
+            searchStage.initModality(Modality.APPLICATION_MODAL);
+            searchStage.setTitle("Ricerca articolo");
+            searchStage.setScene(new Scene(root));
+            searchStage.show();
         }
         catch(IOException e) {
             System.out.println("Errore durante il caricamento di SearchItemView: " + e);
