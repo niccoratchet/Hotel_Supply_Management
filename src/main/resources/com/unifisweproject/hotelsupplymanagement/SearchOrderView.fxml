@@ -12,7 +12,7 @@
 <AnchorPane prefHeight="400.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.SearchOrderController">
     <children>
         <Label layoutX="21.0" layoutY="105.0" text="Bolla/Fattura" />
-        <TextField fx:id="typeOfPaymentField" disable="true" layoutX="376.0" layoutY="103.0" />
+        <ChoiceBox fx:id="typeOfPaymentField" disable="true" layoutX="376.0" layoutY="103.0" />
         <Label layoutX="282.0" layoutY="105.0" prefHeight="21.0" prefWidth="90.0" text="Tipo pagamento" />
         <TextField fx:id="customerCodeField" disable="true" layoutX="255.0" layoutY="250.0" prefHeight="17.0" prefWidth="108.0" />
         <Label layoutX="155.0" layoutY="254.0" text="Codice Cliente" />

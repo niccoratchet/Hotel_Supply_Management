@@ -14,9 +14,8 @@ import java.util.function.UnaryOperator;
 
 
 public class SearchOrderController implements Initializable {
-
     @FXML
-    private TextField typeOfPaymentField;
+    private ChoiceBox<String> typeOfPaymentField;
     @FXML
     private TextField customerCodeField;
     @FXML
@@ -51,28 +50,7 @@ public class SearchOrderController implements Initializable {
             enableCustomerSearch.setOnAction(event -> handleCheckBoxAction(enableCustomerSearch));
 
             BFField.getItems().addAll("Bolla", "Fattura");
-
-            UnaryOperator<TextFormatter.Change> filterDouble = change -> {              // Creazione del Formatter per inserimento del prezzo
-                String text = change.getText();
-                if (text.matches("[0-9]*\\.?[0-9]*")) {
-                    return change;
-                }
-                return null;
-            };
-
-            UnaryOperator<TextFormatter.Change> filterInt = change -> {             // Creazione del Formatter per inserimento delle quantità
-                String text = change.getText();
-                if (text.matches("[0-9]*")) {
-                    return change;
-                }
-                return null;
-            };
-
-            TextFormatter<String> textFormatterDouble = new TextFormatter<>(filterInt);
-            customerCodeField.setTextFormatter(textFormatterDouble);
-
-            TextFormatter<String> textFormatterInt = new TextFormatter<>(filterInt);
-            orderCodeField.setTextFormatter(textFormatterInt);
+            typeOfPaymentField.getItems().addAll("Ricevuta bancaria", "Bonifico bancario", "Rimessa diretta");
 
         });
 
@@ -103,7 +81,6 @@ public class SearchOrderController implements Initializable {
             }
             case "Tipo_Pagamento" -> {
                 typeOfPaymentField.setDisable(hasToBeEnabled);
-                typeOfPaymentField.setText("");
             }
             case "Data_Ordine" -> {
                 datePicker.setDisable(hasToBeEnabled);
@@ -134,7 +111,7 @@ public class SearchOrderController implements Initializable {
 
     public Order getSearchFilters() {
 
-        Order searchItem = new Order(-1, -1, false, null, null);   // NOTA: è un oggetto item fittizio utile alla ricerca
+        Order searchItem = new Order(-1, -1, false, null, null);   // NOTA: è un oggetto order fittizio utile alla ricerca
 
         int i = 0;
 
@@ -152,9 +129,14 @@ public class SearchOrderController implements Initializable {
                             searchItem.setCodice_ordine(Integer.parseInt(orderCodeField.getText()));
                     }
                     case 2 -> {
-                        if (!typeOfPaymentField.isDisabled() && ! "".equals(typeOfPaymentField.getText())) {
-                            searchItem.setTipo_pagamento(typeOfPaymentField.getText());
-                        }
+                        if (!typeOfPaymentField.isDisabled() && ! "".equals(typeOfPaymentField.getValue()))
+                            if(typeOfPaymentField.getValue().equals("Ricevuta bancaria"))
+                                searchItem.setTipo_pagamento("Ricevuta bancaria");
+                            else if (typeOfPaymentField.getValue().equals("Bonifico Bancario"))
+                                searchItem.setTipo_pagamento("Bonifico bancario");
+                                else if(typeOfPaymentField.getValue().equals("Rimessa diretta"))
+                                    searchItem.setTipo_pagamento("Rimessa diretta");
+
                     }
                     case 3 -> {
                         if (!datePicker.isDisabled() && datePicker.getValue() != null)

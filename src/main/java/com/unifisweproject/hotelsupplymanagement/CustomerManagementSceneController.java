@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.CountDownLatch;
 
 public class CustomerManagementSceneController implements Initializable {
 
@@ -190,7 +189,7 @@ public class CustomerManagementSceneController implements Initializable {
     public void modifyRow(Customer toBeModified) {
 
         customerManagement.modify(toBeModified);
-        createConfirmedCustomerModify();
+        createConfirmedModifyAlert();
         updateTable();
 
     }
@@ -269,7 +268,7 @@ public class CustomerManagementSceneController implements Initializable {
 
     }
 
-    public void createConfirmedCustomerModify() {
+    public void createConfirmedModifyAlert() {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Modifiche applicate");
@@ -329,7 +328,7 @@ public class CustomerManagementSceneController implements Initializable {
 
     }
 
-    public void displaySearchCustomerView(ActionEvent ignoredEvent) {
+    public void displaySearchView(ActionEvent ignoredEvent) {
 
         try {
 

@@ -13,62 +13,59 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-public abstract class OrderViewController implements Initializable{
+public class OrderViewController implements Initializable {
+
     @FXML
-    private ChoiceBox BFField;
+    private TableView<Item> itemTable;
     @FXML
-    private TextField TypeOfPaymentField;
+    private TableColumn<Item, Integer> codeColumn;
+    @FXML
+    private TableColumn<Item, String> nameColumn;
+    @FXML
+    private TableColumn<Item, Integer> amountColumn;
+    @FXML
+    private TableColumn<Item, String> descriptionColumn;
+    @FXML
+    private TableColumn<Item, Double> priceColumn;
+    @FXML
+    private ChoiceBox<String> BFField;
+    @FXML
+    private ChoiceBox<String> typeOfPaymentField;
     @FXML
     private DatePicker datePicker;
     @FXML
-    private TextField CustomerCodeField;
-
-    @FXML
     private Label codeLabel;
-
     private Order displayedOrder;
     private OrderManagementSceneController orderManagementSceneController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         Platform.runLater(this::addOrderInfo);
+        datePicker.setValue(LocalDate.now());
+        BFField.getItems().addAll("Bolla", "Fattura");
+        typeOfPaymentField.getItems().addAll("Ricevuta bancaria", "Bonifico bancario", "Rimessa diretta");
+
     }
 
     public void addOrderInfo() {
 
+        String bf;
         codeLabel.setText("Dati ordine n°" + displayedOrder.getCodice_ordine());
-        //TODO: gestire il valore booleano
-        TypeOfPaymentField.setText(displayedOrder.getTipo_pagamento());
+        typeOfPaymentField.setValue(displayedOrder.getTipo_pagamento());
         datePicker.setValue(LocalDate.parse(displayedOrder.getData_ordine()));
-        CustomerCodeField.setText(Integer.toString(displayedOrder.getCodice_ordine()));
+        if(displayedOrder.isBolla()) {
+            bf = "Bolla";
+        }
+        else {
+            bf = "Fattura";
+        }
+        BFField.setValue(bf);
+
     }
 
     public void setDisplayedOrder(Order displayedOrder) {
         this.displayedOrder = displayedOrder;
-    }
-
-    public void modifyOrder(ActionEvent event) {
-
-        int code = 0;
-        boolean error = false;
-
-        try {
-            code = Integer.parseInt(CustomerCodeField.getText());
-        }
-        catch (NumberFormatException e) {
-            System.err.println("Inserire un valore di sconto valido");
-            error = true;
-        }
-
-        if (!error) {
-            //TODO: gestire il fatto che BF sia boolean
-            displayedOrder.setTipo_pagamento(TypeOfPaymentField.getText());
-            displayedOrder.setCodice_cliente(code);
-            displayedOrder.setData_ordine(datePicker.getValue().toString());
-        }
-
-        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
-
     }
 
     public void closeOrderView(ActionEvent event) {

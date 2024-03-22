@@ -14,7 +14,6 @@ public class CustomerManagement implements Data_Management {
     public CustomerManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Cliente'";
-
         try {
             Statement statement = HotelSupplyManagementMain.conn.createStatement();
             ResultSet resultSet = statement.executeQuery(getCodeQuery);
@@ -32,9 +31,7 @@ public class CustomerManagement implements Data_Management {
         Customer toBeAdded = (Customer) newCustomer;
         String addQuery = "INSERT INTO Cliente (Sconto, Data_Inserimento, Nome, Cognome, Codice_Fiscale, P_IVA, Ragione_Sociale, Indirizzo, CAP, Civico) \n" +       // creazione della query di inserimento
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
         try {
-
             PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(addQuery);
             preparedStatement.setInt(1, toBeAdded.getSconto());
             preparedStatement.setString(2, toBeAdded.getData_inserimento());
@@ -48,7 +45,6 @@ public class CustomerManagement implements Data_Management {
             preparedStatement.setString(10, toBeAdded.getCivico());
             preparedStatement.executeUpdate();
             nextCustomerCode++;
-
         }
         catch (SQLException e) {
             System.out.println("Errore durante l'aggiunta del nuovo Cliente: " +e.getMessage() + " \n Query utilizzata: " + addQuery);
@@ -66,9 +62,6 @@ public class CustomerManagement implements Data_Management {
                 + getDataTypeForQuery("P_IVA", modified.getP_IVA(), false) + ", " + getDataTypeForQuery("Ragione_Sociale", modified.getRagione_sociale(), false) + ", "
                 + getDataTypeForQuery("Indirizzo", modified.getIndirizzo(), false) + ", " + getDataTypeForQuery("Civico", modified.getCivico(), false) + ", "
                 + getDataTypeForQuery("CAP", modified.getCAP(), false) + " WHERE Codice_Cliente = " + modified.getCodice_cliente();
-
-        System.out.println(modifyQuery);
-
         try {
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
             statement.setString(1, modified.getNome());
@@ -366,18 +359,7 @@ public class CustomerManagement implements Data_Management {
     public void executeQuery(boolean isOutput, PreparedStatement statement) {
 
         try {
-            if (isOutput) {
-                ResultSet resultSet = statement.executeQuery();
-                while(resultSet.next()) {
-                    System.out.println(resultSet.getInt(1) + "\t" + resultSet.getInt(2) +
-                            "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4) +
-                            "\t" + resultSet.getString(5) + "\t" + resultSet.getString(6) +
-                            "\t" + resultSet.getString(7) + "\t" + resultSet.getString(8) +
-                            "\t" + resultSet.getString(9) + "\t" + resultSet.getString(10) +
-                            "\t" + resultSet.getString(11));
-                }
-            }
-            else
+            if (! isOutput)
                 statement.executeUpdate();
         }
 
@@ -392,7 +374,7 @@ public class CustomerManagement implements Data_Management {
         String toBeExecutedQuery;
         try {
             if (areAllRowsRequested) {
-                toBeExecutedQuery = "SELECT * FROM Cliente";
+                toBeExecutedQuery = "SELECT * FROM Cliente ORDER BY Data_Inserimento DESC";
                 PreparedStatement allRowsQuery = HotelSupplyManagementMain.conn.prepareStatement(toBeExecutedQuery);
                 return allRowsQuery.executeQuery();
             }

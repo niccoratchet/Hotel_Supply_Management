@@ -281,17 +281,7 @@ public class SupplierManagement implements Data_Management{
     public void executeQuery(boolean isOutput, PreparedStatement statement) {
 
         try {
-            if (isOutput) {
-                ResultSet resultSet = statement.executeQuery();
-                while(resultSet.next()) {
-                    System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2)
-                            + "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4)
-                            + "\t" + resultSet.getString(5) + "\t" + resultSet.getString(6)
-                            + "\t" + resultSet.getString(7));
-                }
-            }
-
-            else
+            if (! isOutput)
                 statement.executeUpdate();
         }
 
@@ -306,7 +296,7 @@ public class SupplierManagement implements Data_Management{
         String toBeExecutedQuery;
         try {
             if (areAllRowsRequested) {
-                toBeExecutedQuery = "SELECT * FROM Fornitore";
+                toBeExecutedQuery = "SELECT * FROM Fornitore ORDER BY Data_Inserimento DESC";
                 PreparedStatement allRowsQuery = HotelSupplyManagementMain.conn.prepareStatement(toBeExecutedQuery);
                 return allRowsQuery.executeQuery();
             }

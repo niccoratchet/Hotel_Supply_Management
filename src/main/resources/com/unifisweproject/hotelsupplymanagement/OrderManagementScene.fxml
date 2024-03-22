@@ -12,10 +12,10 @@
     <children>
             <TableView fx:id="orderTable" layoutX="119.0" layoutY="46.0" prefHeight="344.0" prefWidth="459.0">
                 <columns>
-                    <TableColumn fx:id="IDColumn" prefWidth="141.0" text="Codice_ordine" />
-                    <TableColumn fx:id="TypeOfPaymentColumn" prefWidth="74.0" text="Tipo_di_pagamento" />
-                    <TableColumn fx:id="DateColumn" prefWidth="85.0" text="Data_ordine" />
-                    <TableColumn fx:id="CustomerIDColumn" prefWidth="117.0" text="Codice_Cliente" />
+                    <TableColumn fx:id="IDColumn" prefWidth="113.0" text="Codice_ordine" />
+                    <TableColumn fx:id="TypeOfPaymentColumn" prefWidth="91.0" text="Tipo_di_pagamento" />
+                    <TableColumn fx:id="DateColumn" prefWidth="104.0" text="Data_ordine" />
+                    <TableColumn fx:id="CustomerIDColumn" prefWidth="147.0" text="Codice_Cliente" />
                 </columns>
       </TableView>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="586.0">
@@ -39,9 +39,9 @@
             </menus>
         </MenuBar>
         <Button fx:id="addButton" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayAddView" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
-        <Button fx:id="deleteButton" disable="true" layoutX="14.0" layoutY="91.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Elimina" />
-        <Button fx:id="modifyButton" disable="true" layoutX="14.0" layoutY="138.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Modifica" />
-      <Button fx:id="searchButton" layoutX="14.0" layoutY="182.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Ricerca" />
-      <Button fx:id="backButton" layoutX="14.0" layoutY="346.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Indietro" />
+        <Button fx:id="deleteButton" disable="true" layoutX="14.0" layoutY="91.0" mnemonicParsing="false" onAction="#deleteRow" prefHeight="25.0" prefWidth="89.0" text="Elimina" />
+        <Button fx:id="modifyButton" disable="true" layoutX="14.0" layoutY="138.0" mnemonicParsing="false" onAction="#displayOrderView" prefHeight="25.0" prefWidth="89.0" text="Modifica" />
+      <Button fx:id="searchButton" layoutX="14.0" layoutY="182.0" mnemonicParsing="false" onAction="#displaySearchView" prefHeight="25.0" prefWidth="89.0" text="Ricerca" />
+      <Button fx:id="backButton" disable="true" layoutX="14.0" layoutY="346.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="25.0" prefWidth="89.0" text="Indietro" visible="false" />
     </children>
 </AnchorPane>

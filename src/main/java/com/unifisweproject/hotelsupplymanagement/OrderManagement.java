@@ -93,7 +93,7 @@ public class OrderManagement implements Data_Management {
         int numberOfParameters = getNumberOfParameters(order);
         StringBuilder searchQuery = new StringBuilder("SELECT * FROM Ordine WHERE ");
         int i = 0;
-        while (i < 4 && numberOfParameters > 0) {
+        while (i < 3 && numberOfParameters > 0) {
             switch (i) {
                 case 0 -> {
                     if(order.getCodice_cliente() != -1) {
@@ -104,13 +104,6 @@ public class OrderManagement implements Data_Management {
                     }
                 }
                 case 1 -> {
-                    //TODO: gestire il caso dell'attributo booleano
-                    numberOfParameters--;
-                    searchQuery.append(getDataTypeForQuery("", order.isBolla(), true));
-                    if (numberOfParameters != 0)
-                        searchQuery.append(" AND ");
-                }
-                case 2 -> {
                     if(order.getTipo_pagamento() != null) {
                         numberOfParameters--;
                         searchQuery.append(getDataTypeForQuery("Tipo_pagamento", order.getTipo_pagamento(), true));
@@ -118,7 +111,7 @@ public class OrderManagement implements Data_Management {
                             searchQuery.append(" AND ");
                     }
                 }
-                case 3 -> {
+                case 2 -> {
                     if(order.getData_ordine() != null) {
                         numberOfParameters--;
                         searchQuery.append(getDataTypeForQuery("Data_ordine", order.getData_ordine(), true));
@@ -141,22 +134,18 @@ public class OrderManagement implements Data_Management {
 
     private int getNumberOfParameters(Order forCounting) {
         int i = 0, count = 0;
-        while (i < 4) {
-
+        while (i < 3) {
             switch (i) {
                 case 0 -> {
                     if (forCounting.getCodice_cliente() != -1)
                         count++;
                 }
                 case 1 -> {
-                    //TODO: gestire attributo booleano
-                }
-                case 2 -> {
                     if (forCounting.getTipo_pagamento() != null)
                         count++;
 
                 }
-                case 3 -> {
+                case 2 -> {
                     if (forCounting.getData_ordine() != null)
                         count++;
                 }
@@ -197,17 +186,7 @@ public class OrderManagement implements Data_Management {
     public void executeQuery(boolean isOutput, PreparedStatement statement) {
 
         try {
-            if (isOutput) {
-                ResultSet resultSet = statement.executeQuery();
-                while(resultSet.next()) {
-                    System.out.println(resultSet.getInt(1) + "\t" + resultSet.getBoolean(2) +
-                            "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4) + "\t" +
-                            resultSet.getInt(5));
-
-                }
-            }
-
-            else
+            if (! isOutput)
                 statement.executeUpdate();
         }
 
@@ -222,7 +201,7 @@ public class OrderManagement implements Data_Management {
         String toBeExecutedQuery;
         try {
             if (areAllRowsRequested) {
-                toBeExecutedQuery = "SELECT * FROM Ordine";
+                toBeExecutedQuery = "SELECT * FROM Ordine ORDER BY Data_Ordine DESC";
                 PreparedStatement allRowsQuery = HotelSupplyManagementMain.conn.prepareStatement(toBeExecutedQuery);
                 return allRowsQuery.executeQuery();
             }

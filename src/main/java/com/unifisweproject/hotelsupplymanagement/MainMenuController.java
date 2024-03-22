@@ -17,11 +17,12 @@ public class MainMenuController {
     private final CustomerManagement customerManagement = new CustomerManagement();
     private final SupplierManagement supplierManagement = new SupplierManagement();
     private final OrderManagement orderManagement = new OrderManagement();
+    private final SuppliesManagement suppliesManagement = new SuppliesManagement();
     private boolean isMenuButton = false;               // Utile a conoscere se il cambio di area lavorativa (ad es.Item) avviene dalla pressione del bottone nel menù principale oppure tramite il MenuBar
     private final ArrayList<Boolean> isNotFirstTimeLoad = new ArrayList<>(4);       // Serve a capire quali delle 4 sezioni sono state aperte per la prima volta o meno ai fini di effettuare una singola interrogazione
 
     public MainMenuController() {               // Inizializza il contenuto del vettore isNotFirstTimeLoad con tutti valori false
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
             isNotFirstTimeLoad.add(false);
     }
 
@@ -96,9 +97,27 @@ public class MainMenuController {
             stage.show();
         }
         catch (IOException e) {
-            System.err.println("Non è stato possibile caricare la pagina SupplierManagementScene.fxml: " + e);
+            System.err.println("Non è stato possibile caricare la pagina SupplierManagementScene.fxml: " + e.getMessage());
         }
 
+    }
+
+    public void openSuppliesManagement(ActionEvent event) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SuppliesManagementScene.fxml"));
+            Parent root = loader.load();
+            SuppliesManagementSceneController suppliesManagementSceneController = loader.getController();
+            suppliesManagementSceneController.setSuppliesManagement(suppliesManagement);
+            suppliesManagementSceneController.setMainMenuController(this);
+            verifyIsMenuButton(event);
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            System.err.println("Non è stato possibile caricare la pagina SuppliesManagementScene.fxml: " + e.getMessage());
+        }
 
     }
 
@@ -111,6 +130,7 @@ public class MainMenuController {
             case "Fornitori" -> openSupplierManagementView(event);
             case "Clienti" -> openCustomerManagementView(event);
             case "Ordini" -> openOrderManagementView(event);
+            case "Forniture" -> openSuppliesManagement(event);
         }
 
     }

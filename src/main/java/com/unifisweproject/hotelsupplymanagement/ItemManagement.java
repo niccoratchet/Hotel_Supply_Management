@@ -270,15 +270,7 @@ public class ItemManagement implements Data_Management {
     public void executeQuery(boolean isOutput, PreparedStatement statement) {              // TODO: Rendi un unico metodo executeQuery e getRows
 
         try {
-            if (isOutput) {
-                ResultSet resultSet = statement.executeQuery();
-                while(resultSet.next()) {
-                    System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2) +
-                            "\t" + resultSet.getDouble(3) + "\t" + resultSet.getInt(4) + "\t" +
-                            resultSet.getString(5) + "\t" + resultSet.getString(6));
-                }
-            }
-            else
+            if (! isOutput)
                 statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -292,7 +284,7 @@ public class ItemManagement implements Data_Management {
         String toBeExecutedQuery;
         try {
             if (areAllRowsRequested) {
-                toBeExecutedQuery = "SELECT * FROM Articolo";
+                toBeExecutedQuery = "SELECT * FROM Articolo ORDER BY Data_Inserimento DESC";
                 PreparedStatement allRowsQuery = HotelSupplyManagementMain.conn.prepareStatement(toBeExecutedQuery);
                 return allRowsQuery.executeQuery();
             }

@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -104,13 +105,21 @@ public class OrderManagementSceneController implements Initializable{
 
     }
 
-    private void deleteRow() {
+
+    public void deleteRow() {
 
         if (createConfirmDeleteAlert()) {
             SelectionModel<Order> selectionModel = orderTable.getSelectionModel();
             Order selectedOrder = selectionModel.getSelectedItem();
             orderManagement.getOrderList().remove(selectedOrder);
             orderManagement.delete(selectedOrder.getCodice_ordine());
+
+            try {       //Codice per eliminare righe dalla tabella ArticoloInOrdine
+                PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM ArticoloInOrdine WHERE Codice_Ordine = " + selectedOrder.getCodice_ordine());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println("Errore durante l'eliminazione della riga ArticoloInOrdine: " + e.getMessage());
+            }
 
             if (searchView)
                 results.remove(selectedOrder);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
@@ -123,19 +132,16 @@ public class OrderManagementSceneController implements Initializable{
 
         SelectionModel<Order> selectionModel = orderTable.getSelectionModel();
         Order selectedOrder = selectionModel.getSelectedItem();
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderView.fxml"));
             Parent root = loader.load();
             OrderViewController orderViewController = loader.getController();
             orderViewController.setDisplayedOrder(selectedOrder);
             orderViewController.setOrderManagementSceneController(this);
-
             Stage stage = new Stage();
             stage.setTitle(Integer.toString(selectedOrder.getCodice_ordine()));
-            stage.setScene(new Scene(root, 2000, 400));
+            stage.setScene(new Scene(root));
             stage.show();
-
         }
         catch (IOException e) {
             System.err.println("Errore durante l'apertura del file OrderView.fxml: " + e.getMessage());
@@ -307,4 +313,27 @@ public class OrderManagementSceneController implements Initializable{
         this.mainMenuController = mainMenuController;
     }
 
+    public void displaySearchView(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchOrderView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
+            Parent root = loader.load();
+            SearchOrderController searchOrderController = loader.getController();
+            searchOrderController.setOrderManagementSceneController(this);
+            Stage searchStage = new Stage();
+            searchStage.initModality(Modality.APPLICATION_MODAL);
+            searchStage.setTitle("Ricerca ordine");
+            searchStage.setScene(new Scene(root));
+            searchStage.show();
+        }
+        catch(IOException e) {
+            System.out.println("Errore durante il caricamento di SearchOrderView: " + e);
+        }
+    }
+
+    public void exitSearch(ActionEvent event) {
+        searchButton.setDisable(false);             // Riattivo bottone di ricerca
+        searchButton.setVisible(true);
+        searchView = false;
+        updateTable();
+    }
 }
