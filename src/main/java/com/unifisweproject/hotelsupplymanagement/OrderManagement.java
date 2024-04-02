@@ -47,20 +47,7 @@ public class OrderManagement implements Data_Management {
 
     @Override
     public void modify(Object value) {
-        Order modified = (Order) value;
-        String modifyQuery = "UPDATE Ordine SET " + getDataTypeForQuery("Tipo_pagamento", modified.getTipo_pagamento(), false) + ", " + getDataTypeForQuery("Data_ordine", modified.getData_ordine(), false) + ", "
-                + getDataTypeForQuery("Codice_cliente", modified.getCodice_cliente(), false)+
-                " WHERE Codice_Ordine = " + modified.getCodice_ordine();
-        //TODO: gestire attributo booleano ed aggiungere il formatter per tipo di pagamento
-        try {
-            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
-            System.out.println(statement);
-            executeQuery(false, statement);
-        }
 
-        catch (SQLException e) {
-            System.err.println("Errore di formattazione nella generazione della query di modifica: " + e);
-        }
     }
 
     public ArrayList<Object> getSearchResults(ResultSet resultSet) {              // dato un oggetto ResultSet (insieme delle righe del risultato di una query) rende un ArrayList di Item che corrispondono alle righe indicate
@@ -89,12 +76,12 @@ public class OrderManagement implements Data_Management {
         int numberOfParameters = getNumberOfParameters(order);
         StringBuilder searchQuery = new StringBuilder("SELECT * FROM Ordine WHERE ");
         int i = 0;
-        while (i < 3 && numberOfParameters > 0) {
+        while (i < 4 && numberOfParameters > 0) {
             switch (i) {
                 case 0 -> {
                     if(order.getCodice_cliente() != -1) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Codice_cliente", order.getCodice_cliente(), true));
+                        searchQuery.append(getDataTypeForQuery("Codice_Cliente", order.getCodice_cliente(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
@@ -102,7 +89,7 @@ public class OrderManagement implements Data_Management {
                 case 1 -> {
                     if(order.getTipo_pagamento() != null) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Tipo_pagamento", order.getTipo_pagamento(), true));
+                        searchQuery.append(getDataTypeForQuery("Tipo_Pagamento", order.getTipo_pagamento(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
@@ -110,7 +97,15 @@ public class OrderManagement implements Data_Management {
                 case 2 -> {
                     if(order.getData_ordine() != null) {
                         numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Data_ordine", order.getData_ordine(), true));
+                        searchQuery.append(getDataTypeForQuery("Data_Ordine", order.getData_ordine(), true));
+                        if (numberOfParameters != 0)
+                            searchQuery.append(" AND ");
+                    }
+                }
+                case 3 -> {
+                    if(order.getCodice_ordine() != -1) {
+                        numberOfParameters--;
+                        searchQuery.append(getDataTypeForQuery("Codice_Ordine", order.getCodice_ordine(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }

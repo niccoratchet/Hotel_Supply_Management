@@ -38,8 +38,6 @@ public class OrderManagementSceneController implements Initializable{
     @FXML
     private TableColumn<Order, Integer> CustomerIDColumn;
     @FXML
-    private Button modifyButton;
-    @FXML
     private Button deleteButton;
     @FXML
     private Button addButton;
@@ -62,7 +60,7 @@ public class OrderManagementSceneController implements Initializable{
     private long lastClickTime = 0;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Cliente
+    public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Ordine
 
         Platform.runLater(this::createRows);
         orderTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> deleteButton.setDisable(newSelection == null));

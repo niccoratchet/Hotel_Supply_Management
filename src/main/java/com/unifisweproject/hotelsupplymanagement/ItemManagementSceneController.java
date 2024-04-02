@@ -306,7 +306,7 @@ public class ItemManagementSceneController implements Initializable {
     public void displaySearchView(ActionEvent ignoredEvent) {
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchItemView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchItemView.fxml"));
             Parent root = loader.load();
             SearchItemController searchItemController = loader.getController();
             searchItemController.setItemManagementSceneController(this);

@@ -14,13 +14,12 @@
         <Label layoutX="47.0" layoutY="84.0" text="Bolla/Fattura" />
         <ChoiceBox fx:id="typeOfPaymentField" layoutX="409.0" layoutY="80.0" prefHeight="25.0" prefWidth="124.0" />
         <Label layoutX="286.0" layoutY="84.0" text="Tipo di pagamento" />
-        <Button layoutX="438.0" layoutY="347.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Elimina" />
-        <Button layoutX="297.0" layoutY="347.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
+        <Button layoutX="438.0" layoutY="348.0" mnemonicParsing="false" onAction="#closeOrderView" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
         <DatePicker fx:id="datePicker" layoutX="123.0" layoutY="139.0" prefHeight="25.0" prefWidth="124.0" />
         <Label layoutX="49.0" layoutY="143.0" text="Data" />
         <Label fx:id="codeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="34.0" prefHeight="17.0" prefWidth="499.0">
             <font>
-                <Font name="SimSun" size="19.0" />
+                <Font name="System Bold" size="18.0" />
             </font>
         </Label>
         <ChoiceBox fx:id="BFField" layoutX="123.0" layoutY="80.0" prefHeight="25.0" prefWidth="124.0" />

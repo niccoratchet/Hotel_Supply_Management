@@ -1,14 +1,20 @@
 package com.unifisweproject.hotelsupplymanagement;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -37,6 +43,7 @@ public class OrderViewController implements Initializable {
     private Label codeLabel;
     private Order displayedOrder;
     private OrderManagementSceneController orderManagementSceneController;
+    private ObservableList<Item> itemList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -62,6 +69,8 @@ public class OrderViewController implements Initializable {
         }
         BFField.setValue(bf);
 
+        getItemsInOrder();
+
     }
 
     public void setDisplayedOrder(Order displayedOrder) {
@@ -74,5 +83,41 @@ public class OrderViewController implements Initializable {
 
     public void setOrderManagementSceneController(OrderManagementSceneController orderManagementSceneController) {
         this.orderManagementSceneController = orderManagementSceneController;
+    }
+
+    public void getItemsInOrder(){
+        String getCodeQuery = "SELECT A.Codice_Articolo, A.Nome, A.Prezzo, AIO.Quantita, A.Descrizione, A.Data_Inserimento " +
+                "FROM ArticoloInOrdine AIO " +
+                "RIGHT JOIN Articolo A ON AIO.Codice_Articolo = A.Codice_Articolo " +
+                "WHERE AIO.Codice_Ordine = " + displayedOrder.getCodice_ordine();
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(getCodeQuery);
+
+
+            while (resultSet.next()) {
+                int quantita = resultSet.getInt(4);
+                double prezzoTot = resultSet.getDouble(3) * quantita;
+
+                Item item = new Item(resultSet.getInt(1), quantita,
+                        prezzoTot, resultSet.getString(2),
+                        resultSet.getString(5), resultSet.getString(6));
+
+                codeColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_articolo"));
+                nameColumn.setCellValueFactory(new PropertyValueFactory<>("Nome"));
+                amountColumn.setCellValueFactory(new PropertyValueFactory<>("Quantita"));
+                descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("Descrizione"));
+                priceColumn.setCellValueFactory(new PropertyValueFactory<>("Prezzo"));
+
+                itemList.add(item);                       // Inserisce nella tabella tutte le righe degli Item presenti nel DB
+            }
+
+            itemTable.setItems(itemList);
+
+        }
+        catch(SQLException e) {
+            System.err.println("Errore nell'esecuzione della query");
+        }
     }
 }

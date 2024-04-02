@@ -177,8 +177,11 @@ public class ListOfItemsController implements Initializable {
             ResultSet resultSet = mainMenuController.getItemManagement().getRows(true, null);
             try {
                 while (resultSet.next()) {
-                    Item item = new Item(resultSet.getInt(1), resultSet.getInt(4),
-                            resultSet.getDouble(3), resultSet.getString(2), resultSet.getString(5), resultSet.getString(6));
+                    int quantita = resultSet.getInt(4);
+                    double prezzo = resultSet.getDouble(3) * quantita;
+
+                    Item item = new Item(resultSet.getInt(1), quantita,
+                            prezzo, resultSet.getString(2), resultSet.getString(5), resultSet.getString(6));
                     mainMenuController.getItemManagement().getItemList().add(item);
                 }
                 mainMenuController.getIsNotFirstTimeLoad().set(0, true);

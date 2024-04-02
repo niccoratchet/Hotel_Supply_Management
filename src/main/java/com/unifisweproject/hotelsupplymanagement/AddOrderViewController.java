@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 
 public class AddOrderViewController implements Initializable {
@@ -82,6 +84,34 @@ public class AddOrderViewController implements Initializable {
     }
 
     public void createOrder(ActionEvent event) {
+
+        try {
+            int i = 0;
+            while (i < 5) {
+                switch (i) {
+                    case 0 -> {
+                        if (BFField.getValue() == null)
+                            throw new RuntimeException("B/F mancante");
+                    }
+                    case 1 -> {
+                        if (typeOfPaymentField.getValue() == null)
+                            throw new RuntimeException("Tipo di pagamento mancante");
+                    }
+                    case 2 -> {
+                        if ("".equals(customerCodeField.getText()))
+                            throw new RuntimeException("Quantità mancante");
+                    }
+                    case 3 -> {
+                        if (datePicker.getValue() == null)
+                            throw new RuntimeException("Data mancante");
+                    }
+                    case 4 -> {
+                        if(itemInOrder.getNumberOfItems() == 0)
+                            throw new RuntimeException("Nessun articolo inserito");
+                    }
+                }
+                i++;
+            }
 
             boolean bolla;
             bolla = BFField.getValue().equals("Bolla");
@@ -187,6 +217,14 @@ public class AddOrderViewController implements Initializable {
             }
         }
 
+    }
+
+    public ArrayList<Integer> getNewAmount() {
+        return this.newAmount;
+    }
+
+    public ItemInOrder getItemInOrder() {
+        return this.itemInOrder;
     }
 
 }

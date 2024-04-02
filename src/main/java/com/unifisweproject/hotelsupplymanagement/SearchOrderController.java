@@ -100,33 +100,21 @@ public class SearchOrderController implements Initializable {
                 null, null);   // NOTA: è un oggetto order fittizio utile alla ricerca
         int i = 0;
         try {
-            while (i < 5) {
+            while (i < 4) {
                 switch (i) {
                     case 0 -> {
-                        if (!BFField.isDisabled() && ! "".equals(BFField.getValue()))
-                            if(BFField.getValue().equals("bolla"))
-                                searchItem.setBolla(true);
-                            else searchItem.setBolla(false);//TODO: controllare se funziona
-                    }
-                    case 1 -> {
                         if (!orderCodeField.isDisabled() && ! "".equals(orderCodeField.getText()))
                             searchItem.setCodice_ordine(Integer.parseInt(orderCodeField.getText()));
                     }
-                    case 2 -> {
+                    case 1 -> {
                         if (!typeOfPaymentField.isDisabled() && ! "".equals(typeOfPaymentField.getValue()))
-                            if(typeOfPaymentField.getValue().equals("Ricevuta bancaria"))
-                                searchItem.setTipo_pagamento("Ricevuta bancaria");
-                            else if (typeOfPaymentField.getValue().equals("Bonifico Bancario"))
-                                searchItem.setTipo_pagamento("Bonifico bancario");
-                                else if(typeOfPaymentField.getValue().equals("Rimessa diretta"))
-                                    searchItem.setTipo_pagamento("Rimessa diretta");
-
+                            searchItem.setTipo_pagamento(typeOfPaymentField.getValue());
                     }
-                    case 3 -> {
+                    case 2 -> {
                         if (!datePicker.isDisabled() && datePicker.getValue() != null)
                             searchItem.setData_ordine(datePicker.getValue().toString());
                     }
-                    case 4 -> {
+                    case 3 -> {
                         if (!customerCodeField.isDisabled() && ! "".equals(customerCodeField.getText()))
                             searchItem.setCodice_cliente(Integer.parseInt(customerCodeField.getText()));
                     }

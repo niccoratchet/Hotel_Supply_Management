@@ -38,8 +38,6 @@ public class AddContactDetails implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        // TODO: Applicare i formatter
-
         int capCharacters = 5, maxCivicCharacters = 5, maxPhoneNumberCharacter = 10;
 
         UnaryOperator<TextFormatter.Change> filterCivicNumber = change -> {

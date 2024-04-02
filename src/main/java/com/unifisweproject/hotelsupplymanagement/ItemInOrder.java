@@ -15,11 +15,11 @@ public class ItemInOrder {
         return codice_Ordine;
     }
 
-    public Integer getCodice_Articolo(int pos){
+    public int getCodice_Articolo(int pos){
         return codice_Articolo.get(pos);
     }
 
-    public Integer getQuantita(int pos){
+    public int getQuantita(int pos){
         return quantita.get(pos);
     }
 

@@ -309,7 +309,7 @@ public class SupplierManagementSceneController implements Initializable {
     public void displaySearchView(ActionEvent ignoredEvent) {
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchSupplierView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchSupplierView.fxml"));
             Parent root = loader.load();
             SearchSupplierController searchSupplierController = loader.getController();
             searchSupplierController.setSupplierManagementSceneController(this);

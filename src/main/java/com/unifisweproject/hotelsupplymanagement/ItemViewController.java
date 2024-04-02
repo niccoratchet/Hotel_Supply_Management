@@ -62,7 +62,7 @@ public class ItemViewController implements Initializable {
 
     public void addItemInfo() {
 
-        codeLabel.setText("Dati articolo n°" + displayedItem.getCodice_articolo());         // TODO: Modifica deve essere possibile premerlo SOLO se è stata selezionata una riga
+        codeLabel.setText("Dati articolo n°" + displayedItem.getCodice_articolo());
         nameField.setText(displayedItem.getNome());
         priceField.setText(Double.toString(displayedItem.getPrezzo()));
         amountField.setText(Integer.toString(displayedItem.getQuantita()));
