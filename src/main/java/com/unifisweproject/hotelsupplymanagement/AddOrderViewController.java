@@ -28,7 +28,6 @@ import java.util.ResourceBundle;
 
 public class AddOrderViewController implements Initializable {
 
-
     @FXML
     private DatePicker datePicker;
     @FXML
@@ -52,19 +51,30 @@ public class AddOrderViewController implements Initializable {
     @FXML
     private ObservableList<Item> itemList = FXCollections.observableArrayList();
     private Stage addItemStage;
-
     private OrderManagementSceneController orderManagementSceneController;
     private MainMenuController mainMenuController;
     private int lastOrderCode;
-    public ItemInOrder itemInOrder = new ItemInOrder();
-    public ArrayList<Integer> newAmount = new ArrayList<Integer>();
-
+    private ItemInOrder itemInOrder = new ItemInOrder();
+    private ArrayList<Integer> newAmount = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         datePicker.setValue(LocalDate.now());
         BFField.getItems().addAll("Bolla", "Fattura");
         typeOfPaymentField.getItems().addAll("Ricevuta bancaria", "Bonifico bancario", "Rimessa diretta");
+
+        UnaryOperator<TextFormatter.Change> filterInt = change -> {             // Creazione del Formatter per inserimento delle quantità
+            String text = change.getText();
+            if (text.matches("[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+
+        TextFormatter<String> textFormatterInt = new TextFormatter<>(filterInt);
+        customerCodeField.setTextFormatter(textFormatterInt);
+
     }
 
     public void closeAddView(ActionEvent event) {
@@ -73,20 +83,27 @@ public class AddOrderViewController implements Initializable {
 
     public void createOrder(ActionEvent event) {
 
-        boolean bolla;
-        bolla = BFField.getValue().equals("Bolla");
+            boolean bolla;
+            bolla = BFField.getValue().equals("Bolla");
+            Order newOrder = new Order(Integer.parseInt(customerCodeField.getText()), bolla, typeOfPaymentField.getValue(), datePicker.getValue().toString());
+            orderManagementSceneController.addRow(newOrder);
+            updateAmount();
+            updateItemInOrder();
+            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
 
-        Order newOrder = new Order(Integer.parseInt(customerCodeField.getText()), bolla, typeOfPaymentField.getValue(), datePicker.getValue().toString());
-        orderManagementSceneController.addRow(newOrder);
+        } catch (RuntimeException missingParameters) {
 
-        updateAmount();
-        updateItemInOrder();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Parametri assenti");
+            alert.setContentText("Inserire il valore di tutti i dati obbligatori.");
+            alert.showAndWait();
 
-        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
+        }
 
     }
 
-    public void openListOfItemView (ActionEvent event) {
+    public void openListOfItemView (ActionEvent ignoredEvent) {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ListOfItems.fxml"));
@@ -117,39 +134,32 @@ public class AddOrderViewController implements Initializable {
     public void addRow(Item newItem){
 
         itemList.add(newItem);
-
         itemCodeColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_articolo"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("Nome"));
         itemQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("Quantita"));
         itemPriceColumn.setCellValueFactory(new PropertyValueFactory<>("Prezzo"));
         itemDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("Descrizione"));
-
         itemTableView.setItems(itemList);
         itemTableView.getColumns().setAll(itemCodeColumn, itemNameColumn, itemQuantityColumn, itemPriceColumn, itemDescriptionColumn);
 
     }
 
-    public void updateItemInOrder(){        //Inserisce nel database gli articoli inerenti all'ordine
-        String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Ordine'";
+    public void updateItemInOrder() {        // Inserisce nel database gli articoli inerenti all'ordine
 
+        String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Ordine'";
         try {
             Statement statement = HotelSupplyManagementMain.conn.createStatement();
             ResultSet resultSet = statement.executeQuery(getCodeQuery);
             lastOrderCode = resultSet.getInt(1);
         }
         catch(SQLException e) {
-            System.err.println("Errore durante l'estrapolazione dell'ultimo codice ordine");
+            System.err.println("Errore durante l'estrapolazione dell'ultimo codice ordine: " + e.getMessage());
         }
-
         itemInOrder.setCodice_Ordine(lastOrderCode);
-
-        for(int i=0; i<itemInOrder.getNumberOfItems(); i++){
-
+        for(int i = 0; i < itemInOrder.getNumberOfItems(); i++) {
             String addQuery = "INSERT INTO ArticoloInOrdine (Codice_Ordine, Codice_Articolo, Quantita) \n" +       // creazione della query di inserimento
                     "VALUES (?, ?, ?)";
-
             try {
-
                 PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(addQuery);
                 preparedStatement.setInt(1, itemInOrder.getCodice_Ordine());
                 preparedStatement.setInt(2, itemInOrder.getCodice_Articolo(i));
@@ -157,29 +167,25 @@ public class AddOrderViewController implements Initializable {
                 preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
             }
             catch (SQLException e) {
-                System.out.println("Errore durante l'aggiunta di un item all'order: "+ e.getMessage() +" \n Query utilizzata: " + addQuery);
+                System.out.println("Errore durante l'aggiunta di un item in un order: "+ e.getMessage() +" \n Query utilizzata: " + addQuery);
             }
-
         }
+
     }
 
+    public void updateAmount() {
 
-    public void updateAmount(){
-        for(int i=0; i<itemInOrder.getNumberOfItems(); i++){
+        for(int i = 0; i < itemInOrder.getNumberOfItems(); i++){
             String modifyQuery = "UPDATE Articolo SET Quantita = ? WHERE Codice_Articolo = " + itemInOrder.getCodice_Articolo(i);       //Istruzioni per aggiornare la quantita dell'item del DB
-
             try {
                 PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
                 statement.setInt(1, newAmount.get(i));
-
                 statement.executeUpdate();
             }
-
             catch (SQLException e) {
                 System.err.println("Errore di formattazione nella generazione della query di modifica: " + e.getMessage());
             }
         }
-
 
     }
 

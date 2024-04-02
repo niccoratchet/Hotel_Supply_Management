@@ -23,8 +23,6 @@ public class SearchOrderController implements Initializable {
     @FXML
     private DatePicker datePicker;
     @FXML
-    private CheckBox enableBFSearch;
-    @FXML
     private CheckBox enableOrderSearch;
     @FXML
     private CheckBox enablePaymentSearch;
@@ -34,24 +32,17 @@ public class SearchOrderController implements Initializable {
     private CheckBox enableCustomerSearch;
     @FXML
     private Button confirmButton;
-    @FXML
-    private ChoiceBox<String> BFField;
     private OrderManagementSceneController orderManagementSceneController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         Platform.runLater(() -> {
-
-            enableBFSearch.setOnAction(event -> handleCheckBoxAction(enableBFSearch));
             enableOrderSearch.setOnAction(event -> handleCheckBoxAction(enableOrderSearch));
             enablePaymentSearch.setOnAction(event -> handleCheckBoxAction(enablePaymentSearch));
             enableDateSearch.setOnAction(event -> handleCheckBoxAction(enableDateSearch));
             enableCustomerSearch.setOnAction(event -> handleCheckBoxAction(enableCustomerSearch));
-
-            BFField.getItems().addAll("Bolla", "Fattura");
             typeOfPaymentField.getItems().addAll("Ricevuta bancaria", "Bonifico bancario", "Rimessa diretta");
-
         });
 
     }
@@ -72,16 +63,11 @@ public class SearchOrderController implements Initializable {
     public void verifyCheckBox(CheckBox checkBox, boolean hasToBeEnabled) {            // Metodo utile a handleCheckBoxAction per verificare quale TextField attivare o disattivare
 
         switch (checkBox.getText()) {
-            case "BollaFattura" -> {
-                BFField.setDisable(hasToBeEnabled);
-            }
             case "Codice_Ordine" -> {
                 orderCodeField.setDisable(hasToBeEnabled);
                 orderCodeField.setText("");
             }
-            case "Tipo_Pagamento" -> {
-                typeOfPaymentField.setDisable(hasToBeEnabled);
-            }
+            case "Tipo_Pagamento" -> typeOfPaymentField.setDisable(hasToBeEnabled);
             case "Data_Ordine" -> {
                 datePicker.setDisable(hasToBeEnabled);
                 datePicker.setValue(null);
@@ -93,15 +79,14 @@ public class SearchOrderController implements Initializable {
         }
 
     }
-
     public void enableConfirmButton() {
-        confirmButton.setDisable(BFField.isDisabled() && orderCodeField.isDisabled() && typeOfPaymentField.isDisabled() && datePicker.isDisabled() && customerCodeField.isDisabled());
+        confirmButton.setDisable(orderCodeField.isDisabled() && typeOfPaymentField.isDisabled() && datePicker.isDisabled() &&
+                customerCodeField.isDisabled());
     }
 
     public void scanRows(ActionEvent event) {
 
         Order toBeSearched = getSearchFilters();
-
         if (toBeSearched != null) {
             orderManagementSceneController.searchRow(toBeSearched);
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
@@ -111,10 +96,9 @@ public class SearchOrderController implements Initializable {
 
     public Order getSearchFilters() {
 
-        Order searchItem = new Order(-1, -1, false, null, null);   // NOTA: è un oggetto order fittizio utile alla ricerca
-
+        Order searchItem = new Order(-1, -1, false,
+                null, null);   // NOTA: è un oggetto order fittizio utile alla ricerca
         int i = 0;
-
         try {
             while (i < 5) {
                 switch (i) {
@@ -150,17 +134,13 @@ public class SearchOrderController implements Initializable {
                 i++;
             }
             return searchItem;
-
         }
-
         catch (NumberFormatException e) {
-
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Errore di formattazione");
             alert.showAndWait();
             return null;
-
         }
 
     }

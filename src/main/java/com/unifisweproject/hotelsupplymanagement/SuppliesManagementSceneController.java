@@ -30,6 +30,8 @@ public class SuppliesManagementSceneController implements Initializable {
     @FXML
     private TableView<Supply> suppliesTable;
     @FXML
+    private TableColumn<Supply, Integer> supplyColumn;
+    @FXML
     private TableColumn<Supply, String> supplierColumn;
     @FXML
     private TableColumn<Supply, String> itemColumn;
@@ -40,56 +42,41 @@ public class SuppliesManagementSceneController implements Initializable {
     @FXML
     private TableColumn<Supply, Integer> amountColumn;
     @FXML
-    private Button modifyButton;
-    @FXML
     private Button deleteButton;
     @FXML
     private Button addButton;
     @FXML
     private Button backButton;
     @FXML
-    private Button searchButton;
-    @FXML
     private AnchorPane tableAnchorPane;
-    private boolean searchView = false;
+    private final boolean searchView = false;
     private final ContextMenu rightClickMenu = new ContextMenu();
     private final MenuItem viewSupplyMenu = new MenuItem("Visualizza dettagli");
     private final MenuItem deleteSupplyMenu = new MenuItem("Modifica fornitura");
     private MainMenuController mainMenuController;
     private SuppliesManagement suppliesManagement;
-
     private ArrayList<Supply> results = new ArrayList<>();
     private final ObservableList<Supply> supplyRows = FXCollections.observableArrayList();
     private final ObservableList<Supply> searchResultRows = FXCollections.observableArrayList();
     private long lastClickTime = 0;
 
-    // TODO: Valutare se aggiungere la ricerca
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         Platform.runLater(() -> {
+            createRows();
             setTableSelectionModel();
             setCellValueFactory();
             setRightClickMenu();
             setDoubleClickAction();
             suppliesTable.setItems(supplyRows);
         });
+
     }
 
     public void setTableSelectionModel() {                          // Imposta la selezione della tabella per individuare la riga selezionata
-
-        suppliesTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
-            if(newSelection != null) {
-                modifyButton.setDisable(false);
-                deleteButton.setDisable(false);
-            }
-            else {
-                modifyButton.setDisable(true);
-                deleteButton.setDisable(true);
-            }
-        });
-
+        suppliesTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) ->
+                deleteButton.setDisable(newSelection == null));
     }
 
     public void setRightClickMenu() {                       // Imposta il funzionamento del menu contestuale con il tasto destro del mouse
@@ -102,6 +89,7 @@ public class SuppliesManagementSceneController implements Initializable {
 
     public void setCellValueFactory() {                         // Imposta il tipo di parametri nelle colonne della tabella supplyTable
 
+        supplyColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_fornitura"));
         supplierColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_fornitore"));
         itemColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_articolo"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_fornitura"));
@@ -135,11 +123,11 @@ public class SuppliesManagementSceneController implements Initializable {
     public void createRows() {
 
         if (!mainMenuController.getIsNotFirstTimeLoad().get(4)) {
-            ResultSet resultSet = null;                // TODO: Creare classe SupplyManagement per gestire le query
+            ResultSet resultSet = suppliesManagement.getRows(true, null);
             try {
                 while(resultSet.next()) {
-                    Supply supply = new Supply(resultSet.getInt("codice_fornitore"), resultSet.getInt("codice_articolo"), resultSet.getString("data_fornitura"), resultSet.getInt("quantita"), resultSet.getDouble("prezzo"));
-                    //TODO: aggiunta Supply in SupplyManagement
+                    Supply supply = new Supply(resultSet.getInt("codice_fornitura"), resultSet.getInt("codice_fornitore"), resultSet.getInt("codice_articolo"), resultSet.getString("data_fornitura"), resultSet.getInt("quantita"), resultSet.getDouble("prezzo"));
+                    suppliesManagement.getSuppliesList().add(supply);
                 }
                 mainMenuController.getIsNotFirstTimeLoad().set(4, true);
             }
@@ -147,9 +135,21 @@ public class SuppliesManagementSceneController implements Initializable {
                 System.err.println("Errore durante la creazione delle righe di SuppliesViewController: " + e.getMessage());
             }
         }
-        //supplyRows.addAll() TODO: aggiungere le righe create al DB
-        // setCellValueFactory();
+        supplyRows.addAll(suppliesManagement.getSuppliesList());
+        setCellValueFactory();
         suppliesTable.setItems(supplyRows);
+
+    }
+
+    public void addSupply(ItemInSupply newSupplies) {
+
+        for(int i = 0; i < newSupplies.getNumberOfItems(); i++) {
+            Supply newSupply = new Supply(newSupplies.getCodice_Fornitore(), newSupplies.getCodice_Articolo(i), newSupplies.getData_Fornitura(), newSupplies.getQuantita(i), newSupplies.getPrezzo(i));
+            newSupply.setCodice_fornitura(suppliesManagement.getNextSupplyCode() + 1);
+            suppliesManagement.getSuppliesList().add(newSupply);
+            suppliesManagement.add(newSupply);
+        }
+        updateTable();
 
     }
 
@@ -170,14 +170,14 @@ public class SuppliesManagementSceneController implements Initializable {
         // TODO
     }
 
-    public void displayAddView(ActionEvent event) {
+    public void displayAddView(ActionEvent ignoredEvent) {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddSupplyView.fxml"));
             Parent root = loader.load();
-            //AddSupplyViewController addSupplyController = loader.getController();
-            //addSupplyController.setSupplyManagementSceneController(this);
-            //addSupplyController.setMainMenuController(mainMenuController);
+            AddSupplyViewController addSupplyViewController= loader.getController();
+            addSupplyViewController.setSuppliesManagementSceneController(this);
+            addSupplyViewController.setMainMenuController(mainMenuController);
             Stage addStage = new Stage();
             addStage.initModality(Modality.APPLICATION_MODAL);
             addStage.setTitle("Aggiungi fornitura");
@@ -191,6 +191,7 @@ public class SuppliesManagementSceneController implements Initializable {
     }
 
     public void deleteRow() {
+
         if (createConfirmDeleteAlert()) {
             SelectionModel<Supply> selectionModel = suppliesTable.getSelectionModel();
             Supply selectedSupply = selectionModel.getSelectedItem();
@@ -202,11 +203,11 @@ public class SuppliesManagementSceneController implements Initializable {
             } catch (SQLException e) {
                 System.err.println("Errore durante l'eliminazione della riga Fornitura: " + e.getMessage());
             }
-
             if (searchView)
                 results.remove(selectedSupply);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
             updateTable();
         }
+
     }
 
     public void updateTable() {
@@ -223,10 +224,8 @@ public class SuppliesManagementSceneController implements Initializable {
                 supplyRows.clear();
                 supplyRows.setAll(suppliesManagement.getSuppliesList());
                 suppliesTable.setItems(supplyRows);
-
                 addButton.setDisable(false);                // Riattivo bottone di aggiunta
                 addButton.setVisible(true);
-
                 backButton.setDisable(true);                // Disattivo bottone "indietro" quando ho terminato una precedente ricerca
                 backButton.setVisible(false);
             }
@@ -240,6 +239,12 @@ public class SuppliesManagementSceneController implements Initializable {
 
     public void setSuppliesManagement(SuppliesManagement suppliesManagement) {
         this.suppliesManagement = suppliesManagement;
+    }
+
+    public void openDifferentManagement(ActionEvent event) {
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        String menuName = ((MenuItem) event.getSource()).getText();
+        mainMenuController.getStageFromMenuBar(event, stage, menuName);
     }
 
 

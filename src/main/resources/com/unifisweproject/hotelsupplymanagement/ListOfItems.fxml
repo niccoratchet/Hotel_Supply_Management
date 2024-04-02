@@ -8,10 +8,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="360.0" prefWidth="436.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.ListOfItemsController">
+<AnchorPane prefHeight="382.0" prefWidth="436.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.ListOfItemsController">
    <children>
-      <Button fx:id="addButton" disable="true" layoutX="304.0" layoutY="305.0" mnemonicParsing="false" onAction="#addItemToOrder" prefHeight="25.0" prefWidth="92.0" text="Aggiungi" />
-      <Button fx:id="backButton" layoutX="186.0" layoutY="305.0" mnemonicParsing="false" onAction="#closeAddItem" prefHeight="25.0" prefWidth="92.0" text="Annulla" />
+      <Button fx:id="addButton" disable="true" layoutX="304.0" layoutY="318.0" mnemonicParsing="false" onAction="#addItemToOrder" prefHeight="25.0" prefWidth="92.0" text="Aggiungi" />
+      <Button fx:id="backButton" layoutX="184.0" layoutY="318.0" mnemonicParsing="false" onAction="#closeAddItem" prefHeight="25.0" prefWidth="92.0" text="Annulla" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" layoutY="36.0" prefHeight="25.0" prefWidth="355.0" text="Seleziona gli articoli da inserire nell'ordine">
          <font>
             <Font name="System Bold" size="16.0" />
@@ -24,11 +24,17 @@
             <TableColumn fx:id="itemQuantityColumn" prefWidth="66.0" text="Quantita" />
         </columns>
       </TableView>
-      <Label fx:id="quantityLabel" layoutX="57.0" layoutY="256.0" prefHeight="17.0" prefWidth="156.0" text="Inserisci il numero di unità" visible="false">
+      <Label fx:id="quantityLabel" layoutX="57.0" layoutY="244.0" prefHeight="17.0" prefWidth="151.0" text="Inserisci il numero di unità" visible="false">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <TextField fx:id="quantityField" disable="true" layoutX="232.0" layoutY="252.0" prefHeight="25.0" prefWidth="72.0" visible="false" />
+      <TextField fx:id="quantityField" disable="true" layoutX="230.0" layoutY="240.0" prefHeight="25.0" prefWidth="72.0" visible="false" />
+      <Label fx:id="priceLabel" layoutX="93.0" layoutY="277.0" text="Prezzo alla fornitura" visible="false">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <TextField fx:id="priceField" layoutX="230.0" layoutY="273.0" prefHeight="25.0" prefWidth="72.0" visible="false" />
    </children>
 </AnchorPane>

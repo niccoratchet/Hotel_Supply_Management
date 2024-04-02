@@ -52,16 +52,12 @@ public class ItemManagementSceneController implements Initializable {
     private Button addButton;
     @FXML
     private AnchorPane tableAnchorPane;
-
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
     private final MenuItem viewItemMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteItemMenu = new MenuItem("Elimina");
-
     private ItemManagement itemManagement;
-
     private MainMenuController mainMenuController;
     private final ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
-
     private final ObservableList<Item> searchResultRows = FXCollections.observableArrayList();
     private boolean searchView = false;
     private ArrayList<Item> results = new ArrayList<>();
@@ -71,7 +67,6 @@ public class ItemManagementSceneController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Articolo
 
         Platform.runLater(this::createRows);            // TODO: Provare a togliere parte duplicata
-
         itemTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
             if(newSelection != null) {
                 modifyButton.setDisable(false);             // Aggiunta del listener nella tabella per rilevare quale elemento viene selezionato
@@ -82,9 +77,7 @@ public class ItemManagementSceneController implements Initializable {
                 deleteButton.setDisable(true);
             }
         });
-
         rightClickMenu.getItems().addAll(viewItemMenu, viewDeleteItemMenu);
-
         viewItemMenu.setOnAction(event -> {
             try {
                 displayItemView(null);
@@ -92,11 +85,8 @@ public class ItemManagementSceneController implements Initializable {
                 System.out.println("Non è stato possibile visualizzare l'item selezionato");
             }
         });
-
         viewDeleteItemMenu.setOnAction(event -> deleteRow());
-
         itemTable.setOnMouseClicked(event -> {
-
             if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
                 rightClickMenu.hide();
                 if (event.getClickCount() == 2) {
@@ -113,14 +103,11 @@ public class ItemManagementSceneController implements Initializable {
                 }
             }
             else {
-
                 SelectionModel<Item> selectionModel = itemTable.getSelectionModel();        // verifico se è stato cliccato un elemento
                 Item selectedItem = selectionModel.getSelectedItem();
                 if(selectedItem != null)
                     rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
-
             }
-
         });
 
     }
@@ -129,7 +116,6 @@ public class ItemManagementSceneController implements Initializable {
 
         if (!mainMenuController.getIsNotFirstTimeLoad().get(0)) {
             ResultSet resultSet = itemManagement.getRows(true, null);
-
             try {
                 while (resultSet.next()) {
                     Item item = new Item(resultSet.getInt(1), resultSet.getInt(4),
@@ -138,21 +124,17 @@ public class ItemManagementSceneController implements Initializable {
                 }
                 mainMenuController.getIsNotFirstTimeLoad().set(0, true);
             }
-
             catch (SQLException e) {
                 System.err.println("Errore durante il riempimento della tabella");
             }
         }
-
         itemRows.addAll(itemManagement.getItemList());
-
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_articolo"));
         NameColumn.setCellValueFactory(new PropertyValueFactory<>("Nome"));
         AmountColumn.setCellValueFactory(new PropertyValueFactory<>("Quantita"));
         PriceColumn.setCellValueFactory(new PropertyValueFactory<>("Prezzo"));
         DescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("Descrizione"));
         DateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_inserimento"));
-
         itemTable.setItems(itemRows);                       // Inserisce nella tabella tutte le righe degli Item presenti nel DB
 
     }
@@ -196,30 +178,22 @@ public class ItemManagementSceneController implements Initializable {
     public void updateTable() {
 
         Platform.runLater(() -> {                       // Pulisci e aggiorna la tabella
-
             if(searchView) {
-
                 itemTable.getItems().clear();
                 searchResultRows.clear();
                 searchResultRows.setAll(results);
                 itemTable.setItems(searchResultRows);
-
             }
             else {
-
                 itemTable.getItems().clear();
                 itemRows.clear();
                 itemRows.setAll(itemManagement.getItemList());
                 itemTable.setItems(itemRows);
-
                 addButton.setDisable(false);                // Riattivo bottone di aggiunta
                 addButton.setVisible(true);
-
                 backButton.setDisable(true);                // Disattivo bottone "indietro" quando ho terminato una precedente ricerca
                 backButton.setVisible(false);
-
             }
-
         });
 
     }
@@ -264,11 +238,9 @@ public class ItemManagementSceneController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Rimozione prodotto");
         alert.setContentText("Sicuro di procedere con l'eliminazione del prodotto dalla banca dati?");
-
         ButtonType buttonTypeYes = new ButtonType("Sì");
         ButtonType buttonTypeNo = new ButtonType("No");
         alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == buttonTypeYes;
 
@@ -310,7 +282,6 @@ public class ItemManagementSceneController implements Initializable {
                 searchResultRows.setAll(results);
                 itemTable.getItems().clear();
                 itemTable.setItems(searchResultRows);
-
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Risultato ricerca");
                 alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
@@ -354,7 +325,7 @@ public class ItemManagementSceneController implements Initializable {
     public void openDifferentManagement(ActionEvent event) {
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        String menuName = ((MenuItem) event.getSource()).getParentMenu().getText();
+        String menuName = ((MenuItem) event.getSource()).getText();                                         // Ottengo il nome del menuItem premuto
         mainMenuController.getStageFromMenuBar(event, stage, menuName);
 
     }

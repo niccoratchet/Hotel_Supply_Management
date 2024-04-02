@@ -65,22 +65,10 @@ public class OrderManagementSceneController implements Initializable{
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Cliente
 
         Platform.runLater(this::createRows);
-
-        orderTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
-            if(newSelection != null) {
-                modifyButton.setDisable(false);
-                deleteButton.setDisable(false);
-            }
-            else {
-                modifyButton.setDisable(true);
-                deleteButton.setDisable(true);
-            }
-        });
-
+        orderTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> deleteButton.setDisable(newSelection == null));
         rightClickMenu.getItems().addAll(viewOrderMenu, viewDeleteOrderMenu);
         viewOrderMenu.setOnAction(event -> displayOrderView(null));
         viewDeleteOrderMenu.setOnAction(event -> deleteRow());
-
         orderTable.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
                 rightClickMenu.hide();
@@ -94,12 +82,10 @@ public class OrderManagementSceneController implements Initializable{
                 }
             }
             else {
-
                 SelectionModel<Order> selectionModel = orderTable.getSelectionModel();        // verifico se è stato cliccato un elemento
                 Order selectedOrder = selectionModel.getSelectedItem();
                 if(selectedOrder != null)
                     rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
-
             }
         });
 
@@ -113,8 +99,7 @@ public class OrderManagementSceneController implements Initializable{
             Order selectedOrder = selectionModel.getSelectedItem();
             orderManagement.getOrderList().remove(selectedOrder);
             orderManagement.delete(selectedOrder.getCodice_ordine());
-
-            try {       //Codice per eliminare righe dalla tabella ArticoloInOrdine
+            try {                                                                                                                                                           //Codice per eliminare righe dalla tabella ArticoloInOrdine
                 PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM ArticoloInOrdine WHERE Codice_Ordine = " + selectedOrder.getCodice_ordine());
                 statement.executeUpdate();
             } catch (SQLException e) {
@@ -139,6 +124,7 @@ public class OrderManagementSceneController implements Initializable{
             orderViewController.setDisplayedOrder(selectedOrder);
             orderViewController.setOrderManagementSceneController(this);
             Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle(Integer.toString(selectedOrder.getCodice_ordine()));
             stage.setScene(new Scene(root));
             stage.show();
@@ -166,14 +152,11 @@ public class OrderManagementSceneController implements Initializable{
                 System.err.println("Errore durante il riempimento della tabella");
             }
         }
-
         orderRows.addAll(orderManagement.getOrderList());
-
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_ordine"));
         TypeOfPaymentColumn.setCellValueFactory(new PropertyValueFactory<>("Tipo_pagamento"));
         DateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_ordine"));
         CustomerIDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_cliente"));
-
         orderTable.setItems(orderRows);                       // Inserisce nella tabella tutte le righe dei Customer presenti nel DB
 
     }
@@ -205,19 +188,6 @@ public class OrderManagementSceneController implements Initializable{
         orderManagement.add(newOrder);
         updateTable();
 
-    }
-
-    public void modifyRow(Order toBeModified) {
-        orderManagement.modify(toBeModified);
-        createConfirmedOrderModify();
-        updateTable();
-    }
-
-    private void createConfirmedOrderModify() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Modifiche applicate");
-        alert.setContentText("Le modifiche sono state eseguite");
-        alert.showAndWait();
     }
 
     public void updateTable() {
@@ -254,11 +224,9 @@ public class OrderManagementSceneController implements Initializable{
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Rimozione ordine");
         alert.setContentText("Sicuro di procedere con l'eliminazione dell'ordine dalla banca dati?");
-
         ButtonType buttonTypeYes = new ButtonType("Sì");
         ButtonType buttonTypeNo = new ButtonType("No");
         alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == buttonTypeYes;
 
@@ -284,7 +252,6 @@ public class OrderManagementSceneController implements Initializable{
                 alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
                 alert.showAndWait();
             });
-
             backButton.setDisable(false);
             backButton.setVisible(true);
             searchButton.setDisable(true);
@@ -304,7 +271,7 @@ public class OrderManagementSceneController implements Initializable{
     public void openDifferentManagement(ActionEvent event) {
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        String menuName = ((MenuItem) event.getSource()).getParentMenu().getText();
+        String menuName = ((MenuItem) event.getSource()).getText();
         mainMenuController.getStageFromMenuBar(event, stage, menuName);
 
     }
@@ -313,7 +280,8 @@ public class OrderManagementSceneController implements Initializable{
         this.mainMenuController = mainMenuController;
     }
 
-    public void displaySearchView(ActionEvent event) {
+    public void displaySearchView(ActionEvent ignoredEvent) {
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchOrderView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
             Parent root = loader.load();
@@ -328,12 +296,15 @@ public class OrderManagementSceneController implements Initializable{
         catch(IOException e) {
             System.out.println("Errore durante il caricamento di SearchOrderView: " + e);
         }
+
     }
 
-    public void exitSearch(ActionEvent event) {
+    public void exitSearch(ActionEvent ignoredEvent) {
+
         searchButton.setDisable(false);             // Riattivo bottone di ricerca
         searchButton.setVisible(true);
         searchView = false;
         updateTable();
+
     }
 }

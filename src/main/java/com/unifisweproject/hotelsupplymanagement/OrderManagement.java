@@ -14,7 +14,6 @@ public class OrderManagement implements Data_Management {
     public OrderManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Ordine'";
-
         try {
             Statement statement = HotelSupplyManagementMain.conn.createStatement();
             ResultSet resultSet = statement.executeQuery(getCodeQuery);
@@ -29,12 +28,9 @@ public class OrderManagement implements Data_Management {
     public void add(Object newOrder) {
 
         Order toBeAdded = (Order) newOrder;
-
         String addQuery = "INSERT INTO Ordine (BF, Tipo_Pagamento, Data_Ordine, Codice_Cliente) \n" +       // creazione della query di inserimento
                 "VALUES (?, ?, ?, ?)";
-
         try {
-
             PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(addQuery);
             preparedStatement.setBoolean(1, toBeAdded.isBolla());
             preparedStatement.setString(2, toBeAdded.getTipo_pagamento());
@@ -46,6 +42,7 @@ public class OrderManagement implements Data_Management {
         catch (SQLException e) {
             System.out.println("Errore durante l'aggiunta del nuovo Order: "+ e.getMessage() +" \n Query utilizzata: " + addQuery);
         }
+
     }
 
     @Override
@@ -69,7 +66,6 @@ public class OrderManagement implements Data_Management {
     public ArrayList<Object> getSearchResults(ResultSet resultSet) {              // dato un oggetto ResultSet (insieme delle righe del risultato di una query) rende un ArrayList di Item che corrispondono alle righe indicate
 
         ArrayList<Object> results = new ArrayList<>();                // conterrà gli Item che corrispondono ai valori trovati dopo la query
-
         try {
             while (resultSet.next()) {
                 for (Order nextOrder : orderList) {
@@ -130,11 +126,13 @@ public class OrderManagement implements Data_Management {
             System.err.println("Query di ricerca non correttamente formattata");
             return null;
         }
+
     }
 
     private int getNumberOfParameters(Order forCounting) {
+
         int i = 0, count = 0;
-        while (i < 3) {
+        while (i < 4) {
             switch (i) {
                 case 0 -> {
                     if (forCounting.getCodice_cliente() != -1)
@@ -149,11 +147,15 @@ public class OrderManagement implements Data_Management {
                     if (forCounting.getData_ordine() != null)
                         count++;
                 }
+                case 3 -> {
+                    if (forCounting.getCodice_ordine() != -1)
+                        count++;
+                }
             }
             i++;
         }
-
         return count;
+
     }
 
     @Override
@@ -186,10 +188,9 @@ public class OrderManagement implements Data_Management {
     public void executeQuery(boolean isOutput, PreparedStatement statement) {
 
         try {
-            if (! isOutput)
+            if (!isOutput)
                 statement.executeUpdate();
         }
-
         catch (SQLException e) {
             System.err.println(e.getMessage());
         }

@@ -328,7 +328,7 @@ public class SupplierManagementSceneController implements Initializable {
     public void openDifferentManagement(ActionEvent event) {
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        String menuName = ((MenuItem) event.getSource()).getParentMenu().getText();
+        String menuName = ((MenuItem) event.getSource()).getText();
         mainMenuController.getStageFromMenuBar(event, stage, menuName);
 
     }

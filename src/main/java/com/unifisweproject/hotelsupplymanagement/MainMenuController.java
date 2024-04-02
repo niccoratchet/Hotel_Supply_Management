@@ -40,7 +40,7 @@ public class MainMenuController {
             stage.show();
         }
         catch (IOException e) {
-            System.err.println("Non è stato possibile caricare la pagina ItemManagementScene.fxml: " + e);
+            System.err.println("Non è stato possibile caricare la pagina ItemManagementScene.fxml: " + e.getMessage());
         }
 
     }
@@ -59,7 +59,7 @@ public class MainMenuController {
             stage.show();
         }
         catch (IOException e) {
-            System.err.println("Non è stato possibile caricare la pagina CustomerManagementScene.fxml: " + e);
+            System.err.println("Non è stato possibile caricare la pagina CustomerManagementScene.fxml: " + e.getMessage());
         }
 
     }
@@ -78,7 +78,7 @@ public class MainMenuController {
             stage.show();
         }
         catch (IOException e) {
-            System.err.println("Non è stato possibile caricare la pagina OrderManagementScene.fxml: " + e);
+            System.err.println("Non è stato possibile caricare la pagina OrderManagementScene.fxml: " + e.getMessage());
         }
 
     }
@@ -126,11 +126,11 @@ public class MainMenuController {
         this.stage = stage;
         isMenuButton = true;
         switch (sectionName) {
-            case "Articoli" -> openItemManagementView(event);
-            case "Fornitori" -> openSupplierManagementView(event);
-            case "Clienti" -> openCustomerManagementView(event);
-            case "Ordini" -> openOrderManagementView(event);
-            case "Forniture" -> openSuppliesManagement(event);
+            case "Lista articoli" -> openItemManagementView(event);
+            case "Lista fornitori" -> openSupplierManagementView(event);
+            case "Storico forniture" -> openSuppliesManagement(event);
+            case "Lista clienti" -> openCustomerManagementView(event);
+            case "Storico ordini" -> openOrderManagementView(event);
         }
 
     }

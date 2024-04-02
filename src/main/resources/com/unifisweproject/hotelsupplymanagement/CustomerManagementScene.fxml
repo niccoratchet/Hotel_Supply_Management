@@ -14,19 +14,20 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Articoli">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Visualizza" />
+                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista articoli" />
                     </items></Menu>
-                <Menu mnemonicParsing="false" text="Fornitori">
+                <Menu mnemonicParsing="false" text="Fornitura">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Visualizza" />
+                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista fornitori" />
+                  <MenuItem mnemonicParsing="false" text="Storico forniture" />
                     </items></Menu>
                 <Menu disable="true" mnemonicParsing="false" text="Clienti">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Visualizza" />
+                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista clienti" />
                     </items></Menu>
                 <Menu mnemonicParsing="false" text="Ordini">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Visualizza" />
+                        <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Storico ordini" />
                     </items></Menu>
             </menus>
         </MenuBar>

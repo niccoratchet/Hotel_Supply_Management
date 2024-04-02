@@ -331,19 +331,15 @@ public class CustomerManagementSceneController implements Initializable {
     public void displaySearchView(ActionEvent ignoredEvent) {
 
         try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchCustomerView.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchCustomerView.fxml"));
             Parent root = loader.load();
-
             SearchCustomerController searchCustomerController = loader.getController();
             searchCustomerController.setCustomerManagementSceneController(this);
-
             Stage searchStage = new Stage();
             searchStage.setTitle("Ricerca cliente");
             searchStage.initModality(Modality.APPLICATION_MODAL);
             searchStage.setScene(new Scene(root));
             searchStage.show();
-
         }
         catch(IOException e) {
             System.out.println("Errore durante il caricamento di CustomerView: " + e);
@@ -354,7 +350,7 @@ public class CustomerManagementSceneController implements Initializable {
     public void openDifferentManagement(ActionEvent event) {
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-        String menuName = ((MenuItem) event.getSource()).getParentMenu().getText();
+        String menuName = ((MenuItem) event.getSource()).getText();
         mainMenuController.getStageFromMenuBar(event, stage, menuName);
 
     }

@@ -11,11 +11,7 @@ public class SuppliesManagement implements Data_Management {
         Questa classe è stata creata per gestire la tabella "Fornitura" del database. Non ha bisogno dell'attributo nextItemCode per il fatto
         che non è possibile aggiungere nuovi elementi alla tabella se non sono già presenti Fornitori e Articoli.
      */
-
     private int nextSupplyCode;                 // Codice della prossima fornitura da aggiungere
-
-
-
     private final ArrayList<Supply> suppliesList = new ArrayList<>();               // Lista di oggetti che rappresenta una singola riga in Fornitura nel DB
 
     public SuppliesManagement() {
@@ -264,6 +260,10 @@ public class SuppliesManagement implements Data_Management {
     }
     public ArrayList<Supply> getSuppliesList() {
         return suppliesList;
+    }
+
+    public int getNextSupplyCode() {
+        return nextSupplyCode;
     }
 
 }
