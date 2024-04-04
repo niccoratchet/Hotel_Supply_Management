@@ -37,8 +37,6 @@ public class AddOrderViewController implements Initializable {
     @FXML
     private ChoiceBox<String> typeOfPaymentField;
     @FXML
-    private TextField customerCodeField;
-    @FXML
     private TableView<Item> itemTableView;
     @FXML
     private TableColumn<Item, Integer> itemCodeColumn;
@@ -52,6 +50,9 @@ public class AddOrderViewController implements Initializable {
     private TableColumn<Item, String> itemDescriptionColumn;
     @FXML
     private ObservableList<Item> itemList = FXCollections.observableArrayList();
+    @FXML
+    private ChoiceBox<String> customerList;
+    private ResultSet resultSet;
     private Stage addItemStage;
     private OrderManagementSceneController orderManagementSceneController;
     private MainMenuController mainMenuController;
@@ -71,15 +72,47 @@ public class AddOrderViewController implements Initializable {
 
     }
 
+    public void getCustomerList() {
+
+        resultSet = getResultSet();
+        try {
+            while (resultSet.next()) {
+                if(resultSet.getString("Ragione_Sociale") == null)
+                    customerList.getItems().add(resultSet.getString("Codice_Fiscale"));
+                else
+                    customerList.getItems().add(resultSet.getString("Ragione_Sociale"));
+            }
+        }
+        catch (SQLException e) {
+            System.err.println("Errore durante l'estrapolazione dei dati dei clienti: " + e.getMessage());
+        }
+
+    }
+
+
+    public ResultSet getResultSet() {                   // Metodo per riottenere il ResultSet contenente i dati Codice_Fornitore e Ragione_Sociale dei fornitori dal DB
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            return statement.executeQuery("SELECT Codice_Cliente, Ragione_Sociale, Codice_Fiscale FROM Cliente");
+        }
+        catch (SQLException e) {
+            System.err.println("Errore durante l'estrapolazione dei dati dei clienti: " + e.getMessage());
+            return null;
+        }
+
+    }
+
+
     public void closeAddView(ActionEvent event) {
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
-    public void createOrder(ActionEvent event) {
+    public void createOrder(ActionEvent event) {            //TODO: Bho
 
         try {
             int i = 0;
-            while (i < 5) {
+            while (i < 4) {
                 switch (i) {
                     case 0 -> {
                         if (BFField.getValue() == null)
@@ -90,24 +123,30 @@ public class AddOrderViewController implements Initializable {
                             throw new RuntimeException("Tipo di pagamento mancante");
                     }
                     case 2 -> {
-                        if ("".equals(customerCodeField.getText()))
-                            throw new RuntimeException("Quantità mancante");
-                    }
-                    case 3 -> {
                         if (datePicker.getValue() == null)
                             throw new RuntimeException("Data mancante");
                     }
-                    case 4 -> {
+                    case 3 -> {
                         if(itemInOrder.getNumberOfItems() == 0)
                             throw new RuntimeException("Nessun articolo inserito");
                     }
                 }
                 i++;
             }
-
+            try {
+                resultSet = getResultSet();
+                while (resultSet.next()) {
+                    if (customerList.getValue().equals(resultSet.getString(2)) || customerList.getValue().equals(resultSet.getString(3))) {
+                        itemInOrder.setCodice_Ordine(Integer.parseInt(resultSet.getString(1)));
+                    }
+                }
+            }
+            catch (SQLException e) {
+                System.err.println("Errore durante l'estrapolazione del codice cliente: " + e.getMessage());
+            }
             boolean bolla;
             bolla = BFField.getValue().equals("Bolla");
-            Order newOrder = new Order(Integer.parseInt(customerCodeField.getText()), bolla, typeOfPaymentField.getValue(), datePicker.getValue().toString());
+            Order newOrder = new Order(Integer.parseInt(customerList.getValue()), bolla, typeOfPaymentField.getValue(), datePicker.getValue().toString());      //TODO: ???
             orderManagementSceneController.addRow(newOrder);
             updateAmount();
             updateItemInOrder();
