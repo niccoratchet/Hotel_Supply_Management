@@ -18,7 +18,7 @@
       </Label>
       <DatePicker fx:id="datePicker" layoutX="93.0" layoutY="101.0" prefHeight="25.0" prefWidth="143.0" />
       <Label layoutX="42.0" layoutY="105.0" text="Data" />
-      <ChoiceBox fx:id="supplierCodeList" layoutX="396.0" layoutY="101.0" prefHeight="25.0" prefWidth="143.0" />
+      <ChoiceBox fx:id="supplierList" layoutX="396.0" layoutY="101.0" prefHeight="25.0" prefWidth="143.0" />
       <Label layoutX="286.0" layoutY="105.0" text="Nome fornitore" />
       <TableView fx:id="itemTableView" layoutX="42.0" layoutY="195.0" prefHeight="147.0" prefWidth="499.0">
          <columns>

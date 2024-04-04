@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -14,8 +13,6 @@
     <children>
         <Label layoutX="47.0" layoutY="84.0" text="Bolla/Fattura" />
         <Label layoutX="262.0" layoutY="84.0" text="Tipo di pagamento" />
-        <TextField fx:id="customerCodeField" layoutX="137.0" layoutY="132.0" prefHeight="26.0" prefWidth="77.0" />
-        <Label layoutX="43.0" layoutY="137.0" text="Codice Cliente" />
         <Button layoutX="425.0" layoutY="392.0" mnemonicParsing="false" onAction="#createOrder" prefHeight="25.0" prefWidth="108.0" text="Aggiungi" />
         <Button layoutX="290.0" layoutY="392.0" mnemonicParsing="false" onAction="#closeAddView" prefHeight="25.0" prefWidth="108.0" text="Annulla" />
         <DatePicker fx:id="datePicker" layoutX="376.0" layoutY="132.0" prefHeight="25.0" prefWidth="149.0" />
@@ -42,5 +39,7 @@
             <TableColumn fx:id="itemDescriptionColumn" prefWidth="162.0" text="Descrizione" />
         </columns>
       </TableView>
+      <ChoiceBox fx:id="customerList" layoutX="95.0" layoutY="132.0" prefHeight="25.0" prefWidth="149.0" />
+      <Label layoutX="47.0" layoutY="136.0" text="Cliente" />
     </children>
 </AnchorPane>

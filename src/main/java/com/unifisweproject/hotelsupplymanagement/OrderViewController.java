@@ -43,13 +43,12 @@ public class OrderViewController implements Initializable {
     private Label codeLabel;
     private Order displayedOrder;
     private OrderManagementSceneController orderManagementSceneController;
-    private ObservableList<Item> itemList = FXCollections.observableArrayList();
+    private final ObservableList<Item> itemList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        Platform.runLater(this::addOrderInfo);
-        datePicker.setValue(LocalDate.now());
+        Platform.runLater(this::addOrderInfo);                                                                          // TODO: Si rende possibile la modifica di alcuni campi oppure no?
         BFField.getItems().addAll("Bolla", "Fattura");
         typeOfPaymentField.getItems().addAll("Ricevuta bancaria", "Bonifico bancario", "Rimessa diretta");
 
@@ -94,27 +93,20 @@ public class OrderViewController implements Initializable {
         try {
             Statement statement = HotelSupplyManagementMain.conn.createStatement();
             ResultSet resultSet = statement.executeQuery(getCodeQuery);
-
-
             while (resultSet.next()) {
                 int quantita = resultSet.getInt(4);
                 double prezzoTot = resultSet.getDouble(3) * quantita;
-
                 Item item = new Item(resultSet.getInt(1), quantita,
                         prezzoTot, resultSet.getString(2),
                         resultSet.getString(5), resultSet.getString(6));
-
                 codeColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_articolo"));
                 nameColumn.setCellValueFactory(new PropertyValueFactory<>("Nome"));
                 amountColumn.setCellValueFactory(new PropertyValueFactory<>("Quantita"));
                 descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("Descrizione"));
                 priceColumn.setCellValueFactory(new PropertyValueFactory<>("Prezzo"));
-
                 itemList.add(item);                       // Inserisce nella tabella tutte le righe degli Item presenti nel DB
             }
-
             itemTable.setItems(itemList);
-
         }
         catch(SQLException e) {
             System.err.println("Errore nell'esecuzione della query");

@@ -62,20 +62,12 @@ public class AddOrderViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        datePicker.setValue(LocalDate.now());
-        BFField.getItems().addAll("Bolla", "Fattura");
-        typeOfPaymentField.getItems().addAll("Ricevuta bancaria", "Bonifico bancario", "Rimessa diretta");
-
-        UnaryOperator<TextFormatter.Change> filterInt = change -> {             // Creazione del Formatter per inserimento delle quantità
-            String text = change.getText();
-            if (text.matches("[0-9]*")) {
-                return change;
-            }
-            return null;
-        };
-
-        TextFormatter<String> textFormatterInt = new TextFormatter<>(filterInt);
-        customerCodeField.setTextFormatter(textFormatterInt);
+        Platform.runLater(() -> {
+            datePicker.setValue(LocalDate.now());
+            BFField.getItems().addAll("Bolla", "Fattura");
+            typeOfPaymentField.getItems().addAll("Ricevuta bancaria", "Bonifico bancario", "Rimessa diretta");
+            getCustomerList();
+        });
 
     }
 
@@ -120,15 +112,13 @@ public class AddOrderViewController implements Initializable {
             updateAmount();
             updateItemInOrder();
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
-
-        } catch (RuntimeException missingParameters) {
-
+        }
+        catch (RuntimeException missingParameters) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Parametri assenti");
             alert.setContentText("Inserire il valore di tutti i dati obbligatori.");
             alert.showAndWait();
-
         }
 
     }

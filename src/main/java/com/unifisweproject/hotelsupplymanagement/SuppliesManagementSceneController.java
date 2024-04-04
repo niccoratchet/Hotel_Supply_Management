@@ -144,7 +144,8 @@ public class SuppliesManagementSceneController implements Initializable {
     public void addSupply(ItemInSupply newSupplies) {
 
         for(int i = 0; i < newSupplies.getNumberOfItems(); i++) {
-            Supply newSupply = new Supply(newSupplies.getCodice_Fornitore(), newSupplies.getCodice_Articolo(i), newSupplies.getData_Fornitura(), newSupplies.getQuantita(i), newSupplies.getPrezzo(i));
+            double price = newSupplies.getPrezzo(i) * newSupplies.getQuantita(i);
+            Supply newSupply = new Supply(newSupplies.getCodice_Fornitore(), newSupplies.getCodice_Articolo(i), newSupplies.getData_Fornitura(), newSupplies.getQuantita(i), price);
             newSupply.setCodice_fornitura(suppliesManagement.getNextSupplyCode() + 1);
             suppliesManagement.getSuppliesList().add(newSupply);
             suppliesManagement.add(newSupply);
@@ -167,7 +168,24 @@ public class SuppliesManagementSceneController implements Initializable {
     }
 
     public void displayRowView(ActionEvent ignoredEvent) {                  // Visualizza i dettagli della fornitura selezionata senza però poterla modificare
-        // TODO
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SupplyView.fxml"));
+            Parent root = loader.load();
+            SupplyViewController supplyViewController = loader.getController();
+            supplyViewController.setDisplayedSupply(suppliesTable.getSelectionModel().getSelectedItem());
+            supplyViewController.setSuppliesManagementSceneController(this);
+            Stage viewSupplyStage = new Stage();
+            viewSupplyStage.initModality(Modality.APPLICATION_MODAL);
+            viewSupplyStage.getIcons().add(HotelSupplyManagementMain.icon);
+            viewSupplyStage.setTitle("Dettagli fornitura");
+            viewSupplyStage.setScene(new Scene(root));
+            viewSupplyStage.show();
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante l'apertura del file SupplyView.fxml: " + e.getMessage());
+        }
+
     }
 
     public void displayAddView(ActionEvent ignoredEvent) {
@@ -180,6 +198,7 @@ public class SuppliesManagementSceneController implements Initializable {
             addSupplyViewController.setMainMenuController(mainMenuController);
             Stage addStage = new Stage();
             addStage.initModality(Modality.APPLICATION_MODAL);
+            addStage.getIcons().add(HotelSupplyManagementMain.icon);
             addStage.setTitle("Aggiungi fornitura");
             addStage.setScene(new Scene(root));
             addStage.show();

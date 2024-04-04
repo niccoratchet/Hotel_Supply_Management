@@ -122,6 +122,7 @@ public class OrderManagementSceneController implements Initializable{
             orderViewController.setDisplayedOrder(selectedOrder);
             orderViewController.setOrderManagementSceneController(this);
             Stage stage = new Stage();
+            stage.getIcons().add(HotelSupplyManagementMain.icon);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle(Integer.toString(selectedOrder.getCodice_ordine()));
             stage.setScene(new Scene(root));
@@ -169,6 +170,7 @@ public class OrderManagementSceneController implements Initializable{
             addOrderController.setMainMenuController(mainMenuController);
             Stage addStage = new Stage();
             addStage.initModality(Modality.APPLICATION_MODAL);
+            addStage.getIcons().add(HotelSupplyManagementMain.icon);
             addStage.setTitle("Aggiungi ordine");
             addStage.setScene(new Scene(root));
             addStage.show();
@@ -239,12 +241,10 @@ public class OrderManagementSceneController implements Initializable{
             int numberOfResults = results.size();
             searchView = true;
             searchResultRows.clear();
-
             Platform.runLater(() -> {
                 searchResultRows.setAll(results);
                 orderTable.getItems().clear();
                 orderTable.setItems(searchResultRows);
-
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Risultato ricerca");
                 alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");

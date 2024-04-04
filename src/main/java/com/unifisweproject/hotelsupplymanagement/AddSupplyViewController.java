@@ -20,6 +20,7 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -40,7 +41,7 @@ public class AddSupplyViewController implements Initializable {
     private TableColumn<Item, String> itemDescriptionColumn;
 
     @FXML
-    private ChoiceBox<String> supplierCodeList;
+    private ChoiceBox<String> supplierList;
     @FXML
     private DatePicker datePicker;
     private ResultSet resultSet;
@@ -61,16 +62,27 @@ public class AddSupplyViewController implements Initializable {
 
     public void getSupplierList() {
 
-        String getSupplierList = "SELECT Codice_Fornitore, Ragione_Sociale FROM Fornitore";
+        resultSet = getResultSet();
         try {
-            PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(getSupplierList);
-            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                supplierCodeList.getItems().add(resultSet.getString("Ragione_Sociale"));
+                supplierList.getItems().add(resultSet.getString("Ragione_Sociale"));
             }
         }
         catch (SQLException e) {
-            System.err.println("Errore durante il reperimento della lista dei fornitori: " + e.getMessage());
+            System.err.println("Errore durante l'estrapolazione dei dati dei fornitori: " + e.getMessage());
+        }
+
+    }
+
+    public ResultSet getResultSet() {                   // Metodo per riottenere il ResultSet contenente i dati Codice_Fornitore e Ragione_Sociale dei fornitori dal DB
+
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            return statement.executeQuery("SELECT Codice_Fornitore, Ragione_Sociale FROM Fornitore");
+        }
+        catch (SQLException e) {
+            System.err.println("Errore durante l'estrapolazione dei dati dei fornitori: " + e.getMessage());
+            return null;
         }
 
     }
@@ -99,6 +111,7 @@ public class AddSupplyViewController implements Initializable {
             listOfItemsController.setMainMenuController(mainMenuController);
             Stage itemListStage = new Stage();
             itemListStage.initModality(Modality.APPLICATION_MODAL);
+            itemListStage.getIcons().add(HotelSupplyManagementMain.icon);
             itemListStage.setTitle("Seleziona l'articolo rifornito");
             itemListStage.setScene(new Scene(root));
             itemListStage.show();
@@ -115,7 +128,7 @@ public class AddSupplyViewController implements Initializable {
         while (i < 3) {
             switch (i) {
                 case 0:
-                    if (supplierCodeList.getValue() == null) {
+                    if (supplierList.getValue() == null) {
                         throw new RuntimeException("Fornitore");
                     }
                 case 1:
@@ -141,7 +154,7 @@ public class AddSupplyViewController implements Initializable {
 
     }
 
-    public void addRow (Item newItem) {
+    public void addRow (Item newItem) {                 // TODO: Fai vedere il prezzo totale dell'articolo per la quantita inserita
 
         itemList.add(newItem);
         itemTableView.setItems(itemList);
@@ -160,9 +173,10 @@ public class AddSupplyViewController implements Initializable {
         }
 
         try {
+            resultSet = getResultSet();
             while (resultSet.next()) {
-                if (supplierCodeList.getValue().equals(resultSet.getString("Ragione_Sociale"))) {
-                    itemInSupply.setCodice_Fornitore(Integer.parseInt(resultSet.getString("Codice_Fornitore")));
+                if (supplierList.getValue().equals(resultSet.getString(2))) {
+                    itemInSupply.setCodice_Fornitore(Integer.parseInt(resultSet.getString(1)));
                 }
             }
         }
