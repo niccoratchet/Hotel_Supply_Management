@@ -78,17 +78,9 @@ public class SuppliesManagement implements Data_Management {
         int numberOfParameters = getNumberOfParameters(supply);
         StringBuilder searchQuery = new StringBuilder("SELECT * FROM Fornitura WHERE ");
         int i = 0;
-        while (i < 6 && numberOfParameters > 0) {
+        while (i < 3 && numberOfParameters > 0) {
             switch (i) {
                 case 0 -> {
-                    if(supply.getCodice_fornitura() != -1) {
-                        numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Codice_Fornitura", supply.getCodice_fornitura(), true));
-                        if (numberOfParameters != 0)
-                            searchQuery.append(" AND ");
-                    }
-                }
-                case 1 -> {
                     if(supply.getCodice_articolo() != -1) {
                         numberOfParameters--;
                         searchQuery.append(getDataTypeForQuery("Codice_Articolo", supply.getCodice_articolo(), true));
@@ -96,7 +88,7 @@ public class SuppliesManagement implements Data_Management {
                             searchQuery.append(" AND ");
                     }
                 }
-                case 2 -> {
+                case 1 -> {
                     if(supply.getCodice_fornitore() != -1) {
                         numberOfParameters--;
                         searchQuery.append(getDataTypeForQuery("Codice_Fornitore", supply.getCodice_fornitore(), true));
@@ -104,26 +96,10 @@ public class SuppliesManagement implements Data_Management {
                             searchQuery.append(" AND ");
                     }
                 }
-                case 3 -> {
+                case 2 -> {
                     if(supply.getData_fornitura() != null) {
                         numberOfParameters--;
                         searchQuery.append(getDataTypeForQuery("Data_Fornitura", supply.getData_fornitura(), true));
-                        if (numberOfParameters != 0)
-                            searchQuery.append(" AND ");
-                    }
-                }
-                case 4 -> {
-                    if(supply.getPrezzo() != -1) {
-                        numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Prezzo", supply.getPrezzo(), true));
-                        if (numberOfParameters != 0)
-                            searchQuery.append(" AND ");
-                    }
-                }
-                case 5 -> {
-                    if(supply.getQuantita() != -1) {
-                        numberOfParameters--;
-                        searchQuery.append(getDataTypeForQuery("Quantita", supply.getQuantita(), true));
                         if (numberOfParameters != 0)
                             searchQuery.append(" AND ");
                     }
@@ -145,12 +121,11 @@ public class SuppliesManagement implements Data_Management {
     public ArrayList<Object> getSearchResults(ResultSet resultSet) {              // dato un oggetto ResultSet (insieme delle righe del risultato di una query) rende un ArrayList di Item che corrispondono alle righe indicate
 
         ArrayList<Object> results = new ArrayList<>();                // conterrà gli Item che corrispondono ai valori trovati dopo la query
-
         try {
             while (resultSet.next()) {
-                for (Supply nextItem : suppliesList) {
-                    if (nextItem.getCodice_fornitura() == resultSet.getInt(1)) {
-                        results.add(nextItem);
+                for (Supply nextSupply : suppliesList) {
+                    if (nextSupply.getCodice_fornitura() == resultSet.getInt(1)) {
+                        results.add(nextSupply);
                     }
                 }
             }
@@ -166,8 +141,7 @@ public class SuppliesManagement implements Data_Management {
     public int getNumberOfParameters(Supply forCounting) {
 
         int i = 0, count = 0;
-        while (i < 6) {
-
+        while (i < 3) {
             switch (i) {
                 case 0 -> {
                     if (forCounting.getCodice_articolo() != -1)
@@ -179,18 +153,6 @@ public class SuppliesManagement implements Data_Management {
                 }
                 case 2 -> {
                     if (forCounting.getData_fornitura() != null)
-                        count++;
-                }
-                case 3 -> {
-                    if (forCounting.getPrezzo() != -1)
-                        count++;
-                }
-                case 4 -> {
-                    if (forCounting.getQuantita() != -1)
-                        count++;
-                }
-                case 5 -> {
-                    if (forCounting.getCodice_fornitura() != -1)
                         count++;
                 }
             }
@@ -232,7 +194,7 @@ public class SuppliesManagement implements Data_Management {
     @Override
     public void executeQuery(boolean isOutput, PreparedStatement statement) {
         try {
-            if (! isOutput)
+            if (!isOutput)
                 statement.executeUpdate();
         }
 

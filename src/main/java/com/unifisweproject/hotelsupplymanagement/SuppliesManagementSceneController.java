@@ -48,8 +48,10 @@ public class SuppliesManagementSceneController implements Initializable {
     @FXML
     private Button backButton;
     @FXML
+    private Button searchButton;
+    @FXML
     private AnchorPane tableAnchorPane;
-    private final boolean searchView = false;
+    private boolean searchView = false;
     private final ContextMenu rightClickMenu = new ContextMenu();
     private final MenuItem viewSupplyMenu = new MenuItem("Visualizza dettagli");
     private final MenuItem deleteSupplyMenu = new MenuItem("Modifica fornitura");
@@ -209,6 +211,26 @@ public class SuppliesManagementSceneController implements Initializable {
 
     }
 
+    public void displaySearchView(ActionEvent ignoredEvent) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchSupplyView.fxml"));
+            Parent root = loader.load();
+            SearchSupplyController searchSupplyViewController = loader.getController();
+            searchSupplyViewController.setSuppliesManagementSceneController(this);
+            Stage searchStage = new Stage();
+            searchStage.initModality(Modality.APPLICATION_MODAL);
+            searchStage.getIcons().add(HotelSupplyManagementMain.icon);
+            searchStage.setTitle("Ricerca fornitura");
+            searchStage.setScene(new Scene(root));
+            searchStage.show();
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante l'apertura del file SearchSupplyView.fxml: " + e.getMessage());
+        }
+
+    }
+
     public void deleteRow() {
 
         if (createConfirmDeleteAlert()) {
@@ -226,6 +248,60 @@ public class SuppliesManagementSceneController implements Initializable {
                 results.remove(selectedSupply);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
             updateTable();
         }
+
+    }
+
+    public void searchRow(Supply toBeSearched) {
+
+        results.clear();
+        try {
+            results = HotelSupplyManagementMain.castArrayList(suppliesManagement.search(toBeSearched));       // Estrapola i risultati della ricerca
+            searchView = true;
+            searchResultRows.clear();
+            Platform.runLater(() -> {
+                searchResultRows.setAll(results);
+                suppliesTable.getItems().clear();
+                suppliesTable.setItems(searchResultRows);
+                displaySearchResultsAlert();
+            });
+            backButton.setDisable(false);               // Riattiva il bottone "indietro" per tornare alla vista precedente
+            backButton.setVisible(true);
+            searchButton.setDisable(true);              // Disattiva il bottone di ricerca per evitare ricerche multiple
+            searchButton.setVisible(false);
+            addButton.setDisable(true);                 // Disattiva il bottone di aggiunta per evitare aggiunte multiple
+            addButton.setVisible(false);
+        }
+        catch (NullPointerException e) {
+            displayMissingParametersAlert(e);
+        }
+
+    }
+
+    public void exitSearchView(ActionEvent ignoredEvent) {
+
+        searchView = false;
+        searchButton.setDisable(false);                 // Riattiva il bottone di ricerca
+        searchButton.setVisible(true);
+        updateTable();
+
+    }
+
+    public void displaySearchResultsAlert() {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Risultati ricerca");
+        alert.setHeaderText("Risultati ricerca");
+        alert.setContentText("Sono stati trovati " + results.size() + " risultati");
+        alert.showAndWait();
+
+    }
+
+    public void displayMissingParametersAlert(NullPointerException e) {
+
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Errore");
+        alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore: " + e.getMessage());
+        alert.showAndWait();
 
     }
 
@@ -261,9 +337,11 @@ public class SuppliesManagementSceneController implements Initializable {
     }
 
     public void openDifferentManagement(ActionEvent event) {
+
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
         String menuName = ((MenuItem) event.getSource()).getText();
         mainMenuController.getStageFromMenuBar(event, stage, menuName);
+
     }
 
 

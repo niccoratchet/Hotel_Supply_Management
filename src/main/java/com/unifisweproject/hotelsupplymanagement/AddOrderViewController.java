@@ -25,8 +25,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
-
 
 public class AddOrderViewController implements Initializable {
 
@@ -103,13 +101,13 @@ public class AddOrderViewController implements Initializable {
 
     }
 
-
     public void closeAddView(ActionEvent event) {
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
-    public void createOrder(ActionEvent event) {            //TODO: Bho
+    public void createOrder(ActionEvent event) {
 
+        int customerCode = 0;
         try {
             int i = 0;
             while (i < 4) {
@@ -137,7 +135,8 @@ public class AddOrderViewController implements Initializable {
                 resultSet = getResultSet();
                 while (resultSet.next()) {
                     if (customerList.getValue().equals(resultSet.getString(2)) || customerList.getValue().equals(resultSet.getString(3))) {
-                        itemInOrder.setCodice_Ordine(Integer.parseInt(resultSet.getString(1)));
+                        customerCode = resultSet.getInt(1);
+                        itemInOrder.setCodice_Ordine(customerCode);
                     }
                 }
             }
@@ -146,7 +145,7 @@ public class AddOrderViewController implements Initializable {
             }
             boolean bolla;
             bolla = BFField.getValue().equals("Bolla");
-            Order newOrder = new Order(Integer.parseInt(customerList.getValue()), bolla, typeOfPaymentField.getValue(), datePicker.getValue().toString());      //TODO: ???
+            Order newOrder = new Order(customerCode, bolla, typeOfPaymentField.getValue(), datePicker.getValue().toString());
             orderManagementSceneController.addRow(newOrder);
             updateAmount();
             updateItemInOrder();
@@ -156,7 +155,7 @@ public class AddOrderViewController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Parametri assenti");
-            alert.setContentText("Inserire il valore di tutti i dati obbligatori.");
+            alert.setContentText("Inserire il valore di tutti i dati obbligatori. " + missingParameters.getMessage());
             alert.showAndWait();
         }
 

@@ -1,8 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement;
 public class Supply {               // Rappresenta una singola riga della tabella "Fornitura" del database
 
-    private String nomeFornitore = null;            // TODO: Valutare se visualizzare il nome al posto del codice
-
     private int codice_fornitura;
     private int codice_fornitore;
     private int codice_articolo;
@@ -60,10 +58,6 @@ public class Supply {               // Rappresenta una singola riga della tabell
         this.codice_articolo = codice_articolo;
     }
 
-    public void setData_fornitura(String data_fornitura) {
-        this.data_fornitura = data_fornitura;
-    }
-
     public void setQuantita(int quantita) {
         this.quantita = quantita;
     }
@@ -78,6 +72,9 @@ public class Supply {               // Rappresenta una singola riga della tabell
 
     public void setCodice_fornitura(int codice_fornitura) {
         this.codice_fornitura = codice_fornitura;
+    }
+    public void setData_fornitura(String data_fornitura) {
+        this.data_fornitura = data_fornitura;
     }
 
 }

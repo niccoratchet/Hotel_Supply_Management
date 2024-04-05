@@ -126,7 +126,7 @@ public class MainMenuController {
         this.stage = stage;
         isMenuButton = true;
         switch (sectionName) {
-            case "Lista articoli" -> openItemManagementView(event);
+            case "Articoli in magazzino" -> openItemManagementView(event);
             case "Lista fornitori" -> openSupplierManagementView(event);
             case "Storico forniture" -> openSuppliesManagement(event);
             case "Lista clienti" -> openCustomerManagementView(event);

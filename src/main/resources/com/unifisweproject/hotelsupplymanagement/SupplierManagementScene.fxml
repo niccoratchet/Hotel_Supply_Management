@@ -25,7 +25,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Articoli">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista articoli" />
+                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Articoli in magazzino" />
                </items></Menu>
                 <Menu disable="true" mnemonicParsing="false" text="Fornitura">
                <items>
