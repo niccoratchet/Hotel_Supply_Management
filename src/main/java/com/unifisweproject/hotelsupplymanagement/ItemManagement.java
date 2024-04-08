@@ -267,7 +267,7 @@ public class ItemManagement implements Data_Management {
 
     }
 
-    public void executeQuery(boolean isOutput, PreparedStatement statement) {              // TODO: Rendi un unico metodo executeQuery e getRows
+    public void executeQuery(boolean isOutput, PreparedStatement statement) {
 
         try {
             if (! isOutput)

@@ -40,7 +40,7 @@ public class SupplyDisplayWindowController implements Initializable {
     private TableColumn<Item, String> itemDescriptionColumn;
     private Supply displayedSupply;
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
-    private SuppliesManagementWindowController suppliesManagementWindowController;                // TODO: Rendere possibile l'eliminazione dalla visualizzazione? La modifica?
+    private SuppliesManagementWindowController suppliesManagementWindowController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -82,8 +82,13 @@ public class SupplyDisplayWindowController implements Initializable {
         try {
             Statement statement = HotelSupplyManagementMain.conn.createStatement();
             ResultSet resultSet = statement.executeQuery(searchSupplierQuery);
+            int rowCount = 0;
             while (resultSet.next()) {
                 supplierList.setValue(resultSet.getString(1));
+                rowCount++;
+            }
+            if (rowCount == 0) {
+                supplierList.setValue("Codice: " + displayedSupply.getCodice_fornitore() + " - Dettagli non disponibili");
             }
         }
         catch (SQLException e) {

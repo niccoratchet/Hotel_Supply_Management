@@ -87,8 +87,16 @@ public class OrderSearchWindowController implements Initializable {
 
         Order toBeSearched = getSearchFilters();
         if (toBeSearched != null) {
-            orderManagementWindowController.searchRow(toBeSearched);
-            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+            try {
+                orderManagementWindowController.searchRow(toBeSearched);
+                ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+            }
+            catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Errore");
+                alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
+                alert.showAndWait();
+            }
         }
 
     }
@@ -125,7 +133,7 @@ public class OrderSearchWindowController implements Initializable {
         catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");
-            alert.setHeaderText("Errore di formattazione");
+            alert.setContentText("Errore di formattazione: verifica i campi inseriti");
             alert.showAndWait();
             return null;
         }

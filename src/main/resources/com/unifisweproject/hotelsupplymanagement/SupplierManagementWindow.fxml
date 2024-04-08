@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="tableAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.SupplierManagementWindowController">
+<AnchorPane fx:id="tableAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.SupplierManagementWindowController">
     <children>
             <TableView fx:id="supplierTable" layoutX="118.0" layoutY="46.0" prefHeight="346.0" prefWidth="638.0">
                 <columns>
@@ -27,10 +27,10 @@
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Articoli in magazzino" />
                </items></Menu>
-                <Menu disable="true" mnemonicParsing="false" text="Fornitura">
+                <Menu mnemonicParsing="false" text="Fornitura">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista fornitori" />
-                  <MenuItem mnemonicParsing="false" text="Storico forniture" />
+                  <MenuItem disable="true" mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista fornitori" />
+                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Storico forniture" />
                </items></Menu>
                 <Menu mnemonicParsing="false" text="Clienti">
                <items>

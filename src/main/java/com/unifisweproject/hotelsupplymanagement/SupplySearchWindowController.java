@@ -123,7 +123,7 @@ public class SupplySearchWindowController implements Initializable {
 
     }
 
-    public Supply getSearchFilters() {
+    public Supply getSearchFilters() throws NumberFormatException {
 
         Supply searchSupply = new Supply(-1, -1, -1, null, -1, -1);
         int i = 0;
@@ -163,27 +163,32 @@ public class SupplySearchWindowController implements Initializable {
             return searchSupply;
         }
         catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.setHeaderText("Errore di formattazione");
-            alert.showAndWait();
-            return null;
+            throw new NumberFormatException();
         }
 
     }
 
     public void scanRows(ActionEvent event) {                                                                                   // Metodo per la ricerca delle righe
 
-        Supply toBeSearched = getSearchFilters();
-        if (toBeSearched != null) {
-            suppliesManagementWindowController.searchRow(toBeSearched);
-            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+        try {
+            Supply toBeSearched = getSearchFilters();
+            if (toBeSearched != null) {
+                suppliesManagementWindowController.searchRow(toBeSearched);
+                ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+            }
+            else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Errore");
+                alert.setHeaderText("Parametri assenti");
+                alert.setContentText("Hai spuntato dei parametri ma non hai inserito i valori corrispondenti. \nRiprovare.");
+                alert.showAndWait();
+            }
         }
-        else {
+        catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");
-            alert.setHeaderText("Parametri assenti");
-            alert.setContentText("Hai spuntato dei parametri ma non hai inserito i valori corrispondenti. \nRiprovare.");
+            alert.setHeaderText("Errore di formattazione");
+            alert.setContentText("Il codice articolo deve essere un numero intero. \nRiprovare.");
             alert.showAndWait();
         }
 

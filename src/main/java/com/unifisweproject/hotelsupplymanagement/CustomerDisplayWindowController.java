@@ -192,7 +192,7 @@ public class CustomerDisplayWindowController implements Initializable {
 
     }
 
-    public void verifyEmptyFields() {                   // TODO: Riportare questa implementazione anche da altre parti del codice
+    public void verifyEmptyFields() {
         if ("".equals(nameField.getText()) || "".equals(surnameField.getText()) || "".equals(fiscalCodeField.getText()) || "".equals(discountField.getText()) || datePicker.getValue() == null) {
             throw new RuntimeException("Campi vuoti");
         }

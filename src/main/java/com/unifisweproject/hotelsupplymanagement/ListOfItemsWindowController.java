@@ -127,14 +127,29 @@ public class ListOfItemsWindowController implements Initializable {
         };
         TextFormatter<String> textFormatterInt = new TextFormatter<>(filterInt);
         quantityField.setTextFormatter(textFormatterInt);
+        UnaryOperator<TextFormatter.Change> filterDouble = change -> {              // Creazione del Formatter per inserimento del prezzo
+            String text = change.getText();
+            if (text.matches("[0-9]*\\.?[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> textFormatterDouble = new TextFormatter<>(filterDouble);
+        priceField.setTextFormatter(textFormatterDouble);
 
     }
 
-    public void addItemToOrder(ActionEvent event){
+    public void addItemToOrder(ActionEvent event) {
 
         Item selectedItem = itemTableView.getSelectionModel().getSelectedItem();
-        int newAmount = 0;
-
+        int newAmount;
+        if (quantityField.getText().equals("0")) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setContentText("Non e' possibile aggiungere un articolo con quantita' pari a 0");
+            alert.showAndWait();
+            return;
+        }
         if(orderAddWindowController != null) {
             newAmount = selectedItem.getQuantita() - Integer.parseInt(quantityField.getText());
             if(newAmount < 0) {

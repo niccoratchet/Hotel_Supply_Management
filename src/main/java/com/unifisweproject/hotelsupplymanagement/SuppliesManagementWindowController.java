@@ -54,7 +54,7 @@ public class SuppliesManagementWindowController implements Initializable {
     private boolean searchView = false;
     private final ContextMenu rightClickMenu = new ContextMenu();
     private final MenuItem viewSupplyMenu = new MenuItem("Visualizza dettagli");
-    private final MenuItem deleteSupplyMenu = new MenuItem("Modifica fornitura");
+    private final MenuItem deleteSupplyMenu = new MenuItem("Elimina");
     private MainMenuWindowController mainMenuWindowController;
     private SuppliesManagement suppliesManagement;
     private ArrayList<Supply> results = new ArrayList<>();
@@ -128,7 +128,8 @@ public class SuppliesManagementWindowController implements Initializable {
             ResultSet resultSet = suppliesManagement.getRows(true, null);
             try {
                 while(resultSet.next()) {
-                    Supply supply = new Supply(resultSet.getInt("codice_fornitura"), resultSet.getInt("codice_fornitore"), resultSet.getInt("codice_articolo"), resultSet.getString("data_fornitura"), resultSet.getInt("quantita"), resultSet.getDouble("prezzo"));
+                    Supply supply = new Supply(resultSet.getInt("codice_fornitura"), resultSet.getInt("codice_fornitore"),
+                            resultSet.getInt("codice_articolo"), resultSet.getString("data_fornitura"), resultSet.getInt("quantita"), resultSet.getDouble("prezzo"));
                     suppliesManagement.getSuppliesList().add(supply);
                 }
                 mainMenuWindowController.getIsNotFirstTimeLoad().set(4, true);
@@ -303,7 +304,8 @@ public class SuppliesManagementWindowController implements Initializable {
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore");
-        alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore: " + e.getMessage());
+        alert.setHeaderText("Parametri di ricerca vuoti");
+        alert.setContentText("Inserire almeno un valore all'interno dei parametri di ricerca selezionati: " + e.getMessage());
         alert.showAndWait();
 
     }

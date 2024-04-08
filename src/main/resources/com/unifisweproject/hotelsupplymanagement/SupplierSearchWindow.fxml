@@ -28,7 +28,7 @@
       <CheckBox fx:id="enableCivicNumberSearch" layoutX="218.0" layoutY="254.0" mnemonicParsing="false" text="Civico" textFill="TRANSPARENT" />
       <CheckBox fx:id="enableCAPSearch" layoutX="499.0" layoutY="254.0" mnemonicParsing="false" text="CAP" textFill="TRANSPARENT" />
       <Button fx:id="confirmButton" disable="true" layoutX="447.0" layoutY="305.0" mnemonicParsing="false" onAction="#scanRows" prefHeight="25.0" prefWidth="105.0" text="Ricerca" />
-      <Button layoutX="313.0" layoutY="305.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Annulla" />
+      <Button layoutX="313.0" layoutY="305.0" mnemonicParsing="false" onAction="#closeSearchView" prefHeight="25.0" prefWidth="105.0" text="Annulla" />
       <Label layoutX="112.0" layoutY="26.0" text="Ricerca fornitore: scegli i parametri di ricerca">
          <font>
             <Font name="System Bold" size="18.0" />

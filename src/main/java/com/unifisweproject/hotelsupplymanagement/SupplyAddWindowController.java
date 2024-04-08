@@ -45,10 +45,10 @@ public class SupplyAddWindowController implements Initializable {
     @FXML
     private DatePicker datePicker;
     private ResultSet resultSet;
-    private ArrayList<Integer> suppliedAmount = new ArrayList<>();
-    private ObservableList<Item> itemList = FXCollections.observableArrayList();
+    private final ArrayList<Integer> suppliedAmount = new ArrayList<>();
+    private final ObservableList<Item> itemList = FXCollections.observableArrayList();
     private SuppliesManagementWindowController suppliesManagementWindowController;
-    private ItemInSupply itemInSupply = new ItemInSupply();
+    private final ItemInSupply itemInSupply = new ItemInSupply();
     private MainMenuWindowController mainMenuWindowController;
 
     @Override
@@ -149,14 +149,16 @@ public class SupplyAddWindowController implements Initializable {
     public void displayEmptyFieldAlert(String field) {
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Campo vuoto");
-        alert.setHeaderText("Il campo " + field + " non può essere vuoto");
+        alert.setTitle("Errore");
+        alert.setHeaderText("Campo vuoto");
+        alert.setContentText("Il campo " + field + " non può essere vuoto");
         alert.showAndWait();
 
     }
 
-    public void addRow (Item newItem) {                 // TODO: Fai vedere il prezzo totale dell'articolo per la quantita inserita
+    public void addRow (Item newItem) {
 
+        newItem.setPrezzo(newItem.getPrezzo() * newItem.getQuantita());
         itemList.add(newItem);
         itemTableView.setItems(itemList);
         itemTableView.getColumns().setAll(itemCodeColumn, itemNameColumn, itemQuantityColumn, itemPriceColumn, itemDescriptionColumn);
@@ -210,8 +212,9 @@ public class SupplyAddWindowController implements Initializable {
     public void displayAddExectuedAlert(ActionEvent ignoredEvent) {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Aggiunta completata");
-        alert.setHeaderText("Fornitura aggiunta con successo");
+        alert.setTitle("Successo");
+        alert.setHeaderText("Aggiunta completata");
+        alert.setContentText("La fornitura è stata aggiunta con successo");
         alert.showAndWait();
         suppliesManagementWindowController.updateTable();
         closeAddView(ignoredEvent);

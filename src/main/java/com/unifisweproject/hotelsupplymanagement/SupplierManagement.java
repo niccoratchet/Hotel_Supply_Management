@@ -61,7 +61,7 @@ public class SupplierManagement implements Data_Management{
                 + getDataTypeForQuery("Data_Inserimento", modified.getData_inserimento(), false) +
                 " WHERE Codice_Fornitore = " + modified.getCodice_fornitore();
 
-        try {                                                                                                           //TODO: implementari i vari vincoli di formattazione
+        try {
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
             statement.setString(1, modified.getRagione_sociale());
             statement.setString(2, modified.getIndirizzo());

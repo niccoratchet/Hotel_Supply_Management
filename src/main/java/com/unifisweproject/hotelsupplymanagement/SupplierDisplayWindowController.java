@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -94,6 +95,8 @@ public class SupplierDisplayWindowController implements Initializable {
 
         try {
             verifyEmptyFields();
+            if (contactDetails.isEmpty() || companyDetails.isEmpty())
+                throw new RuntimeException("Confermare tutte le modifiche tramite l'apposito pulsante nelle sezioni 'Dati Azienda' e 'Indirizzo e Recapito'");
             companyDetailsModifyWindowController.executeQuery();
             contactDetailsModifyWindowController.executeQuery(displayedSupplier.getIndirizzo(), displayedSupplier.getCivico(), displayedSupplier.getCAP());
 
@@ -113,7 +116,11 @@ public class SupplierDisplayWindowController implements Initializable {
 
         }
         catch (RuntimeException errorWithParameters) {
-            System.err.println("Errore con alcuni parametri: "+ errorWithParameters.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Conferma modifiche");
+            alert.setContentText("E' necessario confermare le modifiche: " + errorWithParameters.getMessage());
+            alert.showAndWait();
         }
 
     }

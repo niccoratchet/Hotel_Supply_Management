@@ -38,7 +38,7 @@ public class CustomerAddWindowController implements Initializable {
     private Button addCompanyDataButton;
 
     private CustomerManagementWindowController customerManagementWindowController;
-    private ContactDetailsAddWindowController contactDetailsAddWindowController = null;         // TODO: Implementare collegamento tra le due view in modo da garantire la comunicazione
+    private ContactDetailsAddWindowController contactDetailsAddWindowController = null;
     private CompanyDetailsAddWindowController companyDetailsAddWindowController = null;
     private final ArrayList<String> companyDetails = new ArrayList<>();
     private final ArrayList<String> contactDetails = new ArrayList<>();
@@ -142,9 +142,12 @@ public class CustomerAddWindowController implements Initializable {
 
         try {
             verifyEmptyFields();
+            if (contactDetails.isEmpty())
+                throw new RuntimeException("Dati di contatto mancanti, inserire i dati nell'apposita sezione e premere 'Conferma modifiche'");
             Customer newCustomer = verifyIfCompanyInfoNull();
             contactDetailsAddWindowController.executeQuery();
-            companyDetailsAddWindowController.executeQuery();
+            if (newCustomer.getP_IVA() != null && newCustomer.getRagione_sociale() != null)
+                companyDetailsAddWindowController.executeQuery();
             customerManagementWindowController.addRow(newCustomer);
             clearCompanyDetails();
             clearContactDetails();
@@ -193,9 +196,13 @@ public class CustomerAddWindowController implements Initializable {
 
     public Customer verifyIfCompanyInfoNull() {             // Controlla se sono state inserite info sull'azienda o meno (nel caso di privati)
 
-        if (!companyDetails.isEmpty() && !privateCheckBox.isSelected()) {
-            return new Customer(Integer.parseInt(discountField.getText()), nameField.getText(), surnameField.getText(), datePicker.getValue().toString(), fiscalCodeField.getText(),
-                    companyDetails.get(0), companyDetails.get(1), contactDetails.get(0), contactDetails.get(1), contactDetails.get(2));
+        if (!privateCheckBox.isSelected()) {
+            if (!companyDetails.isEmpty())
+                    return new Customer(Integer.parseInt(discountField.getText()), nameField.getText(), surnameField.getText(), datePicker.getValue().toString(), fiscalCodeField.getText(),
+                            companyDetails.get(0), companyDetails.get(1), contactDetails.get(0), contactDetails.get(1), contactDetails.get(2));
+            else {
+                throw new RuntimeException("Dati aziendali mancanti, inserire i dati nell'apposita sezione e premere 'Conferma modifiche'");
+            }
         }
         else {
             return new Customer(Integer.parseInt(discountField.getText()), nameField.getText(), surnameField.getText(), datePicker.getValue().toString(), fiscalCodeField.getText(),
@@ -212,7 +219,7 @@ public class CustomerAddWindowController implements Initializable {
         companyDetailsStage.show();
     }
 
-    public void viewAddContactDetails(ActionEvent ignoredEvent) {           // FIXME: Se già aperto nella stessa sessione, mostrare i soliti dati
+    public void viewAddContactDetails(ActionEvent ignoredEvent) {
         contactDetailsStage.show();
     }
 

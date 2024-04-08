@@ -327,12 +327,12 @@ public class CustomerManagement implements Data_Management {
                 case "Data_Inserimento" -> "Data_Inserimento = '" + value + "'";
                 case "Nome" -> "Nome LIKE ?";
                 case "Cognome" -> "Cognome LIKE ?";
-                case "Codice_Fiscale" -> "Codice_fiscale = '" + value + "'";            // TODO: Applicare il formatter corretto per il codice fiscale
-                case "P_IVA" -> "P_IVA = '" + value + "'";                              // TODO: Applicare il formatter corretto per la P_IVA
+                case "Codice_Fiscale" -> "Codice_fiscale = '" + value + "'";
+                case "P_IVA" -> "P_IVA = '" + value + "'";
                 case "Ragione_Sociale" -> "Ragione_Sociale LIKE ?";
                 case "Indirizzo" -> "Indirizzo LIKE ?";
-                case "CAP" -> "CAP = '" + value + "'";                                  // TODO: Applicare il formatter corretto per il CAP
-                case "Civico" -> "Civico = '" + value + "'";                            // TODO: Applicare il formatter corretto per il Civico
+                case "CAP" -> "CAP = '" + value + "'";
+                case "Civico" -> "Civico = '" + value + "'";
                 default -> " ";
             };
         }

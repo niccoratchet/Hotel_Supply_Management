@@ -23,5 +23,6 @@
          </image>
       </ImageView>
       <Button layoutX="62.0" layoutY="309.0" mnemonicParsing="false" onAction="#openSuppliesManagement" prefHeight="37.0" prefWidth="134.0" text="Storico forniture" />
+      <Button layoutX="336.0" layoutY="346.0" mnemonicParsing="false" onAction="#openCredits" prefHeight="37.0" prefWidth="134.0" text="Crediti" />
    </children>
 </AnchorPane>

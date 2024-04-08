@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="tableAnchorPane" prefHeight="388.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.SuppliesManagementWindowController">
+<AnchorPane fx:id="tableAnchorPane" prefHeight="388.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.SuppliesManagementWindowController">
    <children>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
         <menus>
@@ -21,8 +21,8 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Fornitura">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista forniture" />
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Fornitori" />
+              <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista fornitori" />
+                  <MenuItem disable="true" mnemonicParsing="false" onAction="#openDifferentManagement" text="Storico forniture" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Clienti">
@@ -32,7 +32,7 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Ordini">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista ordini" />
+                <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Storico ordini" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Menu principale">

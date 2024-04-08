@@ -48,7 +48,7 @@ public class CompanyDetailsAddWindowController implements Initializable {
                 if ("".equals(ragioneSocialeField.getText()))
                     throw new RuntimeException();
                 if (customerAddWindowController != null)
-                    customerAddWindowController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());           // TODO: A proposito di renderlo generale, fare in modo che si possa utilizzare un'unica istruzione con un solo riferimento a controller generico
+                    customerAddWindowController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
                 if (supplierAddWindowController != null)
                     supplierAddWindowController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
                 ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
@@ -70,6 +70,8 @@ public class CompanyDetailsAddWindowController implements Initializable {
 
     public void executeQuery() {
 
+        if ("".equals(P_IVAField.getText()) || "".equals(ragioneSocialeField.getText()))
+            return;
         String insertCompanyDataQuery = "INSERT INTO Dati_Azienda (P_IVA, Ragione_Sociale) VALUES (" + P_IVAField.getText() + ", ?)";
         try {
             PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(insertCompanyDataQuery);
@@ -82,7 +84,7 @@ public class CompanyDetailsAddWindowController implements Initializable {
             }
         }
         catch (SQLException e) {
-            System.err.println("Errore durante la generazione della query: " + e.getMessage());
+            System.err.println("Errore durante la generazione della query in CompanyDetailsAddWindowController: " + e.getMessage());
         }
 
     }

@@ -189,7 +189,7 @@ public class SupplierSearchWindowController implements Initializable {
 
     }
 
-    public void closeSearchView(ActionEvent event) {                                        // TODO: Metodo uguali tra le diverse aree (possibile generalizzazione)
+    public void closeSearchView(ActionEvent event) {
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 

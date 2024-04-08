@@ -7,48 +7,23 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.ItemAddWindowController">
+<AnchorPane prefHeight="305.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.ItemAddWindowController">
    <children>
-      <TextField fx:id="nameField" layoutX="103.0" layoutY="80.0" />
+      <TextField fx:id="nameField" layoutX="103.0" layoutY="80.0" prefHeight="25.0" prefWidth="208.0" />
       <Label layoutX="41.0" layoutY="84.0" text="Nome" />
-      <TextField fx:id="priceField" layoutX="372.0" layoutY="80.0" />
-      <Label layoutX="300.0" layoutY="84.0" text="Prezzo" />
-      <TextField fx:id="descriptionField" layoutX="103.0" layoutY="220.0" prefHeight="86.0" prefWidth="422.0" />
-      <Label layoutX="28.0" layoutY="246.0" text="Descrizione" />
-      <TextField fx:id="amountField" layoutX="103.0" layoutY="153.0" prefHeight="25.0" prefWidth="83.0" />
-      <Label layoutX="35.0" layoutY="157.0" text="Quantità" />
-      <Button layoutX="417.0" layoutY="334.0" mnemonicParsing="false" onAction="#createItem" prefHeight="25.0" prefWidth="108.0" text="Aggiungi" />
-      <Button layoutX="282.0" layoutY="334.0" mnemonicParsing="false" onAction="#closeAddView" prefHeight="25.0" prefWidth="108.0" text="Annulla" />
-      <DatePicker fx:id="datePicker" layoutX="351.0" layoutY="153.0" />
-      <Label layoutX="306.0" layoutY="158.0" text="Data" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="35.0" layoutY="32.0" prefHeight="17.0" prefWidth="536.0" text="Inserisci i dati del prodotto">
+      <TextField fx:id="priceField" layoutX="394.0" layoutY="80.0" prefHeight="25.0" prefWidth="83.0" />
+      <Label layoutX="333.0" layoutY="84.0" text="Prezzo" />
+      <TextField fx:id="descriptionField" layoutX="104.0" layoutY="200.0" prefHeight="17.0" prefWidth="422.0" />
+      <Label layoutX="28.0" layoutY="204.0" text="Descrizione" />
+      <TextField fx:id="amountField" layoutX="103.0" layoutY="141.0" prefHeight="25.0" prefWidth="83.0" />
+      <Label layoutX="35.0" layoutY="145.0" text="Quantità" />
+      <Button layoutX="417.0" layoutY="248.0" mnemonicParsing="false" onAction="#createItem" prefHeight="25.0" prefWidth="108.0" text="Aggiungi" />
+      <Button layoutX="279.0" layoutY="248.0" mnemonicParsing="false" onAction="#closeAddView" prefHeight="25.0" prefWidth="108.0" text="Annulla" />
+      <DatePicker fx:id="datePicker" layoutX="354.0" layoutY="141.0" prefHeight="25.0" prefWidth="126.0" />
+      <Label layoutX="302.0" layoutY="145.0" text="Data" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="29.0" prefHeight="17.0" prefWidth="536.0" text="Inserisci i dati del prodotto">
          <font>
             <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="41.0" layoutY="338.0" prefHeight="17.0" prefWidth="168.0" text="* : dati obbligatori">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="77.0" layoutY="83.0" prefHeight="20.0" prefWidth="8.0" text="*">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="84.0" layoutY="156.0" prefHeight="20.0" prefWidth="8.0" text="*">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="332.0" layoutY="156.0" prefHeight="20.0" prefWidth="8.0" text="*">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="336.0" layoutY="83.0" prefHeight="20.0" prefWidth="8.0" text="*">
-         <font>
-            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
    </children>

@@ -49,8 +49,8 @@ public class OrderManagementWindowController implements Initializable{
     private boolean searchView = false;
     private ArrayList<Order> results = new ArrayList<>();
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
-    private final MenuItem viewOrderMenu = new MenuItem("Visualizza");              //TODO cambiare nome
-    private final MenuItem viewDeleteOrderMenu = new MenuItem("Elimina");           //TODO cambiare nome
+    private final MenuItem viewOrderMenu = new MenuItem("Visualizza");
+    private final MenuItem viewDeleteOrderMenu = new MenuItem("Elimina");
     private OrderManagement orderManagement;
     private MainMenuWindowController mainMenuWindowController;
     private final ObservableList<Order> orderRows = FXCollections.observableArrayList();
@@ -232,36 +232,28 @@ public class OrderManagementWindowController implements Initializable{
     }
 
 
-    public void searchRow(Order toBeSearched) {
+    public void searchRow(Order toBeSearched) throws NullPointerException {
 
         results.clear();
-        try {
-            results = HotelSupplyManagementMain.castArrayList(orderManagement.search(toBeSearched));             // effettuo il cast della lista
-            int numberOfResults = results.size();
-            searchView = true;
-            searchResultRows.clear();
-            Platform.runLater(() -> {
-                searchResultRows.setAll(results);
-                orderTable.getItems().clear();
-                orderTable.setItems(searchResultRows);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Risultato ricerca");
-                alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
-                alert.showAndWait();
-            });
-            backButton.setDisable(false);
-            backButton.setVisible(true);
-            searchButton.setDisable(true);
-            searchButton.setVisible(false);
-            addButton.setDisable(true);
-            addButton.setVisible(false);
-        }
-        catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
+        results = HotelSupplyManagementMain.castArrayList(orderManagement.search(toBeSearched));             // effettuo il cast della lista
+        int numberOfResults = results.size();
+        searchView = true;
+        searchResultRows.clear();
+        Platform.runLater(() -> {
+            searchResultRows.setAll(results);
+            orderTable.getItems().clear();
+            orderTable.setItems(searchResultRows);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Risultato ricerca");
+            alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
             alert.showAndWait();
-        }
+        });
+        backButton.setDisable(false);
+        backButton.setVisible(true);
+        searchButton.setDisable(true);
+        searchButton.setVisible(false);
+        addButton.setDisable(true);
+        addButton.setVisible(false);
 
     }
 
@@ -280,7 +272,7 @@ public class OrderManagementWindowController implements Initializable{
     public void displaySearchView(ActionEvent ignoredEvent) {
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderSearchWindow.fxml"));               // TODO: Replicare blocco try/catch su tutti gli altri caricamenti FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderSearchWindow.fxml"));
             Parent root = loader.load();
             OrderSearchWindowController orderSearchWindowController = loader.getController();
             orderSearchWindowController.setOrderManagementSceneController(this);

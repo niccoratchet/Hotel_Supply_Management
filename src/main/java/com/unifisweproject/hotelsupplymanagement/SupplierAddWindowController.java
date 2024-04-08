@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -92,6 +93,8 @@ public class SupplierAddWindowController implements Initializable {
 
         try {
             verifyEmptyFields();
+            if (companyDetails.isEmpty() || contactDetails.isEmpty())
+                throw new RuntimeException("Riempi tutti i campi anche nella sezione 'Indirizzo e Recapito' e 'Dati Azienda'. Una volta inseriti premere 'Conferma modifiche' per salvare i dati.");
             Supplier newSupplier = new Supplier(datePicker.getValue().toString(), companyDetails.get(0), companyDetails.get(1), contactDetails.get(0),
                     contactDetails.get(1), contactDetails.get(2));
             contactDetailsAddWindowController.executeQuery();
@@ -100,10 +103,13 @@ public class SupplierAddWindowController implements Initializable {
             clearCompanyDetails();
             clearContactDetails();
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
-
         }
         catch (RuntimeException errorWithParameters) {
-            System.err.println("Errore con alcuni parametri: " + errorWithParameters.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Parametri mancanti");
+            alert.setContentText("E' necessario inserire tutti i parametri richiesti: " + errorWithParameters.getMessage());
+            alert.showAndWait();
         }
 
     }
@@ -121,7 +127,7 @@ public class SupplierAddWindowController implements Initializable {
         companyDetailsStage.show();
     }
 
-    public void viewAddContactDetails(ActionEvent ignoredEvent) {           // FIXME: Se già aperto nella stessa sessione, mostrare i soliti dati
+    public void viewAddContactDetails(ActionEvent ignoredEvent) {
         contactDetailsStage.show();
     }
 

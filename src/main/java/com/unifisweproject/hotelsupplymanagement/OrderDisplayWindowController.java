@@ -47,7 +47,7 @@ public class OrderDisplayWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        Platform.runLater(this::addOrderInfo);                                                                          // TODO: Si rende possibile la modifica di alcuni campi oppure no?
+        Platform.runLater(this::addOrderInfo);
         BFField.getItems().addAll("Bolla", "Fattura");
         typeOfPaymentField.getItems().addAll("Ricevuta bancaria", "Bonifico bancario", "Rimessa diretta");
 

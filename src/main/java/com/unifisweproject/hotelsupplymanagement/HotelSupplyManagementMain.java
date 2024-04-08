@@ -2,11 +2,16 @@ package com.unifisweproject.hotelsupplymanagement;
 
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -24,25 +29,27 @@ public class HotelSupplyManagementMain extends Application {
 
         conn = null;
         try {
-            String url = "jdbc:sqlite:C:\\Users\\Niccolò\\Desktop\\Work\\UNIFI\\Ingegneria del Software\\Hotel Supply Management\\hotel_supply_management.db";      // TODO: Da rendere possibile l'accesso a tutti
+            String url = "jdbc:sqlite:hotel_supply_management.db";
             conn = DriverManager.getConnection(url);
-            System.out.println("Connection established");
+            System.out.println("Connessione al DB effettuata con successo!");
+            if(!isFirstAccess(stage)) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginWindow.fxml"));
+                    Parent root = loader.load();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.getIcons().add(icon);
+                    stage.setResizable(false);
+                    stage.setTitle("Login");
+                    stage.show();
+                }
+                catch(IOException e) {
+                    System.err.println("Errore durante il caricamento della pagine del file LoginWindow.fxml: " + e.getMessage());
+                }
+            }
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
-        }
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginWindow.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.getIcons().add(icon);
-            stage.setResizable(false);
-            stage.setTitle("Login");
-            stage.show();
-        }
-        catch(Exception e) {
-            System.err.println(e.getMessage());
         }
 
     }
@@ -66,6 +73,32 @@ public class HotelSupplyManagementMain extends Application {
             newlyCastedArrayList.add((newType)listObject);
         }
         return newlyCastedArrayList;
+    }
+
+    public boolean isFirstAccess(Stage stage) {
+
+        boolean isFirstAccess = false;
+        String filePath = "password.txt";
+        File file = new File(filePath);
+        if(file.length() == 0) {
+            isFirstAccess = true;
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("FirstAccessWindow.fxml"));
+                Parent root = loader.load();
+                stage.setTitle("Hotel Supply Management");
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.getIcons().add(HotelSupplyManagementMain.icon);
+                stage.show();
+            }
+            catch (IOException e) {
+                System.err.println("Errore durante il caricamento della pagina del file FirstAccessWindow.fxml: " + e.getMessage());
+            }
+        }
+
+        return isFirstAccess;
+
     }
 
 }

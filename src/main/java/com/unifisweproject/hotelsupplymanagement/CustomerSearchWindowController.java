@@ -76,7 +76,6 @@ public class CustomerSearchWindowController implements Initializable {
             enableCAPSearch.setOnAction(event -> handleCheckBoxAction(enableCAPSearch));
             setFormatters();
 
-            // TODO: Inserire i formatter per il codice fiscale, PIVA, Civico, CAP
 
         });
 
@@ -228,7 +227,7 @@ public class CustomerSearchWindowController implements Initializable {
                     case 1 -> {
                         if (!discountField.isDisabled())
                             if(! "".equals(discountField.getText()))
-                                searchCustomer.setSconto(Integer.parseInt(discountField.getText()));            // TODO: Verificare se vengono inseriti valori sensati di sconto
+                                searchCustomer.setSconto(Integer.parseInt(discountField.getText()));
                             else
                                 return null;
                     }
@@ -300,7 +299,7 @@ public class CustomerSearchWindowController implements Initializable {
 
     }
 
-    public void closeSearchView(ActionEvent event) {                                        // TODO: Metodo uguali tra le diverse aree (possibile generalizzazione)
+    public void closeSearchView(ActionEvent event) {
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 

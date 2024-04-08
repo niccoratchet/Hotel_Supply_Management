@@ -18,8 +18,8 @@
         </Label>
         <DatePicker fx:id="datePicker" disable="true" layoutX="93.0" layoutY="80.0" prefHeight="25.0" prefWidth="143.0" />
         <Label layoutX="42.0" layoutY="84.0" text="Data" />
-        <ChoiceBox fx:id="supplierList" disable="true" layoutX="392.0" layoutY="80.0" prefHeight="25.0" prefWidth="143.0" />
-        <Label layoutX="286.0" layoutY="84.0" text="Nome fornitore" />
+        <ChoiceBox fx:id="supplierList" disable="true" layoutX="303.0" layoutY="80.0" prefHeight="25.0" prefWidth="232.0" />
+        <Label layoutX="378.0" layoutY="113.0" text="Nome fornitore" />
         <TableView fx:id="itemTableView" layoutX="35.0" layoutY="156.0" prefHeight="51.0" prefWidth="502.0">
             <columns>
                 <TableColumn fx:id="itemCodeColumn" prefWidth="103.0" text="Codice articolo" />

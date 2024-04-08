@@ -66,7 +66,7 @@ public class ItemManagementWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Articolo
 
-        Platform.runLater(this::createRows);            // TODO: Provare a togliere parte duplicata
+        Platform.runLater(this::createRows);
         itemTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
             if(newSelection != null) {
                 modifyButton.setDisable(false);             // Aggiunta del listener nella tabella per rilevare quale elemento viene selezionato
@@ -106,7 +106,7 @@ public class ItemManagementWindowController implements Initializable {
                 SelectionModel<Item> selectionModel = itemTable.getSelectionModel();        // verifico se è stato cliccato un elemento
                 Item selectedItem = selectionModel.getSelectedItem();
                 if(selectedItem != null)
-                    rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
+                    rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY());       // Mostra il menu contestuale alle coordinate del click
             }
         });
 

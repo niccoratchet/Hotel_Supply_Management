@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -160,6 +161,16 @@ public class MainMenuWindowController {
             case "Storico ordini" -> openOrderManagementView(event);
             case "Apri menu principale" -> openMainMenuView(event);
         }
+
+    }
+
+    public void openCredits() {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Credits");
+        alert.setHeaderText("Hotel Supply Management");
+        alert.setContentText("Software developed by Niccolò Redi, Lorenzo Gazzini and Edoardo Cravegni. \n For the SWE Exam of UNIFI (A.A.2023/2024.)");
+        alert.showAndWait();
 
     }
 
