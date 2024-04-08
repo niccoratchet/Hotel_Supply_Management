@@ -81,7 +81,6 @@ public class SupplierManagement implements Data_Management{
         int numberOfParameters = getNumberOfParameters(supplier), numQuestionMarks = 0;
         StringBuilder searchQuery = new StringBuilder("SELECT * FROM Fornitore WHERE ");
         boolean isRagioneSocialePresent = false, isIndirizzoPresent = false;
-
         int i = 0;
         while (i < 6 && numberOfParameters > 0) {
             switch (i) {
@@ -166,7 +165,6 @@ public class SupplierManagement implements Data_Management{
                 }
                 i++;
             }
-            System.out.println(statement);
             return getSearchResults(getRows(false, statement));
         }
         catch (SQLException e) {

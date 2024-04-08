@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="330.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.ContactDetailsAddWindowController">
+   <children>
+      <Button layoutX="317.0" layoutY="283.0" mnemonicParsing="false" onAction="#confirmData" prefHeight="25.0" prefWidth="168.0" text="Conferma modifiche" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="18.0" layoutY="28.0" prefHeight="17.0" prefWidth="499.0" text="Inserisci le informazioni su indirizzo e recapito">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="26.0" layoutY="79.0" text="Indirizzo" />
+      <TextField fx:id="CAPField" layoutX="191.0" layoutY="128.0" prefHeight="25.0" prefWidth="101.0" />
+      <TextField fx:id="addressField" layoutX="85.0" layoutY="75.0" prefHeight="25.0" prefWidth="399.0" />
+      <Label layoutX="156.0" layoutY="132.0" text="CAP" />
+      <Label layoutX="25.0" layoutY="132.0" text="Civico" />
+      <TextField fx:id="civicNumberField" layoutX="85.0" layoutY="128.0" prefHeight="25.0" prefWidth="48.0" />
+      <Label layoutX="25.0" layoutY="182.0" prefHeight="17.0" prefWidth="48.0" text="Localita" />
+      <Label layoutX="313.0" layoutY="132.0" text="Provincia" />
+      <Label layoutX="26.0" layoutY="231.0" text="Telefono" />
+      <Label layoutX="256.0" layoutY="231.0" text="Mail" />
+      <TextField fx:id="locationField" layoutX="85.0" layoutY="178.0" prefHeight="25.0" prefWidth="126.0" />
+      <TextField fx:id="phoneNumberField" layoutX="82.0" layoutY="227.0" prefHeight="25.0" prefWidth="149.0" />
+      <TextField fx:id="provinceField" layoutX="373.0" layoutY="128.0" prefHeight="25.0" prefWidth="108.0" />
+      <TextField fx:id="mailField" layoutX="302.0" layoutY="227.0" prefHeight="25.0" prefWidth="183.0" />
+   </children>
+</AnchorPane>

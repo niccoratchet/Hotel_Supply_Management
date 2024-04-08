@@ -32,11 +32,12 @@ public class HotelSupplyManagementMain extends Application {
             System.out.println(e.getMessage());
         }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginScene.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginWindow.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.getIcons().add(icon);
+            stage.setResizable(false);
             stage.setTitle("Login");
             stage.show();
         }

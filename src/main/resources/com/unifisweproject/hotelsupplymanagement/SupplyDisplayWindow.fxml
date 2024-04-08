@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="287.0" prefWidth="571.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.SupplyDisplayWindowController">
+    <children>
+        <Label fx:id="codeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="115.0" layoutY="36.0" prefHeight="27.0" prefWidth="343.0">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+        <DatePicker fx:id="datePicker" disable="true" layoutX="93.0" layoutY="80.0" prefHeight="25.0" prefWidth="143.0" />
+        <Label layoutX="42.0" layoutY="84.0" text="Data" />
+        <ChoiceBox fx:id="supplierList" disable="true" layoutX="392.0" layoutY="80.0" prefHeight="25.0" prefWidth="143.0" />
+        <Label layoutX="286.0" layoutY="84.0" text="Nome fornitore" />
+        <TableView fx:id="itemTableView" layoutX="35.0" layoutY="156.0" prefHeight="51.0" prefWidth="502.0">
+            <columns>
+                <TableColumn fx:id="itemCodeColumn" prefWidth="103.0" text="Codice articolo" />
+                <TableColumn fx:id="itemNameColumn" prefWidth="57.0" text="Nome" />
+                <TableColumn fx:id="itemQuantityColumn" text="Quantita" />
+                <TableColumn fx:id="itemPriceColumn" prefWidth="96.0" text="Prezzo" />
+                <TableColumn fx:id="itemDescriptionColumn" prefWidth="162.0" text="Descrizione" />
+            </columns>
+        </TableView>
+        <Button layoutX="429.0" layoutY="236.0" mnemonicParsing="false" onAction="#closeSupplyView" prefHeight="25.0" prefWidth="106.0" text="Chiudi" />
+        <Button layoutX="286.0" layoutY="236.0" mnemonicParsing="false" onAction="#deleteSupply" prefHeight="25.0" prefWidth="106.0" text="Elimina" />
+        <Label layoutX="35.0" layoutY="121.0" text="Lista oggetti ordinati:">
+            <font>
+                <Font name="System Bold" size="14.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>
