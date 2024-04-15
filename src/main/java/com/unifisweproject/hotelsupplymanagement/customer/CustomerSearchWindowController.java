@@ -83,7 +83,7 @@ public class CustomerSearchWindowController implements Initializable {
 
     public void setFormatters() {
 
-        int capCharacters = 5, maxCivicCharacters = 5, maxPhoneNumberCharacter = 10;
+        int capCharacters = 5, maxCivicCharacters = 5;
 
         UnaryOperator<TextFormatter.Change> filterInt = change -> {             // Creazione del Formatter per inserimento delle quantità
             String text = change.getText();

@@ -142,7 +142,7 @@ public class MainMenuWindowController {
 
     }
 
-    public void openMainMenuView(ActionEvent event) {          // Metodo per l'apertura del Menu principale a partire dalle altre sezioni del programma
+    public void openMainMenuView(ActionEvent ignoredEvent) {          // Metodo per l'apertura del Menu principale a partire dalle altre sezioni del programma
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/main/MainMenuWindow.fxml"));

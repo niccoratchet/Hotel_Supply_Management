@@ -87,9 +87,7 @@ public class ListOfItemsWindowController implements Initializable {
                 addButton.setDisable(quantityField.getText().isEmpty());
             }
         });
-        priceField.textProperty().addListener((observable, oldValue, newValue) -> {
-            addButton.setDisable(quantityField.getText().isEmpty() || priceField.getText().isEmpty());
-        });
+        priceField.textProperty().addListener((observable, oldValue, newValue) -> addButton.setDisable(quantityField.getText().isEmpty() || priceField.getText().isEmpty()));
 
     }
 

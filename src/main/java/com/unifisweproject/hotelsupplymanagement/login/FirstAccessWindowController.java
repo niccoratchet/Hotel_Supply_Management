@@ -17,7 +17,6 @@ import java.io.IOException;
 
 public class FirstAccessWindowController {
 
-    private Scene scene;
     @FXML
     private PasswordField passwordField;
     @FXML
@@ -49,7 +48,7 @@ public class FirstAccessWindowController {
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setTitle("Hotel Supply Management");
-            scene = new Scene(root);
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setResizable(false);
             stage.getIcons().add(HotelSupplyManagementMain.icon);

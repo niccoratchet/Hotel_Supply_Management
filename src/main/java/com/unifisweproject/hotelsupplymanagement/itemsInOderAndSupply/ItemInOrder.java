@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class ItemInOrder {
     private int codice_Ordine;
-    private ArrayList<Integer> codice_Articolo = new ArrayList<>();
-    private ArrayList<Integer> quantita = new ArrayList<>();
+    private final ArrayList<Integer> codice_Articolo = new ArrayList<>();
+    private final ArrayList<Integer> quantita = new ArrayList<>();
 
     public void setCodice_Ordine(int codice_Ordine){
         this.codice_Ordine = codice_Ordine;

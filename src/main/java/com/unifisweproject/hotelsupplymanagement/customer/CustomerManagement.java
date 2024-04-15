@@ -25,26 +25,14 @@ public class CustomerManagement implements Data_Management {
 
     }
 
-    public CustomerManagement(boolean isTest) {          // Costruttore per i test, inizializza il nextItemCode a 0
-        if(isTest) {
-            nextCustomerCode = 0;
-        }
-    }
-
     @Override
     public void add(Object newCustomer) {           // Metodo per l'aggiunta di un nuovo Cliente nel DB nel normale caso di utilizzo
 
         Customer toBeAdded = (Customer) newCustomer;
         String addQuery = "INSERT INTO Cliente (Sconto, Data_Inserimento, Nome, Cognome, Codice_Fiscale, P_IVA, Ragione_Sociale, Indirizzo, CAP, Civico) \n" +       // creazione della query di inserimento
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        add(toBeAdded, HotelSupplyManagementMain.conn, addQuery);
-
-    }
-
-    public void add(Customer toBeAdded, Connection connection, String insertQuery) {        // Metodo per l'inserimento di un nuovo Cliente nel DB. Viene chiamato in ogni caso, ma nel caso dei test viene solo chiamato questo
-
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(addQuery);
             preparedStatement.setInt(1, toBeAdded.getSconto());
             preparedStatement.setString(2, toBeAdded.getData_inserimento());
             preparedStatement.setString(3, toBeAdded.getNome());
@@ -59,7 +47,7 @@ public class CustomerManagement implements Data_Management {
             nextCustomerCode++;
         }
         catch (SQLException e) {
-            System.out.println("Errore durante l'aggiunta del nuovo Cliente: " + e.getMessage() + " \n Query utilizzata: " + insertQuery);
+            System.out.println("Errore durante l'aggiunta del nuovo Cliente: " + e.getMessage() + " \n Query utilizzata: " + addQuery);
         }
 
     }
@@ -74,14 +62,8 @@ public class CustomerManagement implements Data_Management {
                 + getDataTypeForQuery("P_IVA", modified.getP_IVA(), false) + ", " + getDataTypeForQuery("Ragione_Sociale", modified.getRagione_sociale(), false) + ", "
                 + getDataTypeForQuery("Indirizzo", modified.getIndirizzo(), false) + ", " + getDataTypeForQuery("Civico", modified.getCivico(), false) + ", "
                 + getDataTypeForQuery("CAP", modified.getCAP(), false) + " WHERE Codice_Cliente = " + modified.getCodice_cliente();
-        modify(modified, HotelSupplyManagementMain.conn, modifyQuery);
-
-    }
-
-    public void modify(Customer modified, Connection connection, String modifyQuery) {
-
         try {
-            PreparedStatement statement = connection.prepareStatement(modifyQuery);
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
             statement.setString(1, modified.getNome());
             statement.setString(2, modified.getCognome());
             statement.setString(3, modified.getRagione_sociale());

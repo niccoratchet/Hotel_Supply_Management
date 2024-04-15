@@ -1,6 +1,5 @@
 package com.unifisweproject.hotelsupplymanagement.order;
 
-import com.unifisweproject.hotelsupplymanagement.customer.Customer;
 import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 
@@ -27,13 +26,6 @@ public class OrderManagement implements Data_Management {
     }
 
 
-    public OrderManagement(boolean isTest) {          // Costruttore per i test, inizializza il nextOrderCode a 0
-        if(isTest) {
-            nextOrderCode = 0;
-        }
-    }
-
-
     @Override
     public void add(Object newOrder) {
 
@@ -54,24 +46,6 @@ public class OrderManagement implements Data_Management {
         }
 
     }
-
-
-    /*public void add(Order toBeAdded, Connection connection, String insertQuery) {        // Metodo per l'inserimento di un nuovo Ordine nel DB. Viene chiamato in ogni caso, ma nel caso dei test viene solo chiamato questo
-
-        try {
-            PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(addQuery);
-            preparedStatement.setBoolean(1, toBeAdded.isBolla());
-            preparedStatement.setString(2, toBeAdded.getTipo_pagamento());
-            preparedStatement.setString(3, toBeAdded.getData_ordine());
-            preparedStatement.setInt(4, toBeAdded.getCodice_cliente());
-            preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
-            nextOrderCode++;
-        }
-        catch (SQLException e) {
-            System.out.println("Errore durante l'aggiunta del nuovo Cliente: " + e.getMessage() + " \n Query utilizzata: " + insertQuery);
-        }
-
-    }*/
 
 
     @Override

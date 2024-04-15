@@ -22,7 +22,7 @@ public class Customer {
 
     }
 
-    public  Customer(int codice_cliente, int sconto, String nome, String cognome, String data_inserimento, String codice_fiscale,
+    public Customer(int codice_cliente, int sconto, String nome, String cognome, String data_inserimento, String codice_fiscale,
                      String p_IVA, String ragione_sociale, String indirizzo, String CAP, String civico) {
 
         this.codice_cliente = codice_cliente;

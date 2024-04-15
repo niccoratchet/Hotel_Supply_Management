@@ -9,10 +9,10 @@ import java.util.ArrayList;
 public class ItemInSupply {
 
     private int codice_Fornitore;
-    private ArrayList<Integer> codice_ArticoloList = new ArrayList<>();
+    private final ArrayList<Integer> codice_ArticoloList = new ArrayList<>();
     private String data_Fornitura;
-    private ArrayList<Integer> quantitaList = new ArrayList<>();
-    private ArrayList<Double> prezzoList = new ArrayList<>();
+    private final ArrayList<Integer> quantitaList = new ArrayList<>();
+    private final ArrayList<Double> prezzoList = new ArrayList<>();
 
     public int getCodice_Fornitore() {
         return codice_Fornitore;

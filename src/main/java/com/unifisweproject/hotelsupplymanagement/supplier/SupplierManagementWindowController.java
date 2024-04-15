@@ -59,7 +59,6 @@ public class SupplierManagementWindowController implements Initializable {
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
     private final MenuItem viewSupplierMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteSupplierMenu = new MenuItem("Elimina");
-    private Stage addStage;
     private SupplierManagement supplierManagement;
     private MainMenuWindowController mainMenuWindowController;
     private final ObservableList<Supplier> supplierRows = FXCollections.observableArrayList();
@@ -151,7 +150,7 @@ public class SupplierManagementWindowController implements Initializable {
             Parent root = loader.load();
             SupplierAddWindowController addSupplierController = loader.getController();
             addSupplierController.setSupplierManagementSceneController(this);
-            addStage = new Stage();
+            Stage addStage = new Stage();
             addStage.setTitle("Aggiungi fornitore");
             addStage.setResizable(false);
             addStage.getIcons().add(HotelSupplyManagementMain.icon);

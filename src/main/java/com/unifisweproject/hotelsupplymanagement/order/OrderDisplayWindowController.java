@@ -68,7 +68,6 @@ public class OrderDisplayWindowController implements Initializable {
             bf = "Fattura";
         }
         BFField.setValue(bf);
-
         getItemsInOrder();
 
     }

@@ -92,7 +92,7 @@ public class CustomerDisplayWindowController implements Initializable {
         });
         fiscalCodeField.setTextFormatter(fiscalCodeFormatter);
 
-        UnaryOperator<TextFormatter.Change> filterDiscount = change -> {             // Creazione del Formatter per lo sconto: contiene unicamente numeri ed al massimo 2 cifre
+        UnaryOperator<TextFormatter.Change> filterDiscount = change -> {             // Creazione del Formatter per lo sconto: contiene unicamente numeri e al massimo 2 cifre
             String text = change.getText();
             if (text.matches("[0-9]*") && change.getControlNewText().length() <= maxDiscountCharacters) {
                 return change;

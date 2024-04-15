@@ -55,12 +55,11 @@ public class OrderAddWindowController implements Initializable {
     @FXML
     private ChoiceBox<String> customerList;
     private ResultSet resultSet;
-    private Stage addItemStage;
     private OrderManagementWindowController orderManagementWindowController;
     private MainMenuWindowController mainMenuWindowController;
     private int lastOrderCode;
-    private ItemInOrder itemInOrder = new ItemInOrder();
-    private ArrayList<Integer> newAmount = new ArrayList<>();
+    private final ItemInOrder itemInOrder = new ItemInOrder();
+    private final ArrayList<Integer> newAmount = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -152,10 +151,12 @@ public class OrderAddWindowController implements Initializable {
             Order newOrder = new Order(customerCode, bolla, typeOfPaymentField.getValue(), datePicker.getValue().toString());
             orderManagementWindowController.addRow(newOrder);
             updateAmount();
+            updateOrderCode();
             updateItemInOrder();
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();        // Istruzione per chiudere il form
         }
-        catch (RuntimeException missingParameters) {
+        catch (RuntimeException missingParameters)
+        {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Parametri assenti");
@@ -163,6 +164,20 @@ public class OrderAddWindowController implements Initializable {
             alert.showAndWait();
         }
 
+    }
+
+
+    public void updateOrderCode() {
+        String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Ordine'";
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(getCodeQuery);
+            lastOrderCode = resultSet.getInt(1);
+        }
+        catch(SQLException e) {
+            System.err.println("Errore durante l'estrapolazione dell'ultimo codice ordine: " + e.getMessage());
+        }
+        itemInOrder.setCodice_Ordine(lastOrderCode);
     }
 
     public void openListOfItemView (ActionEvent ignoredEvent) {
@@ -173,7 +188,7 @@ public class OrderAddWindowController implements Initializable {
             ListOfItemsWindowController listOfItemsWindowController = loader.getController();
             listOfItemsWindowController.setAddOrderViewController(this);
             listOfItemsWindowController.setMainMenuController(mainMenuWindowController);
-            addItemStage = new Stage();
+            Stage addItemStage = new Stage();
             addItemStage.setTitle("Aggiungi articoli all'ordine");
             addItemStage.setResizable(false);
             addItemStage.getIcons().add(HotelSupplyManagementMain.icon);
@@ -210,16 +225,6 @@ public class OrderAddWindowController implements Initializable {
 
     public void updateItemInOrder() {        // Inserisce nel database gli articoli inerenti all'ordine
 
-        String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Ordine'";
-        try {
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-            ResultSet resultSet = statement.executeQuery(getCodeQuery);
-            lastOrderCode = resultSet.getInt(1);
-        }
-        catch(SQLException e) {
-            System.err.println("Errore durante l'estrapolazione dell'ultimo codice ordine: " + e.getMessage());
-        }
-        itemInOrder.setCodice_Ordine(lastOrderCode);
         for(int i = 0; i < itemInOrder.getNumberOfItems(); i++) {
             String addQuery = "INSERT INTO ArticoloInOrdine (Codice_Ordine, Codice_Articolo, Quantita) \n" +       // creazione della query di inserimento
                     "VALUES (?, ?, ?)";
@@ -251,6 +256,10 @@ public class OrderAddWindowController implements Initializable {
             }
         }
 
+    }
+
+    public void setDatePicker(DatePicker datePicker) {
+        this.datePicker = datePicker;
     }
 
     public ArrayList<Integer> getNewAmount() {

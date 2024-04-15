@@ -19,8 +19,7 @@ import java.util.Objects;
 public class HotelSupplyManagementMain extends Application {
 
     public static Connection conn;
-    public static Image icon =                      // Icona dell'applicazione
-            new Image(Objects.requireNonNull(HotelSupplyManagementMain.class.getResourceAsStream("/com/unifisweproject/hotelsupplymanagement/Icon/HotelSupplyManagementIcon.png")));
+    public static Image icon;
 
     @Override
     public void start(Stage stage) {
@@ -28,8 +27,8 @@ public class HotelSupplyManagementMain extends Application {
         conn = null;
         try {
             String url = "jdbc:sqlite:hotel_supply_management.db";
-            conn = DriverManager.getConnection(url);
-            System.out.println("Connessione al DB effettuata con successo!");
+            connectToDB(url);
+            icon = new Image(Objects.requireNonNull(HotelSupplyManagementMain.class.getResourceAsStream("/com/unifisweproject/hotelsupplymanagement/Icon/HotelSupplyManagementIcon.png")));
             if(!isFirstAccess(stage)) {
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/LoginWindow.fxml"));
@@ -94,8 +93,14 @@ public class HotelSupplyManagementMain extends Application {
                 System.err.println("Errore durante il caricamento della pagina del file FirstAccessWindow.fxml: " + e.getMessage());
             }
         }
-
         return isFirstAccess;
+
+    }
+
+    public static void connectToDB(String url) throws SQLException{             // Il metodo permette di creare la connessione sia al DB principale che al DB di test
+
+        conn = DriverManager.getConnection(url);
+        System.out.println("Connessione al DB effettuata con successo!");
 
     }
 

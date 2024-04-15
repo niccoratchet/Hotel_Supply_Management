@@ -196,14 +196,15 @@ public class SuppliesManagement implements Data_Management {
 
     @Override
     public void executeQuery(boolean isOutput, PreparedStatement statement) {
+
         try {
             if (!isOutput)
                 statement.executeUpdate();
         }
-
         catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+
     }
 
     public ResultSet getRows(boolean areAllRowsRequested, PreparedStatement statement) {
