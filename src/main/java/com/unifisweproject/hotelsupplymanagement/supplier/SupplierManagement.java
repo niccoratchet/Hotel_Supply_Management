@@ -11,10 +11,11 @@ import java.util.ArrayList;
 
 public class SupplierManagement implements Data_Management {
 
+    private static final SupplierManagement instance = new SupplierManagement();        // Singleton
     private int nextSupplierCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
     private final ArrayList<Supplier> supplierList = new ArrayList<>();
 
-    public SupplierManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
+    private SupplierManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Fornitore'";
 
@@ -28,6 +29,11 @@ public class SupplierManagement implements Data_Management {
         }
 
     }
+
+    public static SupplierManagement getInstance() {
+        return instance;
+    }
+
     @Override
     public void add(Object newSupplier) {
 

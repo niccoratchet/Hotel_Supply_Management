@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 
 public class SupplierManagementWindowController implements Initializable {
 
+    private static final SupplierManagementWindowController instance = new SupplierManagementWindowController();        // Applicazione SingleTon per la finestra di gestione fornitori
     @FXML
     private TableView<Supplier> supplierTable;
     @FXML
@@ -66,6 +67,16 @@ public class SupplierManagementWindowController implements Initializable {
     private boolean searchView = false;
     private ArrayList<Supplier> results = new ArrayList<>();
     private long lastClickTime = 0;
+
+    private SupplierManagementWindowController() {               // Costruttore privato per evitare la creazione di nuove istanze (SingleTon)
+        mainMenuWindowController = MainMenuWindowController.getInstance();
+        supplierManagement = SupplierManagement.getInstance();
+    }
+
+    public static SupplierManagementWindowController getInstance() {          // Metodo per ottenere l'istanza della classe (SingleTon)
+        return instance;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 

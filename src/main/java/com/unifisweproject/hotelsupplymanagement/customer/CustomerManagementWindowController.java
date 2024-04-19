@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 
 public class CustomerManagementWindowController implements Initializable {
 
+    private static final CustomerManagementWindowController instance = new CustomerManagementWindowController();        // Singleton
     @FXML
     private TableView<Customer> customerTable;
     @FXML
@@ -77,6 +78,16 @@ public class CustomerManagementWindowController implements Initializable {
 
     private ArrayList<Customer> results = new ArrayList<>();
     private long lastClickTime = 0;
+
+    private CustomerManagementWindowController() {                              // Costruttore privato per Singleton
+        mainMenuWindowController = MainMenuWindowController.getInstance();
+        customerManagement = CustomerManagement.getInstance();
+    }
+
+    public static CustomerManagementWindowController getInstance() {            // Metodo per ottenere l'istanza del Singleton
+        return instance;
+    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Cliente

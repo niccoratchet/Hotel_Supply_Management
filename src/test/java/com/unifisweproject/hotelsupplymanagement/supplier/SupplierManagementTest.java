@@ -47,7 +47,7 @@ public class SupplierManagementTest {
     @Test
     void addSupplier() {
 
-        SupplierManagement supplierManagement = new SupplierManagement();
+        SupplierManagement supplierManagement = SupplierManagement.getInstance();
         supplierManagement.add(new Supplier("2024-04-09", "01234567890",
                 "Rossi Mario", "Via Roma", "00100", "1"));
         String query = "SELECT * FROM Fornitore WHERE"+
@@ -78,7 +78,7 @@ public class SupplierManagementTest {
     @Test
     void modifySupplier() {
 
-        SupplierManagement supplierManagement = new SupplierManagement();
+        SupplierManagement supplierManagement = SupplierManagement.getInstance();
         supplierManagement.modify(new Supplier(99, "2024-04-10", "00000200000",
                 "Rossi Mauro", "Via Firenze", "00200", "2"));
         String query = "SELECT * FROM Fornitore WHERE  Codice_Fornitore = 99";
@@ -106,7 +106,7 @@ public class SupplierManagementTest {
     @Test
     void searchSupplier() {                         // FIXME: Errore 
 
-        SupplierManagement supplierManagement = new SupplierManagement();
+        SupplierManagement supplierManagement = SupplierManagement.getInstance();
         Supplier toBeSearch = new Supplier(98, "2024-04-09",
                 "12345678910", "Bottega Veneta", "Viale Caselli", "50987", "99");
         supplierManagement.add(toBeSearch);
@@ -126,7 +126,7 @@ public class SupplierManagementTest {
     @Test
     void deleteSupplier() {
 
-        SupplierManagement supplierManagement = new SupplierManagement();
+        SupplierManagement supplierManagement = SupplierManagement.getInstance();
         supplierManagement.delete(97);
         String query = "SELECT * FROM Fornitore WHERE  Codice_Fornitore = 97";
         try {

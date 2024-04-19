@@ -58,12 +58,25 @@ public class ItemManagementWindowController implements Initializable {
     private final MenuItem viewItemMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteItemMenu = new MenuItem("Elimina");
     private ItemManagement itemManagement;
-    private MainMenuWindowController mainMenuWindowController;
+    private final MainMenuWindowController mainMenuWindowController;
     private final ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
     private final ObservableList<Item> searchResultRows = FXCollections.observableArrayList();
     private boolean searchView = false;
     private ArrayList<Item> results = new ArrayList<>();
     private long lastClickTime = 0;
+    private static ItemManagementWindowController instance = null;        // Applicazione SingleTon per la finestra di gestione degli Item
+
+    private ItemManagementWindowController() {
+        mainMenuWindowController = MainMenuWindowController.getInstance();
+        itemManagement = ItemManagement.getInstance();
+    }
+
+    public static ItemManagementWindowController getInstance() {         // Metodo per ottenere l'istanza della classe (SingleTon)
+        if (instance == null) {
+            instance = new ItemManagementWindowController();
+        }
+        return instance;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Articolo
@@ -336,10 +349,6 @@ public class ItemManagementWindowController implements Initializable {
         String menuName = ((MenuItem) event.getSource()).getText();                                         // Ottengo il nome del menuItem premuto
         mainMenuWindowController.getStageFromMenuBar(event, stage, menuName);
 
-    }
-
-    public void setMainMenuController(MainMenuWindowController mainMenuWindowController) {
-        this.mainMenuWindowController = mainMenuWindowController;
     }
 
 }

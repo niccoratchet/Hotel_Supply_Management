@@ -26,7 +26,7 @@ public class ItemManagementTest {
         String url = "jdbc:sqlite:src/test/DBTest.db";
         try {
             HotelSupplyManagementMain.connectToDB(url);
-            itemManagement = new ItemManagement();
+            itemManagement = ItemManagement.getInstance();
             itemManagement.getItemList().add(testItem1);
             itemManagement.getItemList().add(testItem2);
         }

@@ -22,7 +22,7 @@ public class SupplyManagementTest {
         String url = "jdbc:sqlite:src/test/DBTest.db";
         try {
             HotelSupplyManagementMain.connectToDB(url);
-            suppliesManagement = new SuppliesManagement();
+            suppliesManagement = SuppliesManagement.getInstance();
             suppliesManagement.getSuppliesList().add(supplyTest);
         }
         catch (Exception e) {

@@ -30,6 +30,7 @@ import java.util.ResourceBundle;
 
 public class SuppliesManagementWindowController implements Initializable {
 
+    private static final SuppliesManagementWindowController instance = new SuppliesManagementWindowController();        // Singleton per la finestra di gestione delle forniture
     @FXML
     private TableView<Supply> suppliesTable;
     @FXML
@@ -64,6 +65,16 @@ public class SuppliesManagementWindowController implements Initializable {
     private final ObservableList<Supply> supplyRows = FXCollections.observableArrayList();
     private final ObservableList<Supply> searchResultRows = FXCollections.observableArrayList();
     private long lastClickTime = 0;
+
+    private SuppliesManagementWindowController() {               // Costruttore privato per evitare la creazione di nuove istanze (SingleTon)
+        mainMenuWindowController = MainMenuWindowController.getInstance();
+        suppliesManagement = SuppliesManagement.getInstance();
+    }
+
+    public static SuppliesManagementWindowController getInstance() {          // Metodo per ottenere l'istanza della classe (SingleTon)
+        return instance;
+    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

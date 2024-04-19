@@ -13,7 +13,9 @@ public class ItemManagement implements Data_Management {
     private int nextItemCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
     private final ArrayList<Item> itemList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Articolo
 
-    public ItemManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
+    private static final ItemManagement instance = new ItemManagement();          // Applicazione SingleTon per la gestione degli Item
+
+    private ItemManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Articolo'";
 
@@ -26,6 +28,10 @@ public class ItemManagement implements Data_Management {
             System.err.println("Errore durante l'estrapolazione dell'ultimo codice articolo");
         }
 
+    }
+
+    public static ItemManagement getInstance() {         // Metodo per ottenere l'istanza della classe (SingleTon)
+        return instance;
     }
 
     @Override

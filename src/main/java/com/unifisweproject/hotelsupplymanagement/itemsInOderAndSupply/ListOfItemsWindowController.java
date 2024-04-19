@@ -7,6 +7,7 @@
 package com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply;
 
 import com.unifisweproject.hotelsupplymanagement.item.Item;
+import com.unifisweproject.hotelsupplymanagement.item.ItemManagement;
 import com.unifisweproject.hotelsupplymanagement.main.MainMenuWindowController;
 import com.unifisweproject.hotelsupplymanagement.order.OrderAddWindowController;
 import com.unifisweproject.hotelsupplymanagement.supply.SupplyAddWindowController;
@@ -197,7 +198,7 @@ public class ListOfItemsWindowController implements Initializable {
     public void createRows()  {
 
         if (!mainMenuWindowController.getIsNotFirstTimeLoad().get(0)) {
-            ResultSet resultSet = mainMenuWindowController.getItemManagement().getRows(true, null);
+            ResultSet resultSet = ItemManagement.getInstance().getRows(true, null);
             try {
                 while (resultSet.next()) {
                     int quantita = resultSet.getInt(4);
@@ -205,7 +206,7 @@ public class ListOfItemsWindowController implements Initializable {
 
                     Item item = new Item(resultSet.getInt(1), quantita,
                             prezzo, resultSet.getString(2), resultSet.getString(5), resultSet.getString(6));
-                    mainMenuWindowController.getItemManagement().getItemList().add(item);
+                    ItemManagement.getInstance().getItemList().add(item);
                 }
                 mainMenuWindowController.getIsNotFirstTimeLoad().set(0, true);
             }
@@ -213,7 +214,7 @@ public class ListOfItemsWindowController implements Initializable {
                 System.err.println("Errore durante il riempimento della tabella");
             }
         }
-        itemList.addAll(mainMenuWindowController.getItemManagement().getItemList());
+        itemList.addAll(ItemManagement.getInstance().getItemList());
         itemCodeColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_articolo"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("Nome"));
         itemQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("Quantita"));

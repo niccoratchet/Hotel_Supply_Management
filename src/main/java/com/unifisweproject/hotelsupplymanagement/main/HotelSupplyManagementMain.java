@@ -1,10 +1,11 @@
 package com.unifisweproject.hotelsupplymanagement.main;
 
 
+import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
+import com.unifisweproject.hotelsupplymanagement.login.FirstAccessWindowController;
+import com.unifisweproject.hotelsupplymanagement.login.LoginWindowController;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -31,14 +32,7 @@ public class HotelSupplyManagementMain extends Application {
             icon = new Image(Objects.requireNonNull(HotelSupplyManagementMain.class.getResourceAsStream("/com/unifisweproject/hotelsupplymanagement/Icon/HotelSupplyManagementIcon.png")));
             if(!isFirstAccess(stage)) {
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/LoginWindow.fxml"));
-                    Parent root = loader.load();
-                    Scene scene = new Scene(root);
-                    stage.setScene(scene);
-                    stage.getIcons().add(icon);
-                    stage.setResizable(false);
-                    stage.setTitle("Login");
-                    stage.show();
+                    FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/LoginWindow.fxml"), LoginWindowController.getInstance(), false, null, "Hotel Supply Management", false);
                 }
                 catch(IOException e) {
                     System.err.println("Errore durante il caricamento della pagine del file LoginWindow.fxml: " + e.getMessage());
@@ -80,14 +74,7 @@ public class HotelSupplyManagementMain extends Application {
         if(file.length() == 0) {
             isFirstAccess = true;
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/FirstAccessWindow.fxml"));
-                Parent root = loader.load();
-                stage.setTitle("Hotel Supply Management");
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.setResizable(false);
-                stage.getIcons().add(HotelSupplyManagementMain.icon);
-                stage.show();
+                FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/FirstAccessWindow.fxml"), FirstAccessWindowController.getInstance(), false, null, "Hotel Supply Management", false);
             }
             catch (IOException e) {
                 System.err.println("Errore durante il caricamento della pagina del file FirstAccessWindow.fxml: " + e.getMessage());
@@ -97,10 +84,28 @@ public class HotelSupplyManagementMain extends Application {
 
     }
 
-    public static void connectToDB(String url) throws SQLException{             // Il metodo permette di creare la connessione sia al DB principale che al DB di test
-
+    public static void connectToDB(String url) throws SQLException {             // Il metodo permette di creare la connessione sia al DB principale che al DB di test
         conn = DriverManager.getConnection(url);
         System.out.println("Connessione al DB effettuata con successo!");
+    }
+
+    public static void generateAlert(Alert.AlertType alertType, String messageType, String messageContent) {
+
+        Alert alert = new Alert(alertType);
+        alert.setTitle("Avviso");
+        alert.setHeaderText(messageType);
+        alert.setContentText(messageContent);
+        alert.showAndWait();
+
+    }
+
+    public static void openCredits() {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Credits");
+        alert.setHeaderText("Hotel Supply Management");
+        alert.setContentText("Software developed by Niccolò Redi, Lorenzo Gazzini and Edoardo Cravegni. \n For the SWE Exam of UNIFI (A.A.2023/2024.)");
+        alert.showAndWait();
 
     }
 

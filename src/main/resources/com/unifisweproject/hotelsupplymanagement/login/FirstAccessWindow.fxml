@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="315.0" prefWidth="763.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.login.FirstAccessWindowController">
+<AnchorPane prefHeight="315.0" prefWidth="763.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="155.0" layoutY="28.0" prefHeight="27.0" prefWidth="449.0" text="Benvenuto in Hotel Supply Management! ">
          <font>
@@ -28,7 +27,7 @@
       <PasswordField fx:id="confirmPasswordField" layoutX="260.0" layoutY="208.0" prefHeight="25.0" prefWidth="244.0" />
       <Label layoutX="178.0" layoutY="167.0" text="Password" />
       <Label layoutX="122.0" layoutY="212.0" text="Conferma password" />
-      <Button layoutX="329.0" layoutY="257.0" mnemonicParsing="false" onAction="#confirmPassword" prefHeight="36.0" prefWidth="106.0" text="Conferma" />
-      <Button layoutX="626.0" layoutY="257.0" mnemonicParsing="false" onAction="#openCredits" prefHeight="36.0" prefWidth="106.0" text="Crediti" />
+      <Button fx:id="confirmButton" layoutX="329.0" layoutY="257.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="106.0" text="Conferma" />
+      <Button fx:id="creditsButton" layoutX="626.0" layoutY="257.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="106.0" text="Crediti" />
    </children>
 </AnchorPane>

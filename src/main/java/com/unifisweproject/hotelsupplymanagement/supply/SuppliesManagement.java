@@ -14,10 +14,12 @@ public class SuppliesManagement implements Data_Management {
         Questa classe è stata creata per gestire la tabella "Fornitura" del database. Non ha bisogno dell'attributo nextItemCode per il fatto
         che non è possibile aggiungere nuovi elementi alla tabella se non sono già presenti Fornitori e Articoli.
      */
+
+    private static final SuppliesManagement instance = new SuppliesManagement();        // Singleton per SuppliesManagement
     private int nextSupplyCode;                 // Codice della prossima fornitura da aggiungere
     private final ArrayList<Supply> suppliesList = new ArrayList<>();               // Lista di oggetti che rappresenta una singola riga in Fornitura nel DB
 
-    public SuppliesManagement() {
+    private SuppliesManagement() {              // Costruttore privato per evitare la creazione di nuove istanze (Singleton) e per estrapolare il prossimo codice fornitura
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Fornitura'";
         try {
@@ -29,6 +31,10 @@ public class SuppliesManagement implements Data_Management {
             System.err.println("Errore durante l'estrapolazione del prossimo codice fornitura: " + e.getMessage());
         }
 
+    }
+
+    public static SuppliesManagement getInstance() {
+        return instance;
     }
 
     @Override
@@ -54,24 +60,7 @@ public class SuppliesManagement implements Data_Management {
 
     @Override
     public void modify(Object value) {
-
-        /*  Si è deciso di non implementare la modifica
-
-        Supply modified = (Supply) value;
-        String modifyQuery = "UPDATE Fornitura SET " + getDataTypeForQuery("Codice_Articolo", modified.getCodice_articolo(), false) + ", " +
-                getDataTypeForQuery("Codice_Fornitore", modified.getCodice_fornitore(), false) + ", " + getDataTypeForQuery("Data_Fornitura", modified.getData_fornitura(), false) + ", " +
-                getDataTypeForQuery("Prezzo", modified.getPrezzo(), false) + ", " + getDataTypeForQuery("Quantita", modified.getQuantita(), false) +
-                " WHERE Codice_Fornitura = " +getDataTypeForQuery("Codice_Fornitura", modified.getCodice_fornitura(), true
-        try {
-            PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(modifyQuery);
-            executeQuery(false, preparedStatement);
-        }
-        catch (Exception e) {
-            System.out.println("Errore durante la modifica di una fornitura: " + e.getMessage());
-        }
-
-         */
-
+        // Non prevista la modifica di una fornitura
     }
 
     @Override

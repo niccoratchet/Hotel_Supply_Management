@@ -48,7 +48,7 @@ public class OrderManagementTest {
     @Test
     void testAddOrder() {
 
-        orderManagement = new OrderManagement();
+        orderManagement = OrderManagement.getInstance();
         orderManagement.add(new Order(50, true, "Rimessa Diretta", "2024-04-09"));
         String query = "SELECT * FROM Ordine WHERE Codice_Cliente = 50 AND BF = '1' AND Data_Ordine = '2024-04-09' AND " +
                 "Tipo_Pagamento = 'Rimessa Diretta'";
@@ -121,7 +121,7 @@ public class OrderManagementTest {
     @Test
     void testDeleteOrder() {
 
-        orderManagement = new OrderManagement();
+        orderManagement = OrderManagement.getInstance();
         orderManagement.delete(99);
         String query = "SELECT * FROM Ordine WHERE Codice_Ordine = 99";
         try {
@@ -142,7 +142,7 @@ public class OrderManagementTest {
     @Test
     void testSearchOrder() {
 
-        orderManagement = new OrderManagement();
+        orderManagement = OrderManagement.getInstance();
         Order order = new Order(15, 50, true, "Bonifico Bancario", "2024-04-09");
         orderManagement.add(order);
         orderManagement.getOrderList().add(order);

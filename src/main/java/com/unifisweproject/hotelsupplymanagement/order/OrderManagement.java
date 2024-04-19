@@ -8,10 +8,11 @@ import java.util.ArrayList;
 
 public class OrderManagement implements Data_Management {
 
+    private static final OrderManagement instance = new OrderManagement();        // Singleton
     private int nextOrderCode;               // Tiene traccia del codice dell'ultimo Ordine nel DB
     private final ArrayList<Order> orderList = new ArrayList<>();
 
-    public OrderManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
+    private OrderManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Ordine'";
         try {
@@ -23,6 +24,10 @@ public class OrderManagement implements Data_Management {
             System.err.println("Errore durante l'estrapolazione dell'ultimo codice ordine");
         }
 
+    }
+
+    public static OrderManagement getInstance() {
+        return instance;
     }
 
 

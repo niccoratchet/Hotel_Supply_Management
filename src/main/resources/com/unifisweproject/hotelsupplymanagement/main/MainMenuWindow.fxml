@@ -7,22 +7,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.main.MainMenuWindowController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label alignment="CENTER" layoutX="62.0" layoutY="29.0" prefHeight="37.0" prefWidth="476.0" text="Benvenuto nel gestionale di forniture alberghiere!">
          <font>
             <Font name="System Bold" size="18.0" />
          </font></Label>
-      <Button layoutX="62.0" layoutY="90.0" mnemonicParsing="false" onAction="#openOrderManagementView" prefHeight="37.0" prefWidth="134.0" text="Storico Ordini" />
-      <Button layoutX="62.0" layoutY="146.0" mnemonicParsing="false" onAction="#openItemManagementView" prefHeight="37.0" prefWidth="134.0" text="Articoli in magazzino" />
-      <Button layoutX="62.0" layoutY="200.0" mnemonicParsing="false" onAction="#openCustomerManagementView" prefHeight="37.0" prefWidth="134.0" text="Lista clienti" />
-      <Button layoutX="62.0" layoutY="253.0" mnemonicParsing="false" onAction="#openSupplierManagementView" prefHeight="37.0" prefWidth="134.0" text="Lista fornitori" />
+      <Button fx:id="openListOfOrdersButton" layoutX="62.0" layoutY="90.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="134.0" text="Storico Ordini" />
+      <Button fx:id="openListOfItemsButton" layoutX="62.0" layoutY="146.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="134.0" text="Articoli in magazzino" />
+      <Button fx:id="openListOfCustomersButton" layoutX="62.0" layoutY="200.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="134.0" text="Lista clienti" />
+      <Button fx:id="openListOfSuppliersButton" layoutX="62.0" layoutY="253.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="134.0" text="Lista fornitori" />
       <ImageView fitHeight="206.0" fitWidth="229.0" layoutX="300.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Icon/HotelSupplyManagementTransparentIcon.png" />
          </image>
       </ImageView>
-      <Button layoutX="62.0" layoutY="309.0" mnemonicParsing="false" onAction="#openSuppliesManagement" prefHeight="37.0" prefWidth="134.0" text="Storico forniture" />
-      <Button layoutX="336.0" layoutY="346.0" mnemonicParsing="false" onAction="#openCredits" prefHeight="37.0" prefWidth="134.0" text="Crediti" />
+      <Button fx:id="openListOfSuppliesButton" layoutX="62.0" layoutY="309.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="134.0" text="Storico forniture" />
+      <Button fx:id= "openCreditsButton" layoutX="336.0" layoutY="346.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="134.0" text="Crediti" />
    </children>
 </AnchorPane>

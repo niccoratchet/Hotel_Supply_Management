@@ -8,10 +8,11 @@ import java.util.ArrayList;
 
 public class CustomerManagement implements Data_Management {
 
+    private static final CustomerManagement instance = new CustomerManagement();           // Singleton
     private int nextCustomerCode;               // Tiene traccia del codice dell'ultimo Cliente nel DB
     private final ArrayList<Customer> customerList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Cliente
 
-    public CustomerManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
+    private CustomerManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Cliente'";
         try {
@@ -23,6 +24,10 @@ public class CustomerManagement implements Data_Management {
             System.err.println("Errore durante l'estrapolazione dell'ultimo codice Cliente");
         }
 
+    }
+
+    public static CustomerManagement getInstance() {
+        return instance;
     }
 
     @Override

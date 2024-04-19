@@ -28,6 +28,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class OrderManagementWindowController implements Initializable{
+
+    private static final OrderManagementWindowController instance = new OrderManagementWindowController();      // Singleton
     @FXML
     private TableView<Order> orderTable;
     @FXML
@@ -59,6 +61,15 @@ public class OrderManagementWindowController implements Initializable{
     private final ObservableList<Order> searchResultRows = FXCollections.observableArrayList();
 
     private long lastClickTime = 0;
+
+    private OrderManagementWindowController() {
+        mainMenuWindowController = MainMenuWindowController.getInstance();
+        orderManagement = OrderManagement.getInstance();
+    }
+
+    public static OrderManagementWindowController getInstance() {
+        return instance;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Ordine
