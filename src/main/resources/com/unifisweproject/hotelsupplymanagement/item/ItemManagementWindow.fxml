@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="tableAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="678.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="tableAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="678.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TableView fx:id="itemTable" layoutX="118.0" layoutY="46.0" prefHeight="406.0" prefWidth="548.0">
          <columns>
@@ -24,32 +24,34 @@
         <menus>
           <Menu disable="true" mnemonicParsing="false" text="Articoli">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Articoli in magazzino" />
+                  <MenuItem fx:id="itemMenuItem" mnemonicParsing="false" text="Articoli in magazzino" />
                </items></Menu>
           <Menu mnemonicParsing="false" text="Fornitura">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista fornitori" />
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Storico forniture" />
+                  <MenuItem fx:id="supplierMenuItem" text="Lista fornitori" >
+                      <mnemonicParsing>false</mnemonicParsing>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Storico forniture" />
                </items></Menu>
           <Menu mnemonicParsing="false" text="Clienti">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista clienti" />
+                  <MenuItem mnemonicParsing="false" text="Lista clienti" />
                </items></Menu>
             <Menu mnemonicParsing="false" text="Ordini">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Storico ordini" />
+                  <MenuItem mnemonicParsing="false" text="Storico ordini" />
                </items></Menu>
             <Menu mnemonicParsing="false" text="Menu principale">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Apri menu principale" />
+                <MenuItem mnemonicParsing="false" text="Apri menu principale" />
               </items>
             </Menu>
         </menus>
       </MenuBar>
-      <Button fx:id="addButton" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayAddView" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
-      <Button fx:id="deleteButton" disable="true" layoutX="14.0" layoutY="91.0" mnemonicParsing="false" onAction="#deleteRow" prefHeight="25.0" prefWidth="89.0" text="Elimina" />
-      <Button fx:id="modifyButton" disable="true" layoutX="14.0" layoutY="138.0" mnemonicParsing="false" onAction="#displayItemView" prefHeight="25.0" prefWidth="89.0" text="Modifica" />
-      <Button fx:id="searchButton" layoutX="14.0" layoutY="188.0" mnemonicParsing="false" onAction="#displaySearchView" prefHeight="25.0" prefWidth="89.0" text="Ricerca" />
-      <Button fx:id="backButton" disable="true" layoutX="14.0" layoutY="345.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="25.0" prefWidth="89.0" text="Indietro" visible="false" />
+      <Button fx:id="addButton" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
+      <Button fx:id="deleteButton" disable="true" layoutX="14.0" layoutY="91.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Elimina" />
+      <Button fx:id="modifyButton" disable="true" layoutX="14.0" layoutY="138.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Modifica" />
+      <Button fx:id="searchButton" layoutX="14.0" layoutY="188.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Ricerca" />
+      <Button fx:id="backButton" disable="true" layoutX="14.0" layoutY="345.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Indietro" visible="false" />
    </children>
 </AnchorPane>

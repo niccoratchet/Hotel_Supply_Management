@@ -44,6 +44,10 @@ public class ItemSearchWindowController implements Initializable {
     private ItemManagementWindowController itemManagementWindowController;
     private boolean isBadFormatted = false;
 
+    public ItemSearchWindowController() {
+        this.itemManagementWindowController = ItemManagementWindowController.getInstance();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -227,5 +231,4 @@ public class ItemSearchWindowController implements Initializable {
     public void setItemManagementSceneController(ItemManagementWindowController itemManagementWindowController) {
         this.itemManagementWindowController = itemManagementWindowController;
     }
-
 }

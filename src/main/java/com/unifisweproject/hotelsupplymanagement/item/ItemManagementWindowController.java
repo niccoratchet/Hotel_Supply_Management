@@ -1,129 +1,58 @@
 package com.unifisweproject.hotelsupplymanagement.item;
 
+import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 import com.unifisweproject.hotelsupplymanagement.main.MainMenuWindowController;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
-public class ItemManagementWindowController implements Initializable {
+public class ItemManagementWindowController {
 
-    @FXML
-    private TableView<Item> itemTable;
-    @FXML
-    private TableColumn<Item, Integer> IDColumn;
-    @FXML
-    private TableColumn<Item, String> NameColumn;
-    @FXML
-    private TableColumn<Item, Integer> AmountColumn;
-    @FXML
-    private TableColumn<Item, Double> PriceColumn;
-    @FXML
-    private TableColumn<Item, String> DescriptionColumn;
-    @FXML
-    private TableColumn<Item, String> DateColumn;
-    @FXML
-    private Button modifyButton;
-    @FXML
-    private Button deleteButton;
-    @FXML
-    private Button backButton;
-    @FXML
-    private Button searchButton;
-    @FXML
-    private Button addButton;
-    @FXML
-    private AnchorPane tableAnchorPane;
-    private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
-    private final MenuItem viewItemMenu = new MenuItem("Visualizza");
-    private final MenuItem viewDeleteItemMenu = new MenuItem("Elimina");
-    private ItemManagement itemManagement;
+    private final ItemManagement itemManagement;
     private final MainMenuWindowController mainMenuWindowController;
-    private final ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
-    private final ObservableList<Item> searchResultRows = FXCollections.observableArrayList();
     private boolean searchView = false;
     private ArrayList<Item> results = new ArrayList<>();
-    private long lastClickTime = 0;
     private static ItemManagementWindowController instance = null;        // Applicazione SingleTon per la finestra di gestione degli Item
+    private ItemManagementView itemManagementView;
+    private ItemAddWindow itemAddWindow;
 
     private ItemManagementWindowController() {
+
         mainMenuWindowController = MainMenuWindowController.getInstance();
         itemManagement = ItemManagement.getInstance();
+
     }
 
     public static ItemManagementWindowController getInstance() {         // Metodo per ottenere l'istanza della classe (SingleTon)
+
         if (instance == null) {
             instance = new ItemManagementWindowController();
         }
         return instance;
+
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Articolo
+    public void displayView(ActionEvent event) {            // Metodo per visualizzare la finestra di gestione degli articoli
 
-        Platform.runLater(this::createRows);
-        itemTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
-            if(newSelection != null) {
-                modifyButton.setDisable(false);             // Aggiunta del listener nella tabella per rilevare quale elemento viene selezionato
-                deleteButton.setDisable(false);
-            }
-            else {
-                modifyButton.setDisable(true);
-                deleteButton.setDisable(true);
-            }
-        });
-        rightClickMenu.getItems().addAll(viewItemMenu, viewDeleteItemMenu);
-        viewItemMenu.setOnAction(event -> {
-            try {
-                displayItemView(null);
-            } catch (IOException e) {
-                System.out.println("Non è stato possibile visualizzare l'item selezionato");
-            }
-        });
-        viewDeleteItemMenu.setOnAction(event -> deleteRow());
-        itemTable.setOnMouseClicked(event -> {
-            if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
-                rightClickMenu.hide();
-                if (event.getClickCount() == 2) {
-                    long currentTime = System.currentTimeMillis();
-                    if (currentTime - lastClickTime < 5000)
-                    {
-                        try {
-                            displayItemView(null);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    lastClickTime = currentTime;
-                }
-            }
-            else {
-                SelectionModel<Item> selectionModel = itemTable.getSelectionModel();        // verifico se è stato cliccato un elemento
-                Item selectedItem = selectionModel.getSelectedItem();
-                if(selectedItem != null)
-                    rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY());       // Mostra il menu contestuale alle coordinate del click
-            }
-        });
+        try {
+            itemManagementView = new ItemManagementView();                                                                                                                                            // Apertura della finestra di gestione degli Item
+            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemManagementWindow.fxml"),
+                    itemManagementView, true, event, "Gestione prodotti", false);
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante il caricamento di ItemManagementWindow.fxml: " + e.getMessage());
+        }
+        createRows();
 
     }
 
@@ -135,7 +64,7 @@ public class ItemManagementWindowController implements Initializable {
                 while (resultSet.next()) {
                     Item item = new Item(resultSet.getInt(1), resultSet.getInt(4),
                             resultSet.getDouble(3), resultSet.getString(2), resultSet.getString(5), resultSet.getString(6));
-                    itemManagement.getItemList().add(item);
+                    itemManagement.getItemList().add(item);             // FIXME: Deve l'ItemManagement ad aggiungere l'Item alla lista
                 }
                 mainMenuWindowController.getIsNotFirstTimeLoad().set(0, true);
             }
@@ -143,111 +72,88 @@ public class ItemManagementWindowController implements Initializable {
                 System.err.println("Errore durante il riempimento della tabella");
             }
         }
-        itemRows.addAll(itemManagement.getItemList());
-        IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_articolo"));
-        NameColumn.setCellValueFactory(new PropertyValueFactory<>("Nome"));
-        AmountColumn.setCellValueFactory(new PropertyValueFactory<>("Quantita"));
-        PriceColumn.setCellValueFactory(new PropertyValueFactory<>("Prezzo"));
-        DescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("Descrizione"));
-        DateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_inserimento"));
-        itemTable.setItems(itemRows);                       // Inserisce nella tabella tutte le righe degli Item presenti nel DB
-
-    }
-
-    public void displayAddView() {
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemAddWindow.fxml"));
-            Parent root = loader.load();
-            ItemAddWindowController addItemController = loader.getController();
-            addItemController.setItemManagementSceneController(this);
-            Stage addStage = new Stage();
-            addStage.initModality(Modality.APPLICATION_MODAL);
-            addStage.setTitle("Aggiungi prodotto");
-            addStage.setResizable(false);
-            addStage.getIcons().add(HotelSupplyManagementMain.icon);
-            addStage.setScene(new Scene(root));
-            addStage.show();
-        }
-        catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+        ObservableList<Item> itemRows = FXCollections.observableArrayList(itemManagement.getItemList());
+        itemManagementView.setItemRows(itemRows);
 
     }
 
     public void addRow(Item newItem) {
 
         newItem.setCodice_articolo(itemManagement.getNextItemCode() + 1);
-        itemManagement.getItemList().add(newItem);
+        itemManagement.getItemList().add(newItem);      // FIXME: Deve l'ItemManagement ad aggiungere l'Item alla lista
         itemManagement.add(newItem);
         updateTable();
 
     }
 
+    public void createItem(ActionEvent event) {             // Metodo chiamato quando si preme il pulsante di aggiunta di un nuovo articolo
+
+        try {
+            if ("".equals(itemAddWindow.getNameField().getText()) || "".equals(itemAddWindow.getPriceField().getText()) ||          // Verifica che tutti i campi siano stati riempiti
+                    "".equals(itemAddWindow.getAmountField().getText()) || itemAddWindow.getDatePicker().getValue() == null)
+                throw new RuntimeException("Parametri mancanti");
+            Item newItem = new Item(Integer.parseInt(itemAddWindow.getAmountField().getText()), Double.parseDouble(itemAddWindow.getPriceField().getText()),
+                    itemAddWindow.getNameField().getText(), itemAddWindow.getDescriptionField().getText(), itemAddWindow.getDatePicker().getValue().toString());
+            addRow(newItem);
+            itemAddWindow.closeAddView(event);
+        }
+        catch (RuntimeException missingParameters) {
+            HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Parametri assenti", "Inserire il valore di tutti i dati obbligatori.");
+        }
+    }
+
     public void modifyRow(Item toBeModified) {
 
         itemManagement.modify(toBeModified);
-        createConfirmedItemModify();
+        HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Avviso", "Modifica prodotto",
+                "Modifica del prodotto " + toBeModified.getNome() + " effettuata con successo");
         updateTable();
 
     }
 
     public void updateTable() {
 
-        Platform.runLater(() -> {                       // Pulisci e aggiorna la tabella
-            if(searchView) {
-                itemTable.getItems().clear();
-                searchResultRows.clear();
-                searchResultRows.setAll(results);
-                itemTable.setItems(searchResultRows);
-            }
-            else {
-                itemTable.getItems().clear();
-                itemRows.clear();
-                itemRows.setAll(itemManagement.getItemList());
-                itemTable.setItems(itemRows);
-                addButton.setDisable(false);                // Riattivo bottone di aggiunta
-                addButton.setVisible(true);
-                backButton.setDisable(true);                // Disattivo bottone "indietro" quando ho terminato una precedente ricerca
-                backButton.setVisible(false);
-            }
-        });
-
-    }
-
-    public void exitSearch() {
-
-        searchButton.setDisable(false);             // Riattivo bottone di ricerca
-        searchButton.setVisible(true);
-        searchView = false;
-        updateTable();
-
-    }
-
-    public void setItemManagement(ItemManagement itemManagement) {
-        this.itemManagement = itemManagement;
-    }
-
-    public void displayItemView(ActionEvent ignoredEvent) throws IOException {
-
-        SelectionModel<Item> selectionModel = itemTable.getSelectionModel();
-        Item selectedItem = selectionModel.getSelectedItem();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemDisplayWindow.fxml"));
-            Parent root = loader.load();
-            ItemDisplayWindowController itemDisplayWindowController = loader.getController();
-            itemDisplayWindowController.setDisplayedItem(selectedItem);
-            itemDisplayWindowController.setItemManagementSceneController(this);
-            Stage displayStage = new Stage();
-            displayStage.initModality(Modality.APPLICATION_MODAL);
-            displayStage.setTitle(selectedItem.getNome());
-            displayStage.setResizable(false);
-            displayStage.getIcons().add(HotelSupplyManagementMain.icon);
-            displayStage.setScene(new Scene(root));
-            displayStage.show();
+        if(searchView) {
+            ObservableList<Item> searchResultRows = FXCollections.observableArrayList(results);
+            itemManagementView.setItemRows(searchResultRows);
         }
-        catch (IOException e) {
-            System.err.println("Errore durante l'apertura del file ItemDisplayWindow.fxml: " + e.getMessage());
+        else {
+            ObservableList<Item> itemRows = FXCollections.observableArrayList(itemManagement.getItemList());
+            itemManagementView.setItemRows(itemRows);
+            itemManagementView.refreshAddANdBackButtons();
+        }
+
+    }
+
+    public void deleteRow(Item selectedItem) {
+
+        if (createConfirmDeleteAlert()) {
+            itemManagement.getItemList().remove(selectedItem);          // TODO: La rimozione dee essere effettuata nel modello (ItemManagement)
+            itemManagement.delete(selectedItem.getCodice_articolo());
+            if (searchView)
+                results.remove(selectedItem);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
+            updateTable();
+        }
+
+    }
+
+    public void searchRow(Item toBeSearched) {
+
+        results.clear();
+        try {
+            results = HotelSupplyManagementMain.castArrayList(itemManagement.search(toBeSearched));             // effettuo il cast della lista
+            int numberOfResults = results.size();
+            searchView = true;
+            ObservableList<Item> searchResultRows = FXCollections.observableArrayList(results);
+            itemManagementView.setItemRows(searchResultRows);
+            HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Avviso", "Risultato ricerca",
+                    "La ricerca ha restituito " + numberOfResults + " risultati");
+            itemManagementView.refreshSearchButton();
+            itemManagementView.refreshAddANdBackButtons();
+        }
+        catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
+            HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Errore",
+                    "Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
         }
 
     }
@@ -265,80 +171,39 @@ public class ItemManagementWindowController implements Initializable {
 
     }
 
-    public void createConfirmedItemModify() {
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Modifiche applicate");
-        alert.setContentText("Le modifiche sono state eseguite");
-        alert.showAndWait();
-
-    }
-
-
-    public void deleteRow() {
-
-        if (createConfirmDeleteAlert()) {
-            SelectionModel<Item> selectionModel = itemTable.getSelectionModel();
-            Item selectedItem = selectionModel.getSelectedItem();
-            itemManagement.getItemList().remove(selectedItem);
-            itemManagement.delete(selectedItem.getCodice_articolo());
-            if (searchView)
-                results.remove(selectedItem);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
-            updateTable();
-        }
-
-    }
-
-    public void searchRow(Item toBeSearched) {
-
-        results.clear();
-        try {
-            results = HotelSupplyManagementMain.castArrayList(itemManagement.search(toBeSearched));             // effettuo il cast della lista
-            int numberOfResults = results.size();
-            searchView = true;
-            searchResultRows.clear();
-            Platform.runLater(() -> {
-                searchResultRows.setAll(results);
-                itemTable.getItems().clear();
-                itemTable.setItems(searchResultRows);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Risultato ricerca");
-                alert.setContentText("La ricerca ha reso " + numberOfResults + " risultati");
-                alert.showAndWait();
-            });
-            backButton.setDisable(false);
-            backButton.setVisible(true);
-            searchButton.setDisable(true);
-            searchButton.setVisible(false);
-            addButton.setDisable(true);
-            addButton.setVisible(false);
-        }
-        catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.setContentText("Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
-            alert.showAndWait();
-        }
-
-    }
-
-    public void displaySearchView(ActionEvent ignoredEvent) {
+    public void displaySearchView(ActionEvent event) {
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemSearchWindow.fxml"));
-            Parent root = loader.load();
-            ItemSearchWindowController itemSearchWindowController = loader.getController();
-            itemSearchWindowController.setItemManagementSceneController(this);
-            Stage searchStage = new Stage();
-            searchStage.initModality(Modality.APPLICATION_MODAL);
-            searchStage.setTitle("Ricerca articolo");
-            searchStage.setResizable(false);
-            searchStage.getIcons().add(HotelSupplyManagementMain.icon);
-            searchStage.setScene(new Scene(root));
-            searchStage.show();
+            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemSearchWindow.fxml"),
+                    new ItemSearchWindowController(), false, event, "Ricerca prodotto", false);
         }
         catch(IOException e) {
             System.out.println("Errore durante il caricamento di SearchItemView: " + e);
+        }
+
+    }
+
+    public void displayAddView() {
+
+        try {
+            itemAddWindow = new ItemAddWindow();
+            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemAddWindow.fxml"),
+                   itemAddWindow, false, null, "Aggiungi prodotto", false);
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante il caricamento di ItemAddWindow.fxml: " + e.getMessage());
+        }
+
+    }
+
+    public void displayItemView(ActionEvent event, Item selectedItem) {
+
+        try {
+            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemDisplayWindow.fxml"),
+                    new ItemDisplayWindowController(selectedItem), false, event, selectedItem.getNome(), false);
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante l'apertura del file ItemDisplayWindow.fxml: " + e.getMessage());
         }
 
     }
@@ -349,6 +214,47 @@ public class ItemManagementWindowController implements Initializable {
         String menuName = ((MenuItem) event.getSource()).getText();                                         // Ottengo il nome del menuItem premuto
         mainMenuWindowController.getStageFromMenuBar(event, stage, menuName);
 
+    }
+
+    public void handleActionEvent(ActionEvent event) {
+
+        if (event.getSource() instanceof Button button) {
+            switch (button.getId()) {
+                case "addButton" -> displayAddView();
+                case "searchButton" -> displaySearchView(event);
+                case "backButton" -> itemManagementView.exitSearch();
+                case "modifyButton" -> {
+                    Item selectedItem = itemManagementView.getItemTable().getSelectionModel().getSelectedItem();
+                    displayItemView(null, selectedItem);
+                }
+                case "deleteButton" -> {
+                    Item selectedItem = itemManagementView.getItemTable().getSelectionModel().getSelectedItem();
+                    deleteRow(selectedItem);
+                }
+            }
+        }
+        else if (event.getSource() instanceof MenuItem menuItem) {
+            if (menuItem.getId().equals("viewItemMenu") || menuItem.getId().equals("viewDeleteItemMenu")) {
+                Item selectedItem = itemManagementView.getItemTable().getSelectionModel().getSelectedItem();
+                if (Objects.nonNull(selectedItem)) {
+                    if (menuItem.getId().equals("viewItemMenu"))
+                        displayItemView(null, selectedItem);
+                    else
+                        deleteRow(selectedItem);
+                }
+            }
+            else
+                openDifferentManagement(event);
+        }
+
+    }
+
+    public void handleMouseEvent(Item selectedItem) {
+        displayItemView(null, selectedItem);
+    }
+
+    public void setSearchView(boolean searchView) {
+        this.searchView = searchView;
     }
 
 }

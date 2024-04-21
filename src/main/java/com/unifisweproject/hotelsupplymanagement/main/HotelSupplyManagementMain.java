@@ -6,6 +6,7 @@ import com.unifisweproject.hotelsupplymanagement.login.FirstAccessWindowControll
 import com.unifisweproject.hotelsupplymanagement.login.LoginWindowController;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -16,11 +17,27 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 public class HotelSupplyManagementMain extends Application {
 
     public static Connection conn;
     public static Image icon;
+
+    public static UnaryOperator<TextFormatter.Change> filterDouble = change -> {              // Creazione del Formatter che garantisce l'inserimento corretto di un numero decimale
+        String text = change.getText();
+        if (text.matches("[0-9]*\\.?[0-9]*")) {
+            return change;
+        }
+        return null;
+    };
+    public static UnaryOperator<TextFormatter.Change> filterInt = change -> {             // Creazione del Formatter che garantisce l'inserimento corretto di un numero intero
+        String text = change.getText();
+        if (text.matches("[0-9]*")) {
+            return change;
+        }
+        return null;
+    };
 
     @Override
     public void start(Stage stage) {
@@ -32,7 +49,7 @@ public class HotelSupplyManagementMain extends Application {
             icon = new Image(Objects.requireNonNull(HotelSupplyManagementMain.class.getResourceAsStream("/com/unifisweproject/hotelsupplymanagement/Icon/HotelSupplyManagementIcon.png")));
             if(!isFirstAccess(stage)) {
                 try {
-                    FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/LoginWindow.fxml"), LoginWindowController.getInstance(), false, null, "Hotel Supply Management", false);
+                    FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/LoginWindow.fxml"), new LoginWindowController(), false, null, "Hotel Supply Management", false);
                 }
                 catch(IOException e) {
                     System.err.println("Errore durante il caricamento della pagine del file LoginWindow.fxml: " + e.getMessage());
@@ -74,7 +91,7 @@ public class HotelSupplyManagementMain extends Application {
         if(file.length() == 0) {
             isFirstAccess = true;
             try {
-                FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/FirstAccessWindow.fxml"), FirstAccessWindowController.getInstance(), false, null, "Hotel Supply Management", false);
+                FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/FirstAccessWindow.fxml"), new FirstAccessWindowController(), false, null, "Hotel Supply Management", false);
             }
             catch (IOException e) {
                 System.err.println("Errore durante il caricamento della pagina del file FirstAccessWindow.fxml: " + e.getMessage());
@@ -89,10 +106,10 @@ public class HotelSupplyManagementMain extends Application {
         System.out.println("Connessione al DB effettuata con successo!");
     }
 
-    public static void generateAlert(Alert.AlertType alertType, String messageType, String messageContent) {
+    public static void generateAlert(Alert.AlertType alertType, String messageTitle, String messageType, String messageContent) {
 
         Alert alert = new Alert(alertType);
-        alert.setTitle("Avviso");
+        alert.setTitle(messageTitle);
         alert.setHeaderText(messageType);
         alert.setContentText(messageContent);
         alert.showAndWait();

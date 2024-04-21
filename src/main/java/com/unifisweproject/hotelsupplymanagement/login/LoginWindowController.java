@@ -23,21 +23,14 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 
 public class LoginWindowController implements Initializable {
 
-    private static final LoginWindowController instance = new LoginWindowController();      // Applicazione SingleTon per la finestra di login
     @FXML
     private TextField passwordTextField;
     @FXML
     private Button loginButton;
 
-    private LoginWindowController() {           // Costruttore privato per evitare la creazione di nuove istanze (SingleTon)
-    }
-
-    public static LoginWindowController getInstance() {         // Metodo per ottenere l'istanza della classe (SingleTon)
-        return instance;
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         loginButton.setOnAction(event -> {
             try {
                 verifyPassword(event);
@@ -45,6 +38,7 @@ public class LoginWindowController implements Initializable {
                 System.err.println("Errore durante il login: " + e.getMessage());
             }
         });
+
     }
 
     public void verifyPassword(ActionEvent event) throws IOException {
@@ -59,7 +53,7 @@ public class LoginWindowController implements Initializable {
                         MainMenuWindowController.getInstance(), true, event, "Hotel Supply Management", false);
             }
             else {
-                HotelSupplyManagementMain.generateAlert(ERROR,"Password errata", "La password inserita non è corretta");
+                HotelSupplyManagementMain.generateAlert(ERROR, "Errore","Password errata", "La password inserita non è corretta");
             }
         }
         catch (FileNotFoundException e) {

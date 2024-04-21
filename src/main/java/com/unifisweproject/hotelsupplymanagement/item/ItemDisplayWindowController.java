@@ -31,6 +31,11 @@ public class ItemDisplayWindowController implements Initializable {
     private Item displayedItem;
     private ItemManagementWindowController itemManagementWindowController;
 
+    public ItemDisplayWindowController(Item displayedItem) {
+        this.itemManagementWindowController = ItemManagementWindowController.getInstance();
+        this.displayedItem = displayedItem;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

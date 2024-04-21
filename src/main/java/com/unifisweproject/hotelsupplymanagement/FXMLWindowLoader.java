@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
@@ -56,7 +57,7 @@ public class FXMLWindowLoader extends FXMLLoader {
 
     public static void setStage(Stage stage, Parent root, String title, boolean isResizable) {
 
-        stage.setScene(root.getScene());
+        stage.setScene(root.getScene());            // FIXME: Deve essere aggiunta la modalità per impedire di cliccare sotto quando sono aperte più finestre
         stage.setTitle(title);
         stage.getIcons().add(HotelSupplyManagementMain.icon);
         stage.setResizable(isResizable);

@@ -18,8 +18,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import static javax.security.auth.callback.ConfirmationCallback.INFORMATION;
-
 public class MainMenuWindowController implements Initializable {
 
 
@@ -62,16 +60,8 @@ public class MainMenuWindowController implements Initializable {
     }
 
     public void openItemManagementView(ActionEvent event) {        // Metodo per l'apertura della finestra di gestione degli articoli
-
-        try {
-            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemManagementWindow.fxml"),
-                    ItemManagementWindowController.getInstance(), "Gestione Articoli", false, stage);
-            verifyIsMenuButton(event);
-        }
-        catch (IOException e) {
-            System.err.println("Non è stato possibile caricare la pagina ItemManagementWindow.fxml: " + e.getMessage());
-        }
-
+        ItemManagementWindowController itemManagementWindowController = ItemManagementWindowController.getInstance();
+        itemManagementWindowController.displayView(event);
     }
 
     public void openCustomerManagementView(ActionEvent event) {      // Metodo per l'apertura della finestra di gestione dei clienti
@@ -140,7 +130,7 @@ public class MainMenuWindowController implements Initializable {
 
     public void getStageFromMenuBar(ActionEvent event, Stage stage, String sectionName) {           // Chiamato da un certo Controller dopo la pressione di un MenuItem. Serve a capire quale Management è stato premuto
 
-        this.stage = stage;
+        MainMenuWindowController.stage = stage;
         isMenuButton = true;
         switch (sectionName) {
             case "Articoli in magazzino" -> openItemManagementView(event);
@@ -154,7 +144,7 @@ public class MainMenuWindowController implements Initializable {
     }
 
     public void openCredits() {
-        HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Hotel Supply Management", "Software developed by Niccolò Redi, Lorenzo Gazzini and Edoardo Cravegni. \n For the SWE Exam of UNIFI (A.A.2023/2024.)");
+        HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Credits", "Hotel Supply Management", "Software developed by Niccolò Redi, Lorenzo Gazzini and Edoardo Cravegni. \n For the SWE Exam of UNIFI (A.A.2023/2024.)");
     }
 
     public void verifyIsMenuButton(ActionEvent event) {                         // Verifica e aggiorna la variabile isMenuButton per cambiare modalità di apertura nuovo Management
