@@ -38,6 +38,11 @@ public class SuppliesManagement implements Data_Management {
     }
 
     @Override
+    public void loadFromDB() throws SQLException {
+
+    }
+
+    @Override
     public void add(Object newObject) {
 
         Supply toBeAdded = (Supply) newObject;
@@ -155,10 +160,10 @@ public class SuppliesManagement implements Data_Management {
     }
 
     @Override
-    public void delete(int code) {
+    public void delete(Object toBeDeleted) {
 
         try {
-            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Fornitura WHERE Codice_Fornitura = " + code);
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Fornitura WHERE Codice_Fornitura = " + ((Supply)toBeDeleted).getCodice_fornitura());
             executeQuery(false, statement);
         }
         catch (SQLException e) {

@@ -34,10 +34,22 @@ public class ItemManagement implements Data_Management {
         return instance;
     }
 
+    public void loadFromDB() throws SQLException {              // Carica tutti gli Item presenti nel DB nella lista itemList
+
+        ResultSet resultSet = getRows(true, null);
+        while (resultSet.next()) {
+            Item newItem = new Item(resultSet.getInt(1), resultSet.getInt(4),
+                    resultSet.getDouble(3), resultSet.getString(2), resultSet.getString(5), resultSet.getString(6));
+            itemList.add(newItem);
+        }
+
+    }
+
     @Override
     public void add(Object newItem) {
 
         Item toBeAdded = (Item) newItem;
+        toBeAdded.setCodice_articolo(nextItemCode + 1);
 
         String addQuery = "INSERT INTO Articolo (Nome, Prezzo, Quantita, Descrizione, Data_Inserimento) \n" +       // creazione della query di inserimento
                     "VALUES (?, ?, ?, ?, ?)";
@@ -51,6 +63,7 @@ public class ItemManagement implements Data_Management {
             preparedStatement.setString(5, toBeAdded.getData_inserimento());
             preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
             nextItemCode++;
+            itemList.add(toBeAdded);
         }
 
         catch (SQLException e) {
@@ -238,11 +251,12 @@ public class ItemManagement implements Data_Management {
     }
 
     @Override
-    public void delete(int code) {
+    public void delete(Object toBeDeleted) {
 
         try {
-            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Articolo WHERE Codice_Articolo = " + code);
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Articolo WHERE Codice_Articolo = " + ((Item) toBeDeleted).getCodice_articolo());
             executeQuery(false, statement);
+            itemList.remove(toBeDeleted);
         } catch (SQLException e) {
             System.err.println("Errore durante l'eliminazione della riga Item: " + e.getMessage());
         }
@@ -305,13 +319,9 @@ public class ItemManagement implements Data_Management {
         }
 
     }
-
     public ArrayList<Item> getItemList() {
         return itemList;
     }
 
-    public int getNextItemCode() {
-        return nextItemCode;
-    }
 }
 

@@ -120,7 +120,7 @@ public class ItemSearchWindow implements Initializable {
     }
 
     public void searchItem(ActionEvent event) {
-        controller.scanRows(event);
+        controller.searchRow(event);
     }
 
     public void closeSearchView(ActionEvent event) {

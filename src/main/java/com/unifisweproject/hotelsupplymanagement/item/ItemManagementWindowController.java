@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -43,30 +42,11 @@ public class ItemManagementWindowController {
 
     }
 
-    public void displayView(ActionEvent event) {            // Metodo per visualizzare la finestra di gestione degli articoli
-
-        try {
-            itemManagementView = new ItemManagementView();                                                                                                                                            // Apertura della finestra di gestione degli Item
-            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemManagementWindow.fxml"),
-                    itemManagementView, true, event, "Gestione prodotti", false);
-        }
-        catch (IOException e) {
-            System.err.println("Errore durante il caricamento di ItemManagementWindow.fxml: " + e.getMessage());
-        }
-        createRows();
-
-    }
-
     public void createRows()  {
 
         if (!mainMenuWindowController.getIsNotFirstTimeLoad().get(0)) {
-            ResultSet resultSet = itemManagement.getRows(true, null);
             try {
-                while (resultSet.next()) {
-                    Item item = new Item(resultSet.getInt(1), resultSet.getInt(4),
-                            resultSet.getDouble(3), resultSet.getString(2), resultSet.getString(5), resultSet.getString(6));
-                    itemManagement.getItemList().add(item);             // FIXME: Deve l'ItemManagement ad aggiungere l'Item alla lista
-                }
+                itemManagement.loadFromDB();
                 mainMenuWindowController.getIsNotFirstTimeLoad().set(0, true);
             }
             catch (SQLException e) {
@@ -78,24 +58,15 @@ public class ItemManagementWindowController {
 
     }
 
-    public void addRow(Item newItem) {
-
-        newItem.setCodice_articolo(itemManagement.getNextItemCode() + 1);
-        itemManagement.getItemList().add(newItem);
-        itemManagement.add(newItem);
-        updateTable();
-
-    }
-
-    public void createItem(ActionEvent event) {             // Metodo chiamato quando si preme il pulsante di aggiunta di un nuovo articolo
+    public void createRow(ActionEvent event) {             // Metodo chiamato quando si preme il pulsante di aggiunta di un nuovo articolo
 
         try {
             if ("".equals(itemAddWindow.getNameField().getText()) || "".equals(itemAddWindow.getPriceField().getText()) ||          // Verifica che tutti i campi siano stati riempiti
                     "".equals(itemAddWindow.getAmountField().getText()) || itemAddWindow.getDatePicker().getValue() == null)
                 throw new RuntimeException("Parametri mancanti");
-            Item newItem = new Item(Integer.parseInt(itemAddWindow.getAmountField().getText()), Double.parseDouble(itemAddWindow.getPriceField().getText()),
-                    itemAddWindow.getNameField().getText(), itemAddWindow.getDescriptionField().getText(), itemAddWindow.getDatePicker().getValue().toString());
-            addRow(newItem);
+            itemManagement.add(new Item(Integer.parseInt(itemAddWindow.getAmountField().getText()), Double.parseDouble(itemAddWindow.getPriceField().getText()),
+                    itemAddWindow.getNameField().getText(), itemAddWindow.getDescriptionField().getText(), itemAddWindow.getDatePicker().getValue().toString()));
+            updateTable();
             itemAddWindow.closeAddView(event);
         }
         catch (RuntimeException missingParameters) {
@@ -104,32 +75,26 @@ public class ItemManagementWindowController {
 
     }
 
-    public void modifyItem(ActionEvent event, Item displayedItem) {
+    public void modifyRow(ActionEvent event, Item displayedItem) {
 
         try {
             if ("".equals(itemDisplayWindow.getNameField().getText()) || "".equals(itemDisplayWindow.getPriceField().getText()) ||          // Verifica che tutti i campi siano stati riempiti
                     "".equals(itemDisplayWindow.getAmountField().getText()) || itemDisplayWindow.getDatePicker().getValue() == null)
                 throw new RuntimeException("Parametri mancanti");
-            displayedItem.setNome(itemDisplayWindow.getNameField().getText());                                 // TODO: Forse meglio farlo nel modello?
+            displayedItem.setNome(itemDisplayWindow.getNameField().getText());
             displayedItem.setPrezzo(Double.parseDouble(itemDisplayWindow.getPriceField().getText()));
             displayedItem.setQuantita(Integer.parseInt(itemDisplayWindow.getAmountField().getText()));
             displayedItem.setData_inserimento(itemDisplayWindow.getDatePicker().getValue().toString());
             displayedItem.setDescrizione(itemDisplayWindow.getDescriptionField().getText());
-            modifyRow(displayedItem);
+            itemManagement.modify(displayedItem);
+            HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Avviso", "Modifica prodotto",
+                    "Modifica del prodotto " + displayedItem.getNome() + " effettuata con successo");
+            updateTable();
             itemDisplayWindow.closeItemView(event);
         }
         catch (RuntimeException missingParameters) {
             HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Parametri mancanti", missingParameters.getMessage());
         }
-
-    }
-
-    public void modifyRow(Item toBeModified) {
-
-        itemManagement.modify(toBeModified);
-        HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Avviso", "Modifica prodotto",
-                "Modifica del prodotto " + toBeModified.getNome() + " effettuata con successo");
-        updateTable();
 
     }
 
@@ -149,8 +114,7 @@ public class ItemManagementWindowController {
     public void deleteRow(Item selectedItem) {
 
         if (HotelSupplyManagementMain.displayConfirmationAlert("Attenzione", "Rimozione prodotto", "Sicuro di procedere con l'eliminazione del prodotto dalla banca dati?")) {
-            itemManagement.getItemList().remove(selectedItem);          // TODO: La rimozione dee essere effettuata nel modello (ItemManagement)
-            itemManagement.delete(selectedItem.getCodice_articolo());
+            itemManagement.delete(selectedItem);
             if (searchView)
                 results.remove(selectedItem);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
             updateTable();
@@ -158,7 +122,7 @@ public class ItemManagementWindowController {
 
     }
 
-    public Item getSearchFilters() {
+    public Item getSearchFilters() {            // Metodo per determinare per quali parametri ricerca un articolo: si crea un Item fittizio con i parametri inseriti
 
         Item searchItem = new Item(-1, -1, null, null, null);   // NOTA: è un oggetto item fittizio utile alla ricerca
         int i = 0;
@@ -219,11 +183,25 @@ public class ItemManagementWindowController {
 
     }
 
-    public void scanRows(ActionEvent event) {
+    public void searchRow(ActionEvent event) {         // Metodo per cercare un articolo dato l'oggetto Item fittizio creato con i parametri inseriti
 
         Item toBeSearched = getSearchFilters();
         if (toBeSearched != null) {
-            searchRow(toBeSearched);
+            results.clear();
+            try {
+                results = HotelSupplyManagementMain.castArrayList(itemManagement.search(toBeSearched));             // effettuo il cast della lista
+                int numberOfResults = results.size();
+                searchView = true;
+                ObservableList<Item> searchResultRows = FXCollections.observableArrayList(results);
+                itemManagementView.setItemRows(searchResultRows);
+                HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Avviso", "Risultato ricerca",
+                        "La ricerca ha restituito " + numberOfResults + " risultati");
+                itemManagementView.enableBackButton();
+            }
+            catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
+                HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Errore",
+                        "Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
+            }
             itemSearchWindow.closeSearchView(event);
         }
         else if(isBadFormatted) {
@@ -232,25 +210,20 @@ public class ItemManagementWindowController {
         else {
             HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Parametri assenti", "Hai spuntato dei parametri ma non hai inserito i valori corrispondenti. \nRiprovare.");
         }
+
     }
 
-    public void searchRow(Item toBeSearched) {
+    public void displayView(ActionEvent event) {            // Metodo per visualizzare la finestra di gestione degli articoli
 
-        results.clear();
         try {
-            results = HotelSupplyManagementMain.castArrayList(itemManagement.search(toBeSearched));             // effettuo il cast della lista
-            int numberOfResults = results.size();
-            searchView = true;
-            ObservableList<Item> searchResultRows = FXCollections.observableArrayList(results);
-            itemManagementView.setItemRows(searchResultRows);
-            HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Avviso", "Risultato ricerca",
-                    "La ricerca ha restituito " + numberOfResults + " risultati");
-            itemManagementView.enableBackButton();
+            itemManagementView = new ItemManagementView();                                                                                                                                            // Apertura della finestra di gestione degli Item
+            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemManagementWindow.fxml"),
+                    itemManagementView, true, event, "Gestione prodotti", false);
         }
-        catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
-            HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Errore",
-                    "Parametri di ricerca vuoti: una volta spuntati inserire almeno un valore");
+        catch (IOException e) {
+            System.err.println("Errore durante il caricamento di ItemManagementWindow.fxml: " + e.getMessage());
         }
+        createRows();
 
     }
 
@@ -280,7 +253,7 @@ public class ItemManagementWindowController {
 
     }
 
-    public void displayItemView(ActionEvent event, Item selectedItem) {
+    public void displayRowView(ActionEvent event, Item selectedItem) {
 
         try {
             itemDisplayWindow = new ItemDisplayWindow(selectedItem);
@@ -310,7 +283,7 @@ public class ItemManagementWindowController {
                 case "backButton" -> itemManagementView.exitSearch();
                 case "modifyButton" -> {
                     Item selectedItem = itemManagementView.getItemTable().getSelectionModel().getSelectedItem();
-                    displayItemView(null, selectedItem);
+                    displayRowView(null, selectedItem);
                 }
                 case "deleteButton" -> {
                     Item selectedItem = itemManagementView.getItemTable().getSelectionModel().getSelectedItem();
@@ -323,7 +296,7 @@ public class ItemManagementWindowController {
                 Item selectedItem = itemManagementView.getItemTable().getSelectionModel().getSelectedItem();
                 if (Objects.nonNull(selectedItem)) {
                     if (menuItem.getId().equals("viewItemMenu"))
-                        displayItemView(null, selectedItem);
+                        displayRowView(null, selectedItem);
                     else
                         deleteRow(selectedItem);
                 }
@@ -335,7 +308,7 @@ public class ItemManagementWindowController {
     }
 
     public void handleMouseEvent(Item selectedItem) {
-        displayItemView(null, selectedItem);
+        displayRowView(null, selectedItem);
     }
 
     public void setSearchView(boolean searchView) {

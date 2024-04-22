@@ -35,6 +35,11 @@ public class SupplierManagement implements Data_Management {
     }
 
     @Override
+    public void loadFromDB() throws SQLException {
+
+    }
+
+    @Override
     public void add(Object newSupplier) {
 
         Supplier toBeAdded = (Supplier) newSupplier;
@@ -242,10 +247,10 @@ public class SupplierManagement implements Data_Management {
     }
 
     @Override
-    public void delete(int code) {
+    public void delete(Object toBeDeleted) {
 
         try {
-            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Fornitore WHERE Codice_Fornitore = " + code);
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Fornitore WHERE Codice_Fornitore = " + ((Supplier) toBeDeleted).getCodice_fornitore());
             executeQuery(false, statement);
         } catch (SQLException e) {
             System.err.println("Errore durante l'eliminazione della riga Item: " + e.getMessage());

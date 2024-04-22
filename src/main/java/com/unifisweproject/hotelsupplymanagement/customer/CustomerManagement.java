@@ -31,6 +31,11 @@ public class CustomerManagement implements Data_Management {
     }
 
     @Override
+    public void loadFromDB() throws SQLException {
+
+    }
+
+    @Override
     public void add(Object newCustomer) {           // Metodo per l'aggiunta di un nuovo Cliente nel DB nel normale caso di utilizzo
 
         Customer toBeAdded = (Customer) newCustomer;
@@ -309,10 +314,10 @@ public class CustomerManagement implements Data_Management {
 
 
     @Override
-    public void delete(int code) {
+    public void delete(Object toBeDeleted) {
 
         try {
-            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Cliente WHERE Codice_Cliente = " + code);
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Cliente WHERE Codice_Cliente = " + ((Customer) toBeDeleted).getCodice_cliente());
             executeQuery(false, statement);
         }
         catch (SQLException e) {

@@ -61,7 +61,7 @@ public class ItemDisplayWindow implements Initializable {
     }
 
     public void modifyItem(ActionEvent event) {
-        controller.modifyItem(event, displayedItem);
+        controller.modifyRow(event, displayedItem);
     }
 
     public void closeItemView(ActionEvent event) {

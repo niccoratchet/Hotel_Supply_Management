@@ -30,6 +30,11 @@ public class OrderManagement implements Data_Management {
         return instance;
     }
 
+    @Override
+    public void loadFromDB() throws SQLException {
+
+    }
+
 
     @Override
     public void add(Object newOrder) {
@@ -162,10 +167,10 @@ public class OrderManagement implements Data_Management {
     }
 
     @Override
-    public void delete(int code) {
+    public void delete(Object toBeDeleted) {
 
         try {
-            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Ordine WHERE Codice_Ordine = " + code);
+            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Ordine WHERE Codice_Ordine = " + ((Order) toBeDeleted).getCodice_ordine());
             executeQuery(false, statement);
         } catch (SQLException e) {
             System.err.println("Errore durante l'eliminazione della riga Order: " + e.getMessage());

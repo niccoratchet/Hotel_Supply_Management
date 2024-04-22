@@ -119,7 +119,7 @@ public class ItemManagementTest {
         catch (SQLException e) {
             fail("Errore durante l'inserimento dell'articolo da cancellare nel DB: " + e.getMessage());
         }
-        itemManagement.delete(97);
+        itemManagement.delete(new Item(97, 200, 0.10, "Tovagliolo", "Tovagliolo di carta", "2024-04-09"));
         String query = "SELECT * FROM Articolo WHERE Codice_Articolo = 97";
         try {
             Statement statement = conn.createStatement();

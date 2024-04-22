@@ -46,7 +46,7 @@ public class ItemAddWindow implements Initializable {
     }
 
     public void addItem(ActionEvent event) {
-        controller.createItem(event);
+        controller.createRow(event);
     }
 
     public void closeAddView(ActionEvent event) {
