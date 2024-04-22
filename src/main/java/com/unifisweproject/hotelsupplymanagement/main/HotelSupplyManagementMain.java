@@ -6,6 +6,7 @@ import com.unifisweproject.hotelsupplymanagement.login.FirstAccessWindowControll
 import com.unifisweproject.hotelsupplymanagement.login.LoginWindowController;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -17,6 +18,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 public class HotelSupplyManagementMain extends Application {
@@ -24,7 +26,7 @@ public class HotelSupplyManagementMain extends Application {
     public static Connection conn;
     public static Image icon;
 
-    public static UnaryOperator<TextFormatter.Change> filterDouble = change -> {              // Creazione del Formatter che garantisce l'inserimento corretto di un numero decimale
+    public static UnaryOperator<TextFormatter.Change> filterDouble = change -> {           // Creazione del Formatter che garantisce l'inserimento corretto di un numero decimale
         String text = change.getText();
         if (text.matches("[0-9]*\\.?[0-9]*")) {
             return change;
@@ -47,7 +49,7 @@ public class HotelSupplyManagementMain extends Application {
             String url = "jdbc:sqlite:hotel_supply_management.db";
             connectToDB(url);
             icon = new Image(Objects.requireNonNull(HotelSupplyManagementMain.class.getResourceAsStream("/com/unifisweproject/hotelsupplymanagement/Icon/HotelSupplyManagementIcon.png")));
-            if(!isFirstAccess(stage)) {
+            if(!isFirstAccess()) {
                 try {
                     FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/LoginWindow.fxml"), new LoginWindowController(), false, null, "Hotel Supply Management", false);
                 }
@@ -83,7 +85,7 @@ public class HotelSupplyManagementMain extends Application {
         return newlyCastedArrayList;
     }
 
-    public boolean isFirstAccess(Stage stage) {
+    public boolean isFirstAccess() {
 
         boolean isFirstAccess = false;
         String filePath = "password.txt";
@@ -124,6 +126,28 @@ public class HotelSupplyManagementMain extends Application {
         alert.setContentText("Software developed by Niccolò Redi, Lorenzo Gazzini and Edoardo Cravegni. \n For the SWE Exam of UNIFI (A.A.2023/2024.)");
         alert.showAndWait();
 
+    }
+
+    public static boolean displayConfirmationAlert(String title, String header, String content) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        ButtonType buttonTypeYes = new ButtonType("Sì");
+        ButtonType buttonTypeNo = new ButtonType("No");
+        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == buttonTypeYes;
+
+    }
+
+    public static TextFormatter<String> getDoubleFormatter() {
+        return new TextFormatter<>(filterDouble);
+    }
+
+    public static TextFormatter<String> getIntFormatter() {
+        return new TextFormatter<>(filterInt);
     }
 
 }

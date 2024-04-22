@@ -8,9 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -50,7 +48,6 @@ public class ItemManagementView implements Initializable {
     private final MenuItem viewItemMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteItemMenu = new MenuItem("Elimina");
     private final ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
-    private final ObservableList<Item> searchResultRows = FXCollections.observableArrayList();
     private long lastClickTime = 0;
     private final ItemManagementWindowController controller;
 
@@ -113,19 +110,25 @@ public class ItemManagementView implements Initializable {
 
     }
 
-    public void refreshAddANdBackButtons() {
+    public void refreshButtons() {
 
         addButton.setDisable(false);                // Riattivo bottone di aggiunta
         addButton.setVisible(true);
+        searchButton.setDisable(false);             // Riattivo bottone di ricerca
+        searchButton.setVisible(true);
         backButton.setDisable(true);                // Disattivo bottone "indietro" quando ho terminato una precedente ricerca
         backButton.setVisible(false);
 
     }
 
-    public void refreshSearchButton() {
+    public void enableBackButton() {
 
-        searchButton.setDisable(false);             // Riattivo bottone di ricerca
-        searchButton.setVisible(true);
+        backButton.setDisable(false);
+        backButton.setVisible(true);
+        addButton.setDisable(true);
+        addButton.setVisible(false);
+        searchButton.setDisable(true);
+        searchButton.setVisible(false);
 
     }
 
@@ -150,8 +153,7 @@ public class ItemManagementView implements Initializable {
 
     public void exitSearch() {
 
-        searchButton.setDisable(false);             // Riattivo bottone di ricerca
-        searchButton.setVisible(true);
+        refreshButtons();
         controller.setSearchView(false);
         controller.updateTable();
 

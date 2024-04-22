@@ -17,8 +17,8 @@
         <Label layoutX="28.0" layoutY="224.0" text="Descrizione" />
         <TextField fx:id="amountField" layoutX="103.0" layoutY="153.0" prefHeight="25.0" prefWidth="69.0" />
         <Label layoutX="35.0" layoutY="157.0" text="Quantità" />
-        <Button layoutX="417.0" layoutY="270.0" mnemonicParsing="false" onAction="#modifyItem" prefHeight="25.0" prefWidth="108.0" text="Modifica" />
-        <Button layoutX="282.0" layoutY="270.0" mnemonicParsing="false" onAction="#closeItemView" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
+        <Button fx:id="modifyButton" layoutX="417.0" layoutY="270.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Modifica" />
+        <Button fx:id="backButton" layoutX="282.0" layoutY="270.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
         <DatePicker fx:id="datePicker" layoutX="282.0" layoutY="153.0" prefHeight="25.0" prefWidth="130.0" />
         <Label layoutX="220.0" layoutY="157.0" text="Data" />
         <Label fx:id="codeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="35.0" layoutY="32.0" prefHeight="17.0" prefWidth="499.0">

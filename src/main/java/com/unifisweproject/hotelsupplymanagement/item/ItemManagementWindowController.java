@@ -8,13 +8,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Optional;
 
 public class ItemManagementWindowController {
 
@@ -25,6 +23,9 @@ public class ItemManagementWindowController {
     private static ItemManagementWindowController instance = null;        // Applicazione SingleTon per la finestra di gestione degli Item
     private ItemManagementView itemManagementView;
     private ItemAddWindow itemAddWindow;
+    private ItemDisplayWindow itemDisplayWindow;
+    private ItemSearchWindow itemSearchWindow;
+    private boolean isBadFormatted = false;                     // Variabile per gestire la correttezza o meno dei parametri inseriti nella ricerca di un articolo
 
     private ItemManagementWindowController() {
 
@@ -80,7 +81,7 @@ public class ItemManagementWindowController {
     public void addRow(Item newItem) {
 
         newItem.setCodice_articolo(itemManagement.getNextItemCode() + 1);
-        itemManagement.getItemList().add(newItem);      // FIXME: Deve l'ItemManagement ad aggiungere l'Item alla lista
+        itemManagement.getItemList().add(newItem);
         itemManagement.add(newItem);
         updateTable();
 
@@ -100,6 +101,27 @@ public class ItemManagementWindowController {
         catch (RuntimeException missingParameters) {
             HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Parametri assenti", "Inserire il valore di tutti i dati obbligatori.");
         }
+
+    }
+
+    public void modifyItem(ActionEvent event, Item displayedItem) {
+
+        try {
+            if ("".equals(itemDisplayWindow.getNameField().getText()) || "".equals(itemDisplayWindow.getPriceField().getText()) ||          // Verifica che tutti i campi siano stati riempiti
+                    "".equals(itemDisplayWindow.getAmountField().getText()) || itemDisplayWindow.getDatePicker().getValue() == null)
+                throw new RuntimeException("Parametri mancanti");
+            displayedItem.setNome(itemDisplayWindow.getNameField().getText());                                 // TODO: Forse meglio farlo nel modello?
+            displayedItem.setPrezzo(Double.parseDouble(itemDisplayWindow.getPriceField().getText()));
+            displayedItem.setQuantita(Integer.parseInt(itemDisplayWindow.getAmountField().getText()));
+            displayedItem.setData_inserimento(itemDisplayWindow.getDatePicker().getValue().toString());
+            displayedItem.setDescrizione(itemDisplayWindow.getDescriptionField().getText());
+            modifyRow(displayedItem);
+            itemDisplayWindow.closeItemView(event);
+        }
+        catch (RuntimeException missingParameters) {
+            HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Parametri mancanti", missingParameters.getMessage());
+        }
+
     }
 
     public void modifyRow(Item toBeModified) {
@@ -120,14 +142,13 @@ public class ItemManagementWindowController {
         else {
             ObservableList<Item> itemRows = FXCollections.observableArrayList(itemManagement.getItemList());
             itemManagementView.setItemRows(itemRows);
-            itemManagementView.refreshAddANdBackButtons();
         }
 
     }
 
     public void deleteRow(Item selectedItem) {
 
-        if (createConfirmDeleteAlert()) {
+        if (HotelSupplyManagementMain.displayConfirmationAlert("Attenzione", "Rimozione prodotto", "Sicuro di procedere con l'eliminazione del prodotto dalla banca dati?")) {
             itemManagement.getItemList().remove(selectedItem);          // TODO: La rimozione dee essere effettuata nel modello (ItemManagement)
             itemManagement.delete(selectedItem.getCodice_articolo());
             if (searchView)
@@ -135,6 +156,82 @@ public class ItemManagementWindowController {
             updateTable();
         }
 
+    }
+
+    public Item getSearchFilters() {
+
+        Item searchItem = new Item(-1, -1, null, null, null);   // NOTA: è un oggetto item fittizio utile alla ricerca
+        int i = 0;
+        try {
+            while (i < 6) {
+                switch (i) {
+                    case 0 -> {
+                        if (!itemSearchWindow.getNameField().isDisabled())
+                            if(! "".equals(itemSearchWindow.getNameField().getText()))
+                                searchItem.setNome(itemSearchWindow.getNameField().getText());
+                            else
+                                return null;
+                    }
+                    case 1 -> {
+                        if (!itemSearchWindow.getPriceField().isDisabled())
+                            if(! "".equals(itemSearchWindow.getPriceField().getText()))
+                                searchItem.setPrezzo(Double.parseDouble(itemSearchWindow.getPriceField().getText()));
+                            else
+                                return null;
+                    }
+                    case 2 -> {
+                        if (!itemSearchWindow.getAmountField().isDisabled())
+                            if(! "".equals(itemSearchWindow.getAmountField().getText()))
+                                searchItem.setQuantita(Integer.parseInt(itemSearchWindow.getAmountField().getText()));
+                            else
+                                return null;
+                    }
+                    case 3 -> {
+                        if (!itemSearchWindow.getDatePicker().isDisabled())
+                            if(itemSearchWindow.getDatePicker().getValue() != null)
+                                searchItem.setData_inserimento(itemSearchWindow.getDatePicker().getValue().toString());
+                            else
+                                return null;
+                    }
+                    case 4 -> {
+                        if (!itemSearchWindow.getDescriptionField().isDisabled())
+                            if(! "".equals(itemSearchWindow.getDescriptionField().getText()))
+                                searchItem.setDescrizione(itemSearchWindow.getDescriptionField().getText());
+                            else
+                                return null;
+                    }
+                    case 5 -> {
+                        if(!itemSearchWindow.getCodeField().isDisabled())
+                            if(! "".equals(itemSearchWindow.getCodeField().getText()))
+                                searchItem.setCodice_articolo(Integer.parseInt(itemSearchWindow.getCodeField().getText()));
+                            else
+                                return null;
+                    }
+                }
+                i++;
+            }
+            return searchItem;
+        }
+        catch (NumberFormatException e) {
+            isBadFormatted = true;
+            return null;
+        }
+
+    }
+
+    public void scanRows(ActionEvent event) {
+
+        Item toBeSearched = getSearchFilters();
+        if (toBeSearched != null) {
+            searchRow(toBeSearched);
+            itemSearchWindow.closeSearchView(event);
+        }
+        else if(isBadFormatted) {
+            HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Errore di formattazione", "Valore del parametro 'Codice articolo' non valido. \nRiprovare.");
+        }
+        else {
+            HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Parametri assenti", "Hai spuntato dei parametri ma non hai inserito i valori corrispondenti. \nRiprovare.");
+        }
     }
 
     public void searchRow(Item toBeSearched) {
@@ -148,8 +245,7 @@ public class ItemManagementWindowController {
             itemManagementView.setItemRows(searchResultRows);
             HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Avviso", "Risultato ricerca",
                     "La ricerca ha restituito " + numberOfResults + " risultati");
-            itemManagementView.refreshSearchButton();
-            itemManagementView.refreshAddANdBackButtons();
+            itemManagementView.enableBackButton();
         }
         catch (NullPointerException e) {                            // Serve a gestire il caso in cui si lascino vuoti i campi di ricerca selezionati
             HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Errore",
@@ -158,24 +254,12 @@ public class ItemManagementWindowController {
 
     }
 
-    public boolean createConfirmDeleteAlert() {            // crea la finestra di avviso di cancellazione di un Item con richiesta di conferma
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Rimozione prodotto");
-        alert.setContentText("Sicuro di procedere con l'eliminazione del prodotto dalla banca dati?");
-        ButtonType buttonTypeYes = new ButtonType("Sì");
-        ButtonType buttonTypeNo = new ButtonType("No");
-        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == buttonTypeYes;
-
-    }
-
     public void displaySearchView(ActionEvent event) {
 
         try {
+            itemSearchWindow = new ItemSearchWindow();
             FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemSearchWindow.fxml"),
-                    new ItemSearchWindowController(), false, event, "Ricerca prodotto", false);
+                    itemSearchWindow, false, event, "Ricerca prodotto", false);
         }
         catch(IOException e) {
             System.out.println("Errore durante il caricamento di SearchItemView: " + e);
@@ -199,8 +283,9 @@ public class ItemManagementWindowController {
     public void displayItemView(ActionEvent event, Item selectedItem) {
 
         try {
+            itemDisplayWindow = new ItemDisplayWindow(selectedItem);
             FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemDisplayWindow.fxml"),
-                    new ItemDisplayWindowController(selectedItem), false, event, selectedItem.getNome(), false);
+                    itemDisplayWindow, false, event, selectedItem.getNome(), false);
         }
         catch (IOException e) {
             System.err.println("Errore durante l'apertura del file ItemDisplayWindow.fxml: " + e.getMessage());

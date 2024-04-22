@@ -39,8 +39,10 @@ public class FXMLWindowLoader extends FXMLLoader {
             if (isSameWindow) {
                 stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             }
-            else
+            else {
                 stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);             // Nel caso di finestre diverse, blocca l'interazione con le altre finestre
+            }
             setStage(stage, root, title, isResizable);
         }
 

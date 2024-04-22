@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
 
 
 public class ItemAddWindow implements Initializable {
@@ -39,10 +38,8 @@ public class ItemAddWindow implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         datePicker.setValue(LocalDate.now());
-        TextFormatter<String> textFormatterDouble = new TextFormatter<>(HotelSupplyManagementMain.filterDouble);
-        priceField.setTextFormatter(textFormatterDouble);
-        TextFormatter<String> textFormatterInt = new TextFormatter<>(HotelSupplyManagementMain.filterInt);
-        amountField.setTextFormatter(textFormatterInt);
+        priceField.setTextFormatter(HotelSupplyManagementMain.getDoubleFormatter());
+        amountField.setTextFormatter(HotelSupplyManagementMain.getIntFormatter());
         addButton.setOnAction(this::addItem);
         backButton.setOnAction(this::closeAddView);
 
