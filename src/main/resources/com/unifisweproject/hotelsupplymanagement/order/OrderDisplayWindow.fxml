@@ -9,12 +9,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.order.OrderDisplayWindowController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Label layoutX="47.0" layoutY="84.0" text="Bolla/Fattura" />
         <ChoiceBox fx:id="typeOfPaymentField" disable="true" layoutX="409.0" layoutY="80.0" prefHeight="25.0" prefWidth="124.0" />
         <Label layoutX="286.0" layoutY="84.0" text="Tipo di pagamento" />
-        <Button layoutX="438.0" layoutY="348.0" mnemonicParsing="false" onAction="#closeOrderView" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
+        <Button fx:id="backButton" layoutX="438.0" layoutY="348.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
         <DatePicker fx:id="datePicker" disable="true" layoutX="123.0" layoutY="139.0" prefHeight="25.0" prefWidth="124.0" />
         <Label layoutX="49.0" layoutY="143.0" text="Data" />
         <Label fx:id="codeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="34.0" prefHeight="17.0" prefWidth="499.0">
@@ -32,6 +32,6 @@
             <TableColumn fx:id="priceColumn" text="Prezzo" />
         </columns>
       </TableView>
-      <Button layoutX="307.0" layoutY="348.0" mnemonicParsing="false" onAction="#deleteOrder" prefHeight="25.0" prefWidth="108.0" text="Elimina" />
+      <Button fx:id="deleteButton" layoutX="307.0" layoutY="348.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Elimina" />
     </children>
 </AnchorPane>

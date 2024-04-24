@@ -2,7 +2,7 @@ package com.unifisweproject.hotelsupplymanagement.supply;
 
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ItemInSupply;
-import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ListOfItemsWindowController;
+import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ListOfItemsWindow;
 import com.unifisweproject.hotelsupplymanagement.main.MainMenuWindowController;
 import com.unifisweproject.hotelsupplymanagement.item.Item;
 import javafx.application.Platform;
@@ -111,9 +111,9 @@ public class SupplyAddWindowController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/listOfItems/ListOfItemsWindow.fxml"));
             Parent root = loader.load();
-            ListOfItemsWindowController listOfItemsWindowController = loader.getController();
-            listOfItemsWindowController.setAddSupplyViewController(this);
-            listOfItemsWindowController.setMainMenuController(mainMenuWindowController);
+            ListOfItemsWindow listOfItemsWindow = loader.getController();
+            listOfItemsWindow.setAddSupplyViewController(this);
+            //listOfItemsWindow.setMainMenuController(mainMenuWindowController);
             Stage itemListStage = new Stage();
             itemListStage.initModality(Modality.APPLICATION_MODAL);
             itemListStage.setTitle("Seleziona l'articolo rifornito");

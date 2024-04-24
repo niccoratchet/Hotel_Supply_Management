@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="209.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.company.CompanyDetailsModifyWindowController">
+<AnchorPane prefHeight="209.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Label layoutX="89.0" layoutY="24.0" prefHeight="27.0" prefWidth="432.0" text="Modifica partita IVA e ragione sociale dell'azienda">
             <font>
@@ -25,6 +25,6 @@
                 <Font size="14.0" />
             </font>
         </Label>
-        <Button layoutX="385.0" layoutY="160.0" mnemonicParsing="false" onAction="#confirmData" prefHeight="25.0" prefWidth="152.0" text="Conferma modifiche" />
+        <Button fx:id="confirmButton" layoutX="385.0" layoutY="160.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="152.0" text="Conferma modifiche" />
     </children>
 </AnchorPane>

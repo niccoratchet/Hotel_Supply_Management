@@ -8,10 +8,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="382.0" prefWidth="436.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ListOfItemsWindowController">
+<AnchorPane prefHeight="382.0" prefWidth="436.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="addButton" disable="true" layoutX="304.0" layoutY="318.0" mnemonicParsing="false" onAction="#addItemToOrder" prefHeight="25.0" prefWidth="92.0" text="Aggiungi" />
-      <Button fx:id="backButton" layoutX="184.0" layoutY="318.0" mnemonicParsing="false" onAction="#closeAddItem" prefHeight="25.0" prefWidth="92.0" text="Annulla" />
+      <Button fx:id="addButton" disable="true" layoutX="304.0" layoutY="318.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Aggiungi" />
+      <Button fx:id="backButton" layoutX="184.0" layoutY="318.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Annulla" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" layoutY="36.0" prefHeight="25.0" prefWidth="355.0" text="Seleziona gli articoli da inserire nell'ordine">
          <font>
             <Font name="System Bold" size="16.0" />

@@ -40,6 +40,32 @@ public class HotelSupplyManagementMain extends Application {
         }
         return null;
     };
+    public static UnaryOperator<TextFormatter.Change> filterFiscalCodeFormatter = change -> {             // Creazione del Formatter per lo sconto: contiene unicamente numeri e al massimo 2 cifre
+        String newText = change.getControlNewText().toUpperCase();
+        change.setText(newText);
+        change.setRange(0, change.getControlText().length());
+        String text = change.getText();
+        if (text.matches("[a-zA-Z0-9]*") && change.getControlNewText().length() <= 16) {
+            return change;
+        }
+        return null;
+    };
+    public static UnaryOperator<TextFormatter.Change> filterDiscount = change -> {             // Creazione del Formatter per lo sconto: contiene unicamente numeri e al massimo 2 cifre
+        String text = change.getText();
+        if (text.matches("[0-9]*") && change.getControlNewText().length() <= 2) {
+            return change;
+        }
+        return null;
+    };
+    public static UnaryOperator<TextFormatter.Change> filterCivicNumber = change -> {
+        String newText = change.getControlNewText().toUpperCase();
+        change.setText(newText);
+        change.setRange(0, change.getControlText().length());
+        String text = change.getText();
+        if (text.matches("[a-zA-Z0-9]*") && change.getControlNewText().length() <= 5)
+            return change;
+        return null;
+    };
 
     @Override
     public void start(Stage stage) {
@@ -148,6 +174,29 @@ public class HotelSupplyManagementMain extends Application {
 
     public static TextFormatter<String> getIntFormatter() {
         return new TextFormatter<>(filterInt);
+    }
+
+    public static TextFormatter<String> getFiscalCodeFormatter() {
+        return new TextFormatter<>(filterFiscalCodeFormatter);
+    }
+    public static TextFormatter<String> getDiscountFormatter() {
+        return new TextFormatter<>(filterDiscount);
+    }
+
+    public static TextFormatter<String> getNumberOnlyStringFormatter(int numberOfCharacters) {
+
+        UnaryOperator<TextFormatter.Change> filterNumberOnlyString = change -> {             // Creazione del Formatter per inserimento della partita IVA (contiene solo numeri e non può essere più lungo di 11 caratteri)
+            String text = change.getText();
+            if (text.matches("[0-9]*") && change.getControlNewText().length() <= numberOfCharacters) {
+                return change;
+            }
+            return null;
+        };
+        return new TextFormatter<>(filterNumberOnlyString);
+
+    }
+    public static TextFormatter<String> getCivicNumberFormatter() {
+        return new TextFormatter<>(filterCivicNumber);
     }
 
 }

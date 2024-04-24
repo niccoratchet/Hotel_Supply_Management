@@ -1,6 +1,7 @@
 package com.unifisweproject.hotelsupplymanagement.supplier;
 
 import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
+import com.unifisweproject.hotelsupplymanagement.item.Item;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 
 import java.sql.PreparedStatement;
@@ -11,9 +12,11 @@ import java.util.ArrayList;
 
 public class SupplierManagement implements Data_Management {
 
-    private static final SupplierManagement instance = new SupplierManagement();        // Singleton
+
     private int nextSupplierCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
     private final ArrayList<Supplier> supplierList = new ArrayList<>();
+
+    private static final SupplierManagement instance = new SupplierManagement(); // Applicazione Singleton per la gestione del supplier
 
     private SupplierManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
@@ -37,6 +40,14 @@ public class SupplierManagement implements Data_Management {
     @Override
     public void loadFromDB() throws SQLException {
 
+        ResultSet resultSet = getRows(true, null);
+        while (resultSet.next()) {
+            Supplier newSupplier = new Supplier(resultSet.getInt(1), resultSet.getString(2),
+                    resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
+                    resultSet.getString(7), resultSet.getString(6));
+            supplierList.add(newSupplier);
+        }
+
     }
 
     @Override
@@ -58,6 +69,7 @@ public class SupplierManagement implements Data_Management {
             preparedStatement.setString(6, toBeAdded.getCivico());
             preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
             nextSupplierCode++;
+            supplierList.add(toBeAdded);
 
         }
         catch (SQLException e) {
@@ -85,6 +97,26 @@ public class SupplierManagement implements Data_Management {
         catch (SQLException e) {
             System.err.println("Errore di formattazione nella generazione della query di modifica: " + e.getMessage());
         }
+
+    }
+
+    public ArrayList<Object> getSearchResults(ResultSet resultSet) {              // dato un oggetto ResultSet (insieme delle righe del risultato di una query) rende un ArrayList di Supplier che corrispondono alle righe indicate
+
+        ArrayList<Object> results = new ArrayList<>();                // conterrà gli Item che corrispondono ai valori trovati dopo la query
+        try {
+            while (resultSet.next()) {
+                for (Supplier nextSupplier : supplierList) {
+                    if (nextSupplier.getCodice_fornitore() == resultSet.getInt(1)) {
+                        results.add(nextSupplier);
+                    }
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.err.println("Errore durante la creazione del risultato di ricerca: " + e.getMessage());
+            return null;
+        }
+        return results;
 
     }
 
@@ -185,26 +217,6 @@ public class SupplierManagement implements Data_Management {
             System.err.println("Query di ricerca non correttamente formattata: " + e.getMessage());
             return null;
         }
-
-    }
-
-    public ArrayList<Object> getSearchResults(ResultSet resultSet) {              // dato un oggetto ResultSet (insieme delle righe del risultato di una query) rende un ArrayList di Item che corrispondono alle righe indicate
-
-        ArrayList<Object> results = new ArrayList<>();                // conterrà gli Item che corrispondono ai valori trovati dopo la query
-        try {
-            while (resultSet.next()) {
-                for (Supplier nextSupplier : supplierList) {
-                    if (nextSupplier.getCodice_fornitore() == resultSet.getInt(1)) {
-                        results.add(nextSupplier);
-                    }
-                }
-            }
-        }
-        catch (SQLException e) {
-            System.err.println("Errore durante la creazione del risultato di ricerca: " + e.getMessage());
-            return null;
-        }
-        return results;
 
     }
 
@@ -325,7 +337,4 @@ public class SupplierManagement implements Data_Management {
         return supplierList;
     }
 
-    public int getNextSupplierCode() {
-        return nextSupplierCode;
-    }
 }

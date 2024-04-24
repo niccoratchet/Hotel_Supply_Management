@@ -28,10 +28,10 @@ public class ItemAddWindow implements Initializable {
     private Button addButton;
     @FXML
     private Button backButton;
-    private final ItemManagementWindowController controller;
+    private final ItemManagementController controller;
 
     public ItemAddWindow() {
-        this.controller = ItemManagementWindowController.getInstance();
+        this.controller = ItemManagementController.getInstance();
     }
 
     @Override

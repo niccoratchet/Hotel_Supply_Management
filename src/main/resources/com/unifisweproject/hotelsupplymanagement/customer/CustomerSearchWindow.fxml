@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="471.0" prefWidth="557.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.customer.CustomerSearchWindowController">
+<AnchorPane prefHeight="471.0" prefWidth="557.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
 <children>
     <TextField fx:id="nameField" disable="true" layoutX="95.0" layoutY="101.0" prefHeight="25.0" prefWidth="108.0" />
     <Label layoutX="36.0" layoutY="105.0" text="Nome" />
@@ -17,8 +17,8 @@
     <Label layoutX="39.0" layoutY="309.0" text="Indirizzo" />
     <TextField fx:id="discountField" disable="true" layoutX="95.0" layoutY="154.0" prefHeight="25.0" prefWidth="57.0" />
     <Label layoutX="36.0" layoutY="158.0" text="Sconto" />
-    <Button fx:id="confirmButton" disable="true" layoutX="407.0" layoutY="416.0" mnemonicParsing="false" onAction="#scanRows" prefHeight="25.0" prefWidth="108.0" text="Conferma" />
-    <Button layoutX="262.0" layoutY="416.0" mnemonicParsing="false" onAction="#closeSearchView" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
+    <Button fx:id="confirmButton" disable="true" layoutX="407.0" layoutY="416.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Conferma" />
+    <Button fx:id="backButton" layoutX="262.0" layoutY="416.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
     <Label fx:id="codeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="35.0" layoutY="32.0" prefHeight="21.0" prefWidth="506.0" text="Ricerca cliente: seleziona i parametri di ricerca">
         <font>
             <Font name="System Bold" size="18.0" />

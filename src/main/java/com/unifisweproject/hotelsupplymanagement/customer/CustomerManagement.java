@@ -1,6 +1,7 @@
 package com.unifisweproject.hotelsupplymanagement.customer;
 
 import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
+import com.unifisweproject.hotelsupplymanagement.item.Item;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 
 import java.sql.*;
@@ -31,7 +32,14 @@ public class CustomerManagement implements Data_Management {
     }
 
     @Override
-    public void loadFromDB() throws SQLException {
+    public void loadFromDB() throws SQLException {          // Caricamento dei dati del DB sui clienti nella lista di CustomerManagement
+
+        ResultSet resultSet = getRows(true, null);
+        while (resultSet.next()) {
+            customerList.add(new Customer(resultSet.getInt("Codice_Cliente"), resultSet.getInt("Sconto"), resultSet.getString("Nome"), resultSet.getString("Cognome"),
+                    resultSet.getString("Data_Inserimento"), resultSet.getString("Codice_Fiscale"), resultSet.getString("P_IVA"), resultSet.getString("Ragione_Sociale"), resultSet.getString("Indirizzo"),
+                    resultSet.getString("CAP"), resultSet.getString("Civico")));
+        }
 
     }
 
@@ -39,6 +47,7 @@ public class CustomerManagement implements Data_Management {
     public void add(Object newCustomer) {           // Metodo per l'aggiunta di un nuovo Cliente nel DB nel normale caso di utilizzo
 
         Customer toBeAdded = (Customer) newCustomer;
+        toBeAdded.setCodice_cliente(nextCustomerCode + 1);
         String addQuery = "INSERT INTO Cliente (Sconto, Data_Inserimento, Nome, Cognome, Codice_Fiscale, P_IVA, Ragione_Sociale, Indirizzo, CAP, Civico) \n" +       // creazione della query di inserimento
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
@@ -55,6 +64,7 @@ public class CustomerManagement implements Data_Management {
             preparedStatement.setString(10, toBeAdded.getCivico());
             preparedStatement.executeUpdate();
             nextCustomerCode++;
+            customerList.add(toBeAdded);
         }
         catch (SQLException e) {
             System.out.println("Errore durante l'aggiunta del nuovo Cliente: " + e.getMessage() + " \n Query utilizzata: " + addQuery);
@@ -319,6 +329,7 @@ public class CustomerManagement implements Data_Management {
         try {
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Cliente WHERE Codice_Cliente = " + ((Customer) toBeDeleted).getCodice_cliente());
             executeQuery(false, statement);
+            customerList.remove(toBeDeleted);
         }
         catch (SQLException e) {
             System.err.println("Errore durante l'eliminazione della riga Customer: " + e.getMessage());

@@ -42,10 +42,10 @@ public class ItemSearchWindow implements Initializable {
     private Button confirmButton;
     @FXML
     private Button backButton;
-    private final ItemManagementWindowController controller;
+    private final ItemManagementController controller;
 
     public ItemSearchWindow() {
-        this.controller = ItemManagementWindowController.getInstance();
+        this.controller = ItemManagementController.getInstance();
     }
 
     @Override

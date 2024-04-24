@@ -1,10 +1,9 @@
 package com.unifisweproject.hotelsupplymanagement.main;
 
 import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
-import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementWindowController;
-import com.unifisweproject.hotelsupplymanagement.item.ItemManagementWindowController;
-import com.unifisweproject.hotelsupplymanagement.order.OrderManagementWindowController;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagementWindowController;
+import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementController;
+import com.unifisweproject.hotelsupplymanagement.item.ItemManagementController;
+import com.unifisweproject.hotelsupplymanagement.order.OrderManagementController;
 import com.unifisweproject.hotelsupplymanagement.supply.SuppliesManagementWindowController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -60,46 +59,39 @@ public class MainMenuWindowController implements Initializable {
     }
 
     public void openItemManagementView(ActionEvent event) {        // Metodo per l'apertura della finestra di gestione degli articoli
-        ItemManagementWindowController itemManagementWindowController = ItemManagementWindowController.getInstance();
-        itemManagementWindowController.displayView(event);
+
+        ItemManagementController itemManagementController = ItemManagementController.getInstance();
+        itemManagementController.displayView(event);
+
     }
 
     public void openCustomerManagementView(ActionEvent event) {      // Metodo per l'apertura della finestra di gestione dei clienti
 
-        try {
-            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/customer/CustomerManagementWindow.fxml"),
-                    CustomerManagementWindowController.getInstance(), "Gestione Clienti", false, stage);
-            verifyIsMenuButton(event);
-        }
-        catch (IOException e) {
-            System.err.println("Non è stato possibile caricare la pagina CustomerManagementWindow.fxml: " + e.getMessage());
-        }
+        CustomerManagementController customerManagementController = CustomerManagementController.getInstance();
+        customerManagementController.displayView(event);
 
     }
 
     public void openOrderManagementView(ActionEvent event) {      // Metodo per l'apertura della finestra di gestione degli ordini
 
-        try {
-            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/order/OrderManagementWindow.fxml"),
-                    OrderManagementWindowController.getInstance(),"Gestione Ordini", false, stage);
-            verifyIsMenuButton(event);
-        }
-        catch (IOException e) {
-            System.err.println("Non è stato possibile caricare la pagina OrderManagementWindow.fxml: " + e.getMessage());
-        }
+        OrderManagementController orderManagementController = OrderManagementController.getInstance();
+        orderManagementController.displayView(event);
 
     }
 
     public void openSupplierManagementView(ActionEvent event) {         // Metodo per l'apertura della finestra di gestione dei fornitori
 
-        try {
+
+        /*try {
             FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/supplier/SupplierManagementWindow.fxml"),
-                    SupplierManagementWindowController.getInstance(), "Gestione Fornitori", false, stage);
+                    SupplierManagementController.getInstance(), "Gestione Fornitori", false, stage);
             verifyIsMenuButton(event);
         }
         catch (IOException e) {
             System.err.println("Non è stato possibile caricare la pagina SupplierManagementWindow.fxml: " + e.getMessage());
         }
+
+         */
 
     }
 

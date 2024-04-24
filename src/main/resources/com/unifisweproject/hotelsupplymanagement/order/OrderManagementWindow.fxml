@@ -22,31 +22,31 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Articoli">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Articoli in magazzino" />
+                  <MenuItem fx:id="itemMenuItem" mnemonicParsing="false" text="Articoli in magazzino" />
                </items></Menu>
                 <Menu mnemonicParsing="false" text="Fornitura">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista fornitori" />
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Storico forniture" />
+                  <MenuItem fx:id="supplierMenuItem" mnemonicParsing="false" text="Lista fornitori" />
+                  <MenuItem fx:id="supplyMenuItem" mnemonicParsing="false" text="Storico forniture" />
                </items></Menu>
                 <Menu mnemonicParsing="false" text="Clienti">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Lista clienti" />
+                  <MenuItem fx:id="customerMenuItem" mnemonicParsing="false" text="Lista clienti" />
                </items></Menu>
                 <Menu disable="true" mnemonicParsing="false" text="Ordini">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Storico ordini" />
+                  <MenuItem mnemonicParsing="false" text="Storico ordini" />
                </items></Menu>
             <Menu mnemonicParsing="false" text="Menu principale">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#openDifferentManagement" text="Apri menu principale" />
+                <MenuItem fx:id="mainMenuItem" mnemonicParsing="false" text="Apri menu principale" />
               </items>
             </Menu>
             </menus>
         </MenuBar>
-        <Button fx:id="addButton" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#displayAddView" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
-        <Button fx:id="deleteButton" disable="true" layoutX="14.0" layoutY="91.0" mnemonicParsing="false" onAction="#deleteRow" prefHeight="25.0" prefWidth="89.0" text="Elimina" />
-      <Button fx:id="searchButton" layoutX="14.0" layoutY="137.0" mnemonicParsing="false" onAction="#displaySearchView" prefHeight="25.0" prefWidth="89.0" text="Ricerca" />
-      <Button fx:id="backButton" disable="true" layoutX="14.0" layoutY="346.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="25.0" prefWidth="89.0" text="Indietro" visible="false" />
+        <Button fx:id="addButton" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Aggiungi" />
+        <Button fx:id="deleteButton" disable="true" layoutX="14.0" layoutY="91.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Elimina" />
+      <Button fx:id="searchButton" layoutX="14.0" layoutY="137.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Ricerca" />
+      <Button fx:id="backButton" disable="true" layoutX="14.0" layoutY="346.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Indietro" visible="false" />
     </children>
 </AnchorPane>

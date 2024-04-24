@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="330.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.contact.ContactDetailsAddWindowController">
+<AnchorPane prefHeight="330.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="317.0" layoutY="283.0" mnemonicParsing="false" onAction="#confirmData" prefHeight="25.0" prefWidth="168.0" text="Conferma modifiche" />
+      <Button fx:id="confirmButton" layoutX="317.0" layoutY="283.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="168.0" text="Conferma modifiche" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="18.0" layoutY="28.0" prefHeight="17.0" prefWidth="499.0" text="Inserisci le informazioni su indirizzo e recapito">
          <font>
             <Font name="System Bold" size="18.0" />

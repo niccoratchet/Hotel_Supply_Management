@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="305.0" prefWidth="554.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.supplier.SupplierAddWindowController">
+<AnchorPane prefHeight="305.0" prefWidth="554.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.supplier.SupplierAddWindow">
     <children>
         <Button layoutX="389.0" layoutY="251.0" mnemonicParsing="false" onAction="#createSupplier" prefHeight="25.0" prefWidth="108.0" text="Aggiungi" />
         <Button layoutX="257.0" layoutY="251.0" mnemonicParsing="false" onAction="#closeAddView" prefHeight="25.0" prefWidth="108.0" text="Annulla" />

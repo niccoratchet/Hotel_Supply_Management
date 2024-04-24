@@ -13,36 +13,36 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ItemManagementWindowController {
+public class ItemManagementController {
 
     private final ItemManagement itemManagement;
     private final MainMenuWindowController mainMenuWindowController;
     private boolean searchView = false;
     private ArrayList<Item> results = new ArrayList<>();
-    private static ItemManagementWindowController instance = null;        // Applicazione SingleTon per la finestra di gestione degli Item
+    private static ItemManagementController instance = null;        // Applicazione SingleTon per la finestra di gestione degli Item
     private ItemManagementView itemManagementView;
     private ItemAddWindow itemAddWindow;
     private ItemDisplayWindow itemDisplayWindow;
     private ItemSearchWindow itemSearchWindow;
     private boolean isBadFormatted = false;                     // Variabile per gestire la correttezza o meno dei parametri inseriti nella ricerca di un articolo
 
-    private ItemManagementWindowController() {
+    private ItemManagementController() {
 
         mainMenuWindowController = MainMenuWindowController.getInstance();
         itemManagement = ItemManagement.getInstance();
 
     }
 
-    public static ItemManagementWindowController getInstance() {         // Metodo per ottenere l'istanza della classe (SingleTon)
+    public static ItemManagementController getInstance() {         // Metodo per ottenere l'istanza della classe (SingleTon)
 
         if (instance == null) {
-            instance = new ItemManagementWindowController();
+            instance = new ItemManagementController();
         }
         return instance;
 
     }
 
-    public void createRows()  {
+    public void initializeRows()  {
 
         if (!mainMenuWindowController.getIsNotFirstTimeLoad().get(0)) {
             try {
@@ -54,7 +54,7 @@ public class ItemManagementWindowController {
             }
         }
         ObservableList<Item> itemRows = FXCollections.observableArrayList(itemManagement.getItemList());
-        itemManagementView.setItemRows(itemRows);
+        itemManagementView.setRows(itemRows);
 
     }
 
@@ -102,11 +102,11 @@ public class ItemManagementWindowController {
 
         if(searchView) {
             ObservableList<Item> searchResultRows = FXCollections.observableArrayList(results);
-            itemManagementView.setItemRows(searchResultRows);
+            itemManagementView.setRows(searchResultRows);
         }
         else {
             ObservableList<Item> itemRows = FXCollections.observableArrayList(itemManagement.getItemList());
-            itemManagementView.setItemRows(itemRows);
+            itemManagementView.setRows(itemRows);
         }
 
     }
@@ -193,7 +193,7 @@ public class ItemManagementWindowController {
                 int numberOfResults = results.size();
                 searchView = true;
                 ObservableList<Item> searchResultRows = FXCollections.observableArrayList(results);
-                itemManagementView.setItemRows(searchResultRows);
+                itemManagementView.setRows(searchResultRows);
                 HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Avviso", "Risultato ricerca",
                         "La ricerca ha restituito " + numberOfResults + " risultati");
                 itemManagementView.enableBackButton();
@@ -223,7 +223,7 @@ public class ItemManagementWindowController {
         catch (IOException e) {
             System.err.println("Errore durante il caricamento di ItemManagementWindow.fxml: " + e.getMessage());
         }
-        createRows();
+        initializeRows();
 
     }
 

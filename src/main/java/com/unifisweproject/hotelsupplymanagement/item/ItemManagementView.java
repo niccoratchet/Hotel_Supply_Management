@@ -49,10 +49,10 @@ public class ItemManagementView implements Initializable {
     private final MenuItem viewDeleteItemMenu = new MenuItem("Elimina");
     private final ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
     private long lastClickTime = 0;
-    private final ItemManagementWindowController controller;
+    private final ItemManagementController controller;
 
     public ItemManagementView() {
-        controller = ItemManagementWindowController.getInstance();
+        controller = ItemManagementController.getInstance();
     }
 
     @Override
@@ -102,7 +102,7 @@ public class ItemManagementView implements Initializable {
 
     }
 
-    public void setItemRows(ObservableList<Item> itemRows) {
+    public void setRows(ObservableList<Item> itemRows) {
 
         this.itemRows.setAll(itemRows);
         setCellValueFactory();

@@ -319,6 +319,7 @@ public class ItemManagement implements Data_Management {
         }
 
     }
+
     public ArrayList<Item> getItemList() {
         return itemList;
     }

@@ -1,6 +1,8 @@
 package com.unifisweproject.hotelsupplymanagement.order;
 
+import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagement;
 import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
+import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ItemsInOrderManagement;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 
 import java.sql.*;
@@ -11,19 +13,10 @@ public class OrderManagement implements Data_Management {
     private static final OrderManagement instance = new OrderManagement();        // Singleton
     private int nextOrderCode;               // Tiene traccia del codice dell'ultimo Ordine nel DB
     private final ArrayList<Order> orderList = new ArrayList<>();
+    private final CustomerManagement customerManagement = CustomerManagement.getInstance();
 
     private OrderManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
-
-        String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Ordine'";
-        try {
-            Statement statement = HotelSupplyManagementMain.conn.createStatement();
-            ResultSet resultSet = statement.executeQuery(getCodeQuery);
-            nextOrderCode = resultSet.getInt(1);
-        }
-        catch(SQLException e) {
-            System.err.println("Errore durante l'estrapolazione dell'ultimo codice ordine");
-        }
-
+        nextOrderCode = getLastOrderCode();
     }
 
     public static OrderManagement getInstance() {
@@ -33,13 +26,21 @@ public class OrderManagement implements Data_Management {
     @Override
     public void loadFromDB() throws SQLException {
 
-    }
+        ResultSet resultSet = getRows(true, null);
+        while (resultSet.next()) {
+            Order newOrder = new Order(resultSet.getInt(1), resultSet.getInt(5),
+                    resultSet.getBoolean(2), resultSet.getString(3),
+                    resultSet.getString(4));
+            orderList.add(newOrder);
+        }
 
+    }
 
     @Override
     public void add(Object newOrder) {
 
         Order toBeAdded = (Order) newOrder;
+        toBeAdded.setCodice_ordine(nextOrderCode + 1);
         String addQuery = "INSERT INTO Ordine (BF, Tipo_Pagamento, Data_Ordine, Codice_Cliente) \n" +       // creazione della query di inserimento
                 "VALUES (?, ?, ?, ?)";
         try {
@@ -50,6 +51,7 @@ public class OrderManagement implements Data_Management {
             preparedStatement.setInt(4, toBeAdded.getCodice_cliente());
             preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
             nextOrderCode++;
+            orderList.add(toBeAdded);
         }
         catch (SQLException e) {
             System.out.println("Errore durante l'aggiunta del nuovo Order: "+ e.getMessage() +" \n Query utilizzata: " + addQuery);
@@ -170,8 +172,10 @@ public class OrderManagement implements Data_Management {
     public void delete(Object toBeDeleted) {
 
         try {
-            PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Ordine WHERE Codice_Ordine = " + ((Order) toBeDeleted).getCodice_ordine());
-            executeQuery(false, statement);
+            PreparedStatement orderStatement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Ordine WHERE Codice_Ordine = " + ((Order) toBeDeleted).getCodice_ordine());
+            executeQuery(false, orderStatement);
+            orderList.remove(toBeDeleted);
+            ItemsInOrderManagement.deleteItemInOrderRows(toBeDeleted);
         } catch (SQLException e) {
             System.err.println("Errore durante l'eliminazione della riga Order: " + e.getMessage());
         }
@@ -223,12 +227,27 @@ public class OrderManagement implements Data_Management {
 
     }
 
-    public ArrayList<Order> getOrderList() {
-        return orderList;
+    public int getLastOrderCode() {                 // Metodo per attribuire il codice ordine corretto nella riga della tabella ArticoloInOrdine dopo un'aggi
+
+        String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Ordine'";
+        try {
+            Statement statement = HotelSupplyManagementMain.conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(getCodeQuery);
+            return resultSet.getInt(1);
+        }
+        catch(SQLException e) {
+            System.err.println("Errore durante l'estrapolazione dell'ultimo codice ordine: " + e.getMessage());
+            return -1;
+        }
+
     }
 
-    public int getNextOrderCode() {
-        return nextOrderCode;
+    public ResultSet getCustomerList() {
+        return customerManagement.getRows(true, null);
+    }
+
+    public ArrayList<Order> getOrderList() {
+        return orderList;
     }
 
 }

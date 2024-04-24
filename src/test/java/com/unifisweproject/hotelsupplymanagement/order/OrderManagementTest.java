@@ -13,7 +13,7 @@ import static com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManageme
 public class OrderManagementTest {
 
     static OrderManagement orderManagement;
-    static OrderAddWindowController orderAddWindowController;
+    static OrderAddWindow orderAddWindow;
 
     @BeforeAll
     static void setUp() {
@@ -75,15 +75,15 @@ public class OrderManagementTest {
     @Test
     void testAddItemsInOrder() {
 
-         orderAddWindowController = new OrderAddWindowController();
-        orderAddWindowController.getItemInOrder().setCodice_Ordine(15);                     // Queste 3 istruzioni servono per impostare i dati dell'ordine nell'oggetto ItemInOrder che contiene la lista degli articoli ordinati
-        orderAddWindowController.getItemInOrder().addCodice_Articolo(50);
-        orderAddWindowController.getItemInOrder().addQuantita(1);
+         orderAddWindow = new OrderAddWindow();
+        orderAddWindow.getItemInOrder().setCodice_Ordine(15);                     // Queste 3 istruzioni servono per impostare i dati dell'ordine nell'oggetto ItemsInOrderManagement che contiene la lista degli articoli ordinati
+        orderAddWindow.getItemInOrder().addCodice_Articolo(50);
+        orderAddWindow.getItemInOrder().addQuantita(1);
 
-        orderAddWindowController.getItemInOrder().addCodice_Articolo(35);
-        orderAddWindowController.getItemInOrder().addQuantita(5);
+        orderAddWindow.getItemInOrder().addCodice_Articolo(35);
+        orderAddWindow.getItemInOrder().addQuantita(5);
 
-        orderAddWindowController.updateItemInOrder();                       // Metodo che effettua la query per aggiungere le righe per un singolo ordine in ArticoloInOrdine
+        orderAddWindow.updateItemInOrder();                       // Metodo che effettua la query per aggiungere le righe per un singolo ordine in ArticoloInOrdine
         String query = "SELECT * FROM ArticoloInOrdine WHERE Codice_Ordine = 15 AND Codice_Articolo = 50 AND Quantita = 1";
         try {
             Statement statement = conn.createStatement();

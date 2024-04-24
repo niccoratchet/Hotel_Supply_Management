@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="309.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.order.OrderSearchWindowController">
+<AnchorPane prefHeight="309.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <ChoiceBox fx:id="typeOfPaymentField" disable="true" layoutX="376.0" layoutY="103.0" prefHeight="25.0" prefWidth="149.0" />
         <Label layoutX="282.0" layoutY="105.0" prefHeight="21.0" prefWidth="90.0" text="Tipo pagamento" />
@@ -17,8 +17,8 @@
         <Label layoutX="23.0" layoutY="183.0" text="Codice Cliente" />
         <TextField fx:id="orderCodeField" disable="true" layoutX="112.0" layoutY="103.0" prefHeight="25.0" prefWidth="108.0" />
         <Label layoutX="23.0" layoutY="107.0" prefHeight="17.0" prefWidth="77.0" text="Codice Ordine" />
-        <Button fx:id="confirmButton" disable="true" layoutX="451.0" layoutY="245.0" mnemonicParsing="false" onAction="#scanRows" prefHeight="25.0" prefWidth="108.0" text="Conferma" />
-        <Button layoutX="310.0" layoutY="245.0" mnemonicParsing="false" onAction="#closeSearchView" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
+        <Button fx:id="confirmButton" disable="true" layoutX="451.0" layoutY="245.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Conferma" />
+        <Button layoutX="310.0" layoutY="245.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Chiudi" />
         <DatePicker fx:id="datePicker" disable="true" layoutX="376.0" layoutY="179.0" prefHeight="25.0" prefWidth="149.0" />
         <Label layoutX="282.0" layoutY="183.0" text="Data Ordine" />
         <Label fx:id="codeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="31.0" prefHeight="21.0" prefWidth="521.0" text="Ricerca ordine: seleziona i parametri di ricerca">
