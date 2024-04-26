@@ -2,7 +2,6 @@ package com.unifisweproject.hotelsupplymanagement.supply;
 
 import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.order.Order;
 import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagement;
 
 import java.sql.PreparedStatement;
@@ -239,10 +238,6 @@ public class SupplyManagement implements Data_Management {
 
     public ArrayList<Supply> getSupplyList() {
         return suppliesList;
-    }
-
-    public int getNextSupplyCode() {
-        return nextSupplyCode;
     }
 
 }

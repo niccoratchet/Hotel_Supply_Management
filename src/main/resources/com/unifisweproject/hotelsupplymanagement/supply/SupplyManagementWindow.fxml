@@ -16,28 +16,28 @@
         <menus>
           <Menu mnemonicParsing="false" text="Articoli">
             <items>
-              <MenuItem mnemonicParsing="false" text="Articoli in magazzino" />
+              <MenuItem fx:id="itemMenuItem" mnemonicParsing="false" text="Articoli in magazzino" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Fornitura">
             <items>
-              <MenuItem mnemonicParsing="false" text="Lista fornitori" />
+              <MenuItem fx:id="supplierMenuItem" mnemonicParsing="false" text="Lista fornitori" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Storico forniture" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Clienti">
             <items>
-              <MenuItem mnemonicParsing="false" text="Lista clienti" />
+              <MenuItem fx:id="customerMenuItem" mnemonicParsing="false" text="Lista clienti" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Ordini">
               <items>
-                <MenuItem mnemonicParsing="false" text="Storico ordini" />
+                <MenuItem fx:id="orderMenuItem" mnemonicParsing="false" text="Storico ordini" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Menu principale">
               <items>
-                <MenuItem mnemonicParsing="false" text="Apri menu principale" />
+                <MenuItem fx:id="mainMenuItem" mnemonicParsing="false" text="Apri menu principale" />
               </items>
             </Menu>
         </menus>

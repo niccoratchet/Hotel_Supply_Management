@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -37,7 +38,10 @@ public class FXMLWindowLoader extends FXMLLoader {
         if (root != null) {
             Stage stage;
             if (isSameWindow) {
-                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                if (event.getSource() instanceof MenuItem)
+                    stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+                else
+                    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             }
             else {
                 stage = new Stage();

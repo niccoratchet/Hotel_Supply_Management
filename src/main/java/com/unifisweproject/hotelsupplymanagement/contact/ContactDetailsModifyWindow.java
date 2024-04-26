@@ -143,18 +143,6 @@ public class ContactDetailsModifyWindow implements Initializable {
 
     }
 
-    public TextField getAddressField() {
-        return addressField;
-    }
-
-    public TextField getCivicNumberField() {
-        return civicNumberField;
-    }
-
-    public TextField getCAPField() {
-        return CAPField;
-    }
-
     public TextField getLocationField() {
         return locationField;
     }

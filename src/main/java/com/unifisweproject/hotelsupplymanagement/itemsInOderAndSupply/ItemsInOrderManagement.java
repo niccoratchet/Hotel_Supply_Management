@@ -100,21 +100,8 @@ public class ItemsInOrderManagement {
 
     }
 
-
     public void setCodice_Ordine(int codice_Ordine){
         this.codice_Ordine = codice_Ordine;
-    }
-
-    public int getCodice_Ordine(){
-        return codice_Ordine;
-    }
-
-    public int getCodice_Articolo(int pos){
-        return codice_Articolo.get(pos);
-    }
-
-    public int getQuantita(int pos){
-        return quantita.get(pos);
     }
 
     public void addCodice_Articolo(int codice_Articolo){

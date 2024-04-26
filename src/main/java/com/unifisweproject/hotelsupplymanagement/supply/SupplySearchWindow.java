@@ -1,19 +1,12 @@
 package com.unifisweproject.hotelsupplymanagement.supply;
 
-import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.order.OrderManagementController;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ResourceBundle;
 
 public class SupplySearchWindow implements Initializable {

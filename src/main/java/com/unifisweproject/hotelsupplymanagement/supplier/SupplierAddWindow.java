@@ -1,6 +1,5 @@
 package com.unifisweproject.hotelsupplymanagement.supplier;
 
-import com.unifisweproject.hotelsupplymanagement.supply.SupplyManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

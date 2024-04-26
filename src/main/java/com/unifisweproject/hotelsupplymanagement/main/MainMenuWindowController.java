@@ -9,7 +9,6 @@ import com.unifisweproject.hotelsupplymanagement.supply.SupplyManagementControll
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -35,8 +34,7 @@ public class MainMenuWindowController implements Initializable {
     @FXML
     private Button openCreditsButton;
     private static Stage stage;
-    private boolean isMenuButton = false;               // Utile a conoscere se il cambio di area lavorativa (ad es.Item) avviene dalla pressione del bottone nel menù principale oppure tramite il MenuBar
-    private final ArrayList<Boolean> isNotFirstTimeLoad = new ArrayList<>(4);       // Serve a capire quali delle 4 sezioni sono state aperte per la prima volta o meno ai fini di effettuare una singola interrogazione
+    private final ArrayList<Boolean> isNotFirstTimeLoad = new ArrayList<>();       // Serve a capire quali delle 4 sezioni sono state aperte per la prima volta o meno ai fini di effettuare una singola interrogazione
 
     private MainMenuWindowController() {               // Costruttore privato per evitare la creazione di nuove istanze (SingleTon)
         for (int i = 0; i < 5; i++)
@@ -97,7 +95,7 @@ public class MainMenuWindowController implements Initializable {
     public void openMainMenuView() {          // Metodo per l'apertura del Menu principale a partire dalle altre sezioni del programma
 
         try {
-            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/main/MainMenuWindow.fxml"),    // FIXME: Probabilmente deve essere cambiato il modo  in cui viene passato lo stage a FXMLWindowLoader poiché ha bisogno di quello che è stato fornito dal metodo getStageFormMenuBar
+            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/main/MainMenuWindow.fxml"),
                     MainMenuWindowController.getInstance(), "Menu Principale", false, stage);
         }
         catch (IOException e) {
@@ -109,7 +107,6 @@ public class MainMenuWindowController implements Initializable {
     public void getStageFromMenuBar(ActionEvent event, Stage stage, String sectionName) {           // Chiamato da un certo Controller dopo la pressione di un MenuItem. Serve a capire quale Management è stato premuto
 
         MainMenuWindowController.stage = stage;
-        isMenuButton = true;
         switch (sectionName) {
             case "Articoli in magazzino" -> openItemManagementView(event);
             case "Lista fornitori" -> openSupplierManagementView(event);
@@ -123,13 +120,6 @@ public class MainMenuWindowController implements Initializable {
 
     public void openCredits() {
         HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Credits", "Hotel Supply Management", "Software developed by Niccolò Redi, Lorenzo Gazzini and Edoardo Cravegni. \n For the SWE Exam of UNIFI (A.A.2023/2024.)");
-    }
-
-    public void verifyIsMenuButton(ActionEvent event) {                         // Verifica e aggiorna la variabile isMenuButton per cambiare modalità di apertura nuovo Management
-        if (!isMenuButton)
-            stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        else
-            isMenuButton = false;
     }
 
     public ArrayList<Boolean> getIsNotFirstTimeLoad() {

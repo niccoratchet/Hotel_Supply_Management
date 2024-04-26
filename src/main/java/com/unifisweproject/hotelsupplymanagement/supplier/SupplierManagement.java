@@ -1,7 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.supplier;
 
 import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
-import com.unifisweproject.hotelsupplymanagement.item.Item;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 
 import java.sql.PreparedStatement;

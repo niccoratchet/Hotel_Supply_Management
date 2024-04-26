@@ -2,7 +2,6 @@ package com.unifisweproject.hotelsupplymanagement.company;
 
 import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementController;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierDisplayWindow;
 import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

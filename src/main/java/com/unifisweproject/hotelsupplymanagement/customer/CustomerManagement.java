@@ -1,7 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.customer;
 
 import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
-import com.unifisweproject.hotelsupplymanagement.item.Item;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 
 import java.sql.*;
@@ -410,10 +409,6 @@ public class CustomerManagement implements Data_Management {
 
     public ArrayList<Customer> getCustomerList() {
         return customerList;
-    }
-
-    public int getNextCustomerCode() {
-        return nextCustomerCode;
     }
 
 

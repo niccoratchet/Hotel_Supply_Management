@@ -38,6 +38,16 @@ public class SupplyManagementView implements Initializable {
     @FXML
     private Button searchButton;
     @FXML
+    private MenuItem itemMenuItem;
+    @FXML
+    private MenuItem supplierMenuItem;
+    @FXML
+    private MenuItem customerMenuItem;
+    @FXML
+    private MenuItem orderMenuItem;
+    @FXML
+    private MenuItem mainMenuItem;
+    @FXML
     private AnchorPane tableAnchorPane;
     private final ContextMenu rightClickMenu = new ContextMenu();
     private final ObservableList<Supply> supplyRows = FXCollections.observableArrayList();
@@ -82,6 +92,12 @@ public class SupplyManagementView implements Initializable {
                     rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
             }
         });
+        itemMenuItem.setOnAction(this::handleActionEvent);
+        supplierMenuItem.setOnAction(this::handleActionEvent);
+        customerMenuItem.setOnAction(this::handleActionEvent);
+        orderMenuItem.setOnAction(this::handleActionEvent);
+        mainMenuItem.setOnAction(this::handleActionEvent);
+
     }
 
 

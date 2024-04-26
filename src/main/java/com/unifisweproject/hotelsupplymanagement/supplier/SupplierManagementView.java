@@ -50,6 +50,8 @@ public class SupplierManagementView implements Initializable {
     private MenuItem customerMenuItem;
     @FXML
     private MenuItem supplyMenuItem;
+    @FXML
+    private MenuItem mainMenuItem;
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
     private final MenuItem viewSupplierMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteSupplierMenu = new MenuItem("Elimina");
@@ -68,6 +70,7 @@ public class SupplierManagementView implements Initializable {
         orderMenuItem.setOnAction(this::handleActionEvent);
         supplyMenuItem.setOnAction(this::handleActionEvent);
         customerMenuItem.setOnAction(this::handleActionEvent);
+        mainMenuItem.setOnAction(this::handleActionEvent);
         addButton.setOnAction(this::handleActionEvent);
         searchButton.setOnAction(this::handleActionEvent);
         modifyButton.setOnAction(this::handleActionEvent);

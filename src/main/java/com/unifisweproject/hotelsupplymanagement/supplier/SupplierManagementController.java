@@ -61,10 +61,10 @@ public class SupplierManagementController {
 
     public void initializeRows()  {
 
-        if (!mainMenuWindowController.getIsNotFirstTimeLoad().get(0)) {
+        if (!mainMenuWindowController.getIsNotFirstTimeLoad().get(2)) {
             try {
                 supplierManagement.loadFromDB();
-                mainMenuWindowController.getIsNotFirstTimeLoad().set(0, true);
+                mainMenuWindowController.getIsNotFirstTimeLoad().set(2, true);
             }
             catch (SQLException e) {
                 System.err.println("Errore durante il riempimento della tabella");

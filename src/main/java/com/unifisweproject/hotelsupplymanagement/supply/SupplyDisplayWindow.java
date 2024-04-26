@@ -1,10 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.supply;
 
-import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 import com.unifisweproject.hotelsupplymanagement.item.Item;
-import com.unifisweproject.hotelsupplymanagement.order.Order;
-import com.unifisweproject.hotelsupplymanagement.order.OrderManagementController;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,10 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class SupplyDisplayWindow implements Initializable {

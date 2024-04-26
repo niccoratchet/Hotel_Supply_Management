@@ -50,10 +50,10 @@ public class SupplyManagementController {
 
     public void initializeRows()  {
 
-        if(!mainMenuWindowController.getIsNotFirstTimeLoad().get(3)) {
+        if(!mainMenuWindowController.getIsNotFirstTimeLoad().get(4)) {
             try {
                 supplyManagement.loadFromDB();
-                mainMenuWindowController.getIsNotFirstTimeLoad().set(3, true);
+                mainMenuWindowController.getIsNotFirstTimeLoad().set(4, true);
             }
             catch (SQLException e) {
                 System.err.println("Errore durante il riempimento della tabella");

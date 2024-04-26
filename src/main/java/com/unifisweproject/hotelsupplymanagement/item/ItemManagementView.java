@@ -41,9 +41,15 @@ public class ItemManagementView implements Initializable {
     @FXML
     private AnchorPane tableAnchorPane;
     @FXML
-    private MenuItem itemMenuItem;
-    @FXML
     private MenuItem supplierMenuItem;
+    @FXML
+    private MenuItem customerMenuItem;
+    @FXML
+    private MenuItem orderMenuItem;
+    @FXML
+    private MenuItem supplyMenuItem;
+    @FXML
+    private MenuItem mainMenuItem;
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
     private final MenuItem viewItemMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteItemMenu = new MenuItem("Elimina");
@@ -58,8 +64,11 @@ public class ItemManagementView implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        itemMenuItem.setOnAction(this::handleActionEvent);
         supplierMenuItem.setOnAction(this::handleActionEvent);
+        customerMenuItem.setOnAction(this::handleActionEvent);
+        orderMenuItem.setOnAction(this::handleActionEvent);
+        supplyMenuItem.setOnAction(this::handleActionEvent);
+        mainMenuItem.setOnAction(this::handleActionEvent);
         addButton.setOnAction(this::handleActionEvent);
         searchButton.setOnAction(this::handleActionEvent);
         modifyButton.setOnAction(this::handleActionEvent);
