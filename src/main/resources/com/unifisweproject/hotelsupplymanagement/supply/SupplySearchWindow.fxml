@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="290.0" prefWidth="537.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.supply.SupplySearchWindowController">
+<AnchorPane prefHeight="290.0" prefWidth="537.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="198.0" layoutY="33.0" text="Ricerca fornitura">
          <font>
@@ -23,8 +23,8 @@
       <Label layoutX="284.0" layoutY="110.0" text="Codice Articolo" />
       <DatePicker fx:id="datePicker" disable="true" layoutX="203.0" layoutY="175.0" prefHeight="25.0" prefWidth="142.0" />
       <Label layoutX="117.0" layoutY="179.0" text="Data fornitura" />
-      <Button fx:id="confirmButton" layoutX="392.0" layoutY="240.0" mnemonicParsing="false" onAction="#scanRows" prefHeight="25.0" prefWidth="100.0" text="Conferma" />
-      <Button layoutX="262.0" layoutY="240.0" mnemonicParsing="false" onAction="#closeView" prefHeight="25.0" prefWidth="100.0" text="Annulla" />
+      <Button fx:id="confirmButton" layoutX="392.0" layoutY="240.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Conferma" />
+      <Button layoutX="262.0" layoutY="240.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Annulla" />
       <CheckBox fx:id="enableItemSearch" layoutX="478.0" layoutY="110.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="27.0" text="Articolo" textFill="TRANSPARENT" />
       <CheckBox fx:id="enableCompanySearch" layoutX="240.0" layoutY="110.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="3.0" text="Azienda" textFill="TRANSPARENT" />
       <CheckBox fx:id="enableDateSearch" layoutX="369.0" layoutY="179.0" mnemonicParsing="false" text="Data" textFill="TRANSPARENT" />

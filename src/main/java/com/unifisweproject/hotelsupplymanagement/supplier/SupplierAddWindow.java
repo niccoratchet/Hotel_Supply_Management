@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.supplier;
 
+import com.unifisweproject.hotelsupplymanagement.supply.SupplyManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,20 +16,19 @@ import java.util.ResourceBundle;
 
 public class SupplierAddWindow implements Initializable {
 
-
     @FXML
     private DatePicker datePicker;
+    @FXML
+    private Button addCompanyButton;
+    @FXML
+    private Button addContactButton;
     @FXML
     private Button addButton;
     @FXML
     private Button backButton;
-    private SupplierManagementController controller;
-    /*private ContactDetailsAddWindow contactDetailsAddWindowController = null;
-    private CompanyDetailsAddWindow companyDetailsAddWindowController = null;*/
+    private final SupplierManagementController controller;
 
-    //public ItemAddWindow() {
-    //    this.controller = ManagementController.getInstance();
-    //}
+    public SupplierAddWindow() { this.controller = SupplierManagementController.getInstance(); }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -36,10 +36,13 @@ public class SupplierAddWindow implements Initializable {
         datePicker.setValue(LocalDate.now());
         addButton.setOnAction(this::addSupplier);
         backButton.setOnAction(this::closeAddView);
+        addCompanyButton.setOnAction(controller::loadAddCompanyDetailsView);
+        addContactButton.setOnAction(controller::loadAddContactDetailsView);
+
     }
 
     public void addSupplier(ActionEvent event) {
-        //controller.createRow(event);
+        controller.createRow(event);
     }
 
     public void closeAddView(ActionEvent event) {

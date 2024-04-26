@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SupplyManagementTest {
 
-    static SuppliesManagement suppliesManagement;
+    static SupplyManagement supplyManagement;
     static String insertSupplyTestQuery = "INSERT INTO Fornitura (Codice_Fornitura, Codice_Articolo, Codice_Fornitore, Data_Fornitura, Prezzo, Quantita) " +
             "VALUES (99, 99, 99, '2024-04-09', 1.50, 100)";
     static Supply supplyTest = new Supply(99, 99, 99, "2024-04-09", 100, 1.50);
@@ -22,8 +22,8 @@ public class SupplyManagementTest {
         String url = "jdbc:sqlite:src/test/DBTest.db";
         try {
             HotelSupplyManagementMain.connectToDB(url);
-            suppliesManagement = SuppliesManagement.getInstance();
-            suppliesManagement.getSuppliesList().add(supplyTest);
+            supplyManagement = SupplyManagement.getInstance();
+            supplyManagement.getSupplyList().add(supplyTest);
         }
         catch (Exception e) {
             fail("Errore durante l'apertura del DB di test: " + e.getMessage());
@@ -39,9 +39,9 @@ public class SupplyManagementTest {
     }
 
     @Test
-    void testAddSupply() {              // Test per il metodo add in SuppliesManagement: il test si basa sull'aggiunta di una fornitura nel DB
+    void testAddSupply() {              // Test per il metodo add in SupplyManagement: il test si basa sull'aggiunta di una fornitura nel DB
 
-        suppliesManagement.add(new Supply(99,99, "2024-04-09", 63, 10.00));
+        supplyManagement.add(new Supply(99,99, "2024-04-09", 63, 10.00));
         String query = "SELECT * FROM Fornitura WHERE Codice_Articolo = 99 AND Codice_Fornitore = 99 AND Data_Fornitura = '2024-04-09' AND " +
                 "Prezzo = 1.50 AND Quantita = 100";
         try {
@@ -65,7 +65,7 @@ public class SupplyManagementTest {
     }
 
     @Test
-    void testDeleteSupply() {               // Test per il metodo delete in SuppliesManagement: il test si basa sulla cancellazione di una fornitura dal DB
+    void testDeleteSupply() {               // Test per il metodo delete in SupplyManagement: il test si basa sulla cancellazione di una fornitura dal DB
 
         String insertSupply = "INSERT INTO Fornitura (Codice_Fornitura, Codice_Articolo, Codice_Fornitore, Data_Fornitura, Prezzo, Quantita) " +
                 "VALUES (102, 99, 99, '2024-04-09', 1.50, 100)";
@@ -76,7 +76,7 @@ public class SupplyManagementTest {
         catch (SQLException e) {
             fail("Errore durante l'inserimento della fornitura nel DB in fase di set-up: " + e.getMessage());
         }
-        suppliesManagement.delete(102);
+        supplyManagement.delete(102);
         String searchQuery = "SELECT * FROM Fornitura WHERE Codice_Fornitura = 101";
         try {
             Statement statement = conn.createStatement();
@@ -94,10 +94,10 @@ public class SupplyManagementTest {
     }
 
     @Test
-    void testSearchSupply() {               // Test per il metodo search in SuppliesManagement: il test si basa sulla ricerca di una fornitura nel DB
+    void testSearchSupply() {               // Test per il metodo search in SupplyManagement: il test si basa sulla ricerca di una fornitura nel DB
 
         Supply toBeSearched = new Supply(-1, 99, 99, null, -1, -1);
-        assertEquals(1, suppliesManagement.search(toBeSearched).size());
+        assertEquals(1, supplyManagement.search(toBeSearched).size());
 
     }
 

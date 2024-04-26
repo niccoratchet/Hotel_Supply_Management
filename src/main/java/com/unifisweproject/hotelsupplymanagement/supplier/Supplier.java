@@ -20,7 +20,7 @@ public class Supplier {
 
         this.codice_fornitore = codice_fornitore;
         this.data_inserimento = data_inserimento;
-        P_IVA = p_IVA;
+        this.P_IVA = p_IVA;
         this.ragione_sociale = ragione_sociale;
         this.indirizzo = indirizzo;
         this.CAP = CAP;

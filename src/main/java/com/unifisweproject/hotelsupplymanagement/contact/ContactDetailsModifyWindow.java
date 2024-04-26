@@ -2,7 +2,7 @@ package com.unifisweproject.hotelsupplymanagement.contact;
 
 import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementController;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierDisplayWindow;
+import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,10 +35,10 @@ public class ContactDetailsModifyWindow implements Initializable {
     private TextField mailField;
     @FXML
     private Button confirmButton;
-    private SupplierDisplayWindow supplierController = null;
+    private SupplierManagementController supplierController = null;
     private CustomerManagementController customerController = null;
 
-    public ContactDetailsModifyWindow(SupplierDisplayWindow supplierController) {
+    public ContactDetailsModifyWindow(SupplierManagementController supplierController) {
         this.supplierController = supplierController;
     }
 
@@ -54,18 +54,15 @@ public class ContactDetailsModifyWindow implements Initializable {
         civicNumberField.setTextFormatter(HotelSupplyManagementMain.getCivicNumberFormatter());
         CAPField.setTextFormatter(HotelSupplyManagementMain.getNumberOnlyStringFormatter(capCharacters));
         phoneNumberField.setTextFormatter(HotelSupplyManagementMain.getNumberOnlyStringFormatter(maxPhoneNumberCharacter));
-        //if (supplierController != null)
-            //setInitialFields(supplierDisplayWindowController.getDisplayedSupplier().getIndirizzo(), supplierDisplayWindowController.getDisplayedSupplier().getCivico(), supplierDisplayWindowController.getDisplayedSupplier().getCAP())
-        if (customerController != null)
-           try {
-               updateText();
-           } catch (SQLException e) {
-               System.err.println("Errore durante l'aggiornamento dei campi di testo: " + e.getMessage());
-           }
+        try {
+            updateText();
+        } catch (SQLException e) {
+            System.out.println("Errore nel caricamento dei dati: " + e.getMessage());
+        }
 
     }
 
-    public boolean isValidEmail(String email) {                // una volta confermate delle modifiche viene effettuato il controllo sulla mail
+    public boolean isValidEmail(String email) {              //  una volta confermate delle modifiche viene effettuato il controllo sulla mail
 
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -75,8 +72,15 @@ public class ContactDetailsModifyWindow implements Initializable {
 
     public void updateText() throws SQLException {
 
-        ResultSet resultSet = ContactDetailsManagement.setInitialFields(customerController.getDisplayedCustomer().getIndirizzo(),
-                customerController.getDisplayedCustomer().getCivico(), customerController.getDisplayedCustomer().getCAP());
+        ResultSet resultSet;
+        if (customerController != null) {
+            resultSet = ContactDetailsManagement.setInitialFields(customerController.getDisplayedCustomer().getIndirizzo(),
+                    customerController.getDisplayedCustomer().getCivico(), customerController.getDisplayedCustomer().getCAP());
+        }
+        else {
+            resultSet = ContactDetailsManagement.setInitialFields(supplierController.getDisplayedSupplier().getIndirizzo(),
+                    supplierController.getDisplayedSupplier().getCivico(), supplierController.getDisplayedSupplier().getCAP());
+        }
         addressField.setText(resultSet.getString(1));
         civicNumberField.setText(resultSet.getString(3));
         CAPField.setText(resultSet.getString(2));
@@ -95,8 +99,8 @@ public class ContactDetailsModifyWindow implements Initializable {
             if (!isValidEmail(mailField.getText())) {
                 throw new RuntimeException("E-mail");
             }
-            //if (supplierController != null) Serve per capire quale finestra ha richiamato quella di aggiunta dei dettagli sul recapito
-                //supplierDisplayWindowController.setContactDetails(addressField.getText(), CAPField.getText(), civicNumberField.getText());
+            if (supplierController != null)
+                supplierController.setContactDetails(addressField.getText(), CAPField.getText(), civicNumberField.getText());
             if (customerController != null)
                 customerController.setContactDetails(addressField.getText(), CAPField.getText(), civicNumberField.getText());
             closeWindow(event);

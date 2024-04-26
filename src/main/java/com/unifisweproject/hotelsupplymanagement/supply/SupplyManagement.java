@@ -2,24 +2,27 @@ package com.unifisweproject.hotelsupplymanagement.supply;
 
 import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
+import com.unifisweproject.hotelsupplymanagement.order.Order;
+import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagement;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class SuppliesManagement implements Data_Management {
+public class SupplyManagement implements Data_Management {
 
     /*
         Questa classe è stata creata per gestire la tabella "Fornitura" del database. Non ha bisogno dell'attributo nextItemCode per il fatto
         che non è possibile aggiungere nuovi elementi alla tabella se non sono già presenti Fornitori e Articoli.
      */
 
-    private static final SuppliesManagement instance = new SuppliesManagement();        // Singleton per SuppliesManagement
+    private static final SupplyManagement instance = new SupplyManagement();        // Singleton per SupplyManagement
     private int nextSupplyCode;                 // Codice della prossima fornitura da aggiungere
     private final ArrayList<Supply> suppliesList = new ArrayList<>();               // Lista di oggetti che rappresenta una singola riga in Fornitura nel DB
+    private final SupplierManagement supplierManagement = SupplierManagement.getInstance();
 
-    private SuppliesManagement() {              // Costruttore privato per evitare la creazione di nuove istanze (Singleton) e per estrapolare il prossimo codice fornitura
+    private SupplyManagement() {              // Costruttore privato per evitare la creazione di nuove istanze (Singleton) e per estrapolare il prossimo codice fornitura
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Fornitura'";
         try {
@@ -33,19 +36,28 @@ public class SuppliesManagement implements Data_Management {
 
     }
 
-    public static SuppliesManagement getInstance() {
+    public static SupplyManagement getInstance() {
         return instance;
     }
 
     @Override
     public void loadFromDB() throws SQLException {
 
+        ResultSet resultSet = getRows(true, null);
+        while (resultSet.next()) {
+            Supply newSupply = new Supply(resultSet.getInt("Codice_Fornitura"), resultSet.getInt("Codice_Fornitore"),
+                    resultSet.getInt("Codice_Articolo"), resultSet.getString("Data_Fornitura"),
+                    resultSet.getInt("Quantita"), resultSet.getDouble("Prezzo"));
+            suppliesList.add(newSupply);
+
+        }
     }
 
     @Override
     public void add(Object newObject) {
 
         Supply toBeAdded = (Supply) newObject;
+        toBeAdded.setCodice_fornitura(nextSupplyCode + 1);
         String addQuery = "INSERT INTO Fornitura (Codice_Articolo, Codice_Fornitore, Data_Fornitura, Prezzo, Quantita) VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(addQuery);
@@ -56,6 +68,7 @@ public class SuppliesManagement implements Data_Management {
             preparedStatement.setInt(5, toBeAdded.getQuantita());
             preparedStatement.executeUpdate();
             nextSupplyCode++;
+            suppliesList.add(toBeAdded);
         }
         catch (Exception e) {
             System.out.println("Errore durante l'aggiunta di una nuova fornitura: " + e.getMessage());
@@ -109,7 +122,7 @@ public class SuppliesManagement implements Data_Management {
             return getSearchResults(getRows(false, statement));
         }
         catch (SQLException e) {
-            System.err.println("Query di ricerca del cliente non correttamente formattata: " + e.getMessage());
+            System.err.println("Query di ricerca della fornitura non correttamente formattata: " + e.getMessage());
             return null;
         }
 
@@ -165,6 +178,7 @@ public class SuppliesManagement implements Data_Management {
         try {
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Fornitura WHERE Codice_Fornitura = " + ((Supply)toBeDeleted).getCodice_fornitura());
             executeQuery(false, statement);
+            suppliesList.remove(toBeDeleted);
         }
         catch (SQLException e) {
             System.err.println("Errore durante l'eliminazione della riga Customer: " + e.getMessage());
@@ -218,7 +232,12 @@ public class SuppliesManagement implements Data_Management {
         }
 
     }
-    public ArrayList<Supply> getSuppliesList() {
+
+    public ResultSet getSupplierList() {
+        return supplierManagement.getRows(true, null);
+    }
+
+    public ArrayList<Supply> getSupplyList() {
         return suppliesList;
     }
 

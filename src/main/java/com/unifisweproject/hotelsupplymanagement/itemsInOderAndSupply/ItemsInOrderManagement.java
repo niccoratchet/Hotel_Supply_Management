@@ -101,7 +101,6 @@ public class ItemsInOrderManagement {
     }
 
 
-
     public void setCodice_Ordine(int codice_Ordine){
         this.codice_Ordine = codice_Ordine;
     }

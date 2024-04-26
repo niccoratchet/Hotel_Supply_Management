@@ -1,8 +1,12 @@
 package com.unifisweproject.hotelsupplymanagement.supplier;
 
+import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,30 +41,33 @@ public class SupplierSearchWindow implements Initializable {
     private Button confirmButton;
     @FXML
     private Button backButton;
-    //private SupplierManagementController controller;
+    private final SupplierManagementController controller;
 
     public SupplierSearchWindow() {
-        //this.controller = SupplierManagementController.getInstance();
+        this.controller = SupplierManagementController.getInstance();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        //setOnActionCheckBox();
-        //confirmButton.setOnAction(this::searchSupplier);
-        //backButton.setOnAction(this::closeSearchView);
+        setOnActionCheckBox();
+        int capCharacters = 5;
+        civicNumberField.setTextFormatter(HotelSupplyManagementMain.getCivicNumberFormatter());
+        CAPField.setTextFormatter(HotelSupplyManagementMain.getNumberOnlyStringFormatter(capCharacters));
+        confirmButton.setOnAction(this::searchSupplier);
+        backButton.setOnAction(this::closeSearchView);
 
     }
-    /*
+
 
     public void setOnActionCheckBox() {
 
-        enableNameSearch.setOnAction(event -> handleCheckBoxAction(enableNameSearch));
         enableCodeSearch.setOnAction(event -> handleCheckBoxAction(enableCodeSearch));
-        enablePriceSearch.setOnAction(event -> handleCheckBoxAction(enablePriceSearch));
-        enableAmountSearch.setOnAction(event -> handleCheckBoxAction(enableAmountSearch));
-        enableDateSearch.setOnAction(event -> handleCheckBoxAction(enableDateSearch));
-        enableDescriptionSearch.setOnAction(event -> handleCheckBoxAction(enableDescriptionSearch));
+        enableRagioneSocialeSearch.setOnAction(event -> handleCheckBoxAction(enableRagioneSocialeSearch));
+        enablePIVASearch.setOnAction(event -> handleCheckBoxAction(enablePIVASearch));
+        enableAddressSearch.setOnAction(event -> handleCheckBoxAction(enableAddressSearch));
+        enableCivicNumberSearch.setOnAction(event -> handleCheckBoxAction(enableCivicNumberSearch));
+        enableCAPSearch.setOnAction(event -> handleCheckBoxAction(enableCAPSearch));
 
     }
 
@@ -121,6 +128,11 @@ public class SupplierSearchWindow implements Initializable {
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
+
+    public TextField getSupplierCodeField() {
+        return codeField;
+    }
+
     public TextField getPivaField() {
         return PIVAField;
     }
@@ -129,20 +141,16 @@ public class SupplierSearchWindow implements Initializable {
         return ragioneSocialeField;
     }
 
-    public TextField getCodeField() {
-        return codeField;
+    public TextField getAddressField() {
+        return addressField;
     }
 
-    public TextField getAddressField() { return addressField; }
-
-    public DatePicker getCivicNumberField() {
+    public TextField getCivicNumberField() {
         return civicNumberField;
     }
 
     public TextField getCapField() {
         return CAPField;
     }
-
-     */
 
 }

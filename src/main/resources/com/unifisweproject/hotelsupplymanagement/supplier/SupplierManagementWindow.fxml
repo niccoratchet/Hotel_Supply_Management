@@ -10,17 +10,17 @@
 
 <AnchorPane fx:id="tableAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-            <TableView fx:id="supplierTable" layoutX="118.0" layoutY="46.0" prefHeight="346.0" prefWidth="638.0">
+        <TableView fx:id="supplierTable" layoutX="118.0" layoutY="46.0" prefHeight="346.0" prefWidth="638.0">
                 <columns>
                     <TableColumn fx:id="IDColumn" prefWidth="109.0" text="Codice_fornitore" />
-                    <TableColumn fx:id="BusinessNameColumn" prefWidth="118.0" text="Ragione_sociale" />
-                    <TableColumn fx:id="PivaColumn" prefWidth="71.0" text="P_iva" />
-                    <TableColumn fx:id="AddressColumn" prefWidth="103.0" text="Indirizzo" />
-                    <TableColumn fx:id="CivicColumn" prefWidth="47.0" text="Civico" />
-                    <TableColumn fx:id="CapColumn" prefWidth="78.0" text="Cap" />
-                    <TableColumn fx:id="DateColumn" prefWidth="109.0" text="Data_inserimento" />
+                    <TableColumn fx:id="businessNameColumn" prefWidth="118.0" text="Ragione_sociale" />
+                    <TableColumn fx:id="PIVAColumn" prefWidth="71.0" text="P_iva" />
+                    <TableColumn fx:id="addressColumn" prefWidth="103.0" text="Indirizzo" />
+                    <TableColumn fx:id="civicNumberColumn" prefWidth="47.0" text="Civico" />
+                    <TableColumn fx:id="CAPColumn" prefWidth="78.0" text="Cap" />
+                    <TableColumn fx:id="dateColumn" prefWidth="109.0" text="Data_inserimento" />
                 </columns>
-      </TableView>
+        </TableView>
         <MenuBar layoutY="2.0" prefHeight="26.0" prefWidth="758.0">
             <menus>
                 <Menu mnemonicParsing="false" text="Articoli">

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="479.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.supply.SupplyAddWindowController">
+<AnchorPane prefHeight="479.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="codeLabel" layoutX="162.0" layoutY="37.0" text="Inserisci i dettagli della fornitura">
          <font>
@@ -34,9 +34,9 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Button layoutX="236.0" layoutY="368.0" mnemonicParsing="false" onAction="#displayAddItemView" prefHeight="25.0" prefWidth="80.0" text="Aggiungi" />
-      <Button layoutX="444.0" layoutY="420.0" mnemonicParsing="false" onAction="#createSupply" prefHeight="25.0" prefWidth="106.0" text="Aggiungi" />
-      <Button layoutX="319.0" layoutY="420.0" mnemonicParsing="false" onAction="#closeAddView" prefHeight="25.0" prefWidth="106.0" text="Annulla" />
+      <Button fx:id="addItemsButton" layoutX="236.0" layoutY="368.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Aggiungi" />
+      <Button fx:id="addButton" layoutX="444.0" layoutY="420.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="106.0" text="Aggiungi" />
+      <Button fx:id="backButton" layoutX="319.0" layoutY="420.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="106.0" text="Annulla" />
       <Label layoutX="41.0" layoutY="157.0" text="Lista oggetti ordinati:">
          <font>
             <Font name="System Bold" size="14.0" />

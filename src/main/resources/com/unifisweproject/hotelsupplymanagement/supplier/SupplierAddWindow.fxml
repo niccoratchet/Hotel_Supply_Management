@@ -6,10 +6,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="305.0" prefWidth="554.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unifisweproject.hotelsupplymanagement.supplier.SupplierAddWindow">
+<AnchorPane prefHeight="305.0" prefWidth="554.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Button layoutX="389.0" layoutY="251.0" mnemonicParsing="false" onAction="#createSupplier" prefHeight="25.0" prefWidth="108.0" text="Aggiungi" />
-        <Button layoutX="257.0" layoutY="251.0" mnemonicParsing="false" onAction="#closeAddView" prefHeight="25.0" prefWidth="108.0" text="Annulla" />
+        <Button fx:id="addButton" layoutX="389.0" layoutY="251.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Aggiungi" />
+        <Button fx:id="backButton" layoutX="257.0" layoutY="251.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Annulla" />
         <DatePicker fx:id="datePicker" layoutX="35.0" layoutY="200.0" prefHeight="25.0" prefWidth="140.0" />
         <Label layoutX="198.0" layoutY="204.0" text="Data" />
         <Label alignment="CENTER" contentDisplay="CENTER" layoutX="31.0" layoutY="31.0" prefHeight="17.0" prefWidth="499.0" text="Inserisci i dati del fornitore">
@@ -17,8 +17,8 @@
                 <Font name="System Bold" size="18.0" />
             </font>
         </Label>
-      <Button layoutX="35.0" layoutY="84.0" mnemonicParsing="false" onAction="#viewAddCompanyDetails" text="Dati azienda" />
-      <Button layoutX="35.0" layoutY="140.0" mnemonicParsing="false" onAction="#viewAddContactDetails" text="Indirizzo e recapito" />
+      <Button fx:id="addCompanyButton" layoutX="35.0" layoutY="84.0" mnemonicParsing="false" text="Dati azienda" />
+      <Button fx:id="addContactButton" layoutX="35.0" layoutY="140.0" mnemonicParsing="false" text="Indirizzo e recapito" />
       <Label layoutX="142.0" layoutY="88.0" text="Clicca il bottone per inserire P_IVA e Ragione sociale" />
       <Label layoutX="166.0" layoutY="144.0" prefHeight="17.0" prefWidth="374.0" text="Clicca il bottone per inserire indirizzo e recapito dell'azieda fornitrice" />
     </children>

@@ -3,6 +3,7 @@ package com.unifisweproject.hotelsupplymanagement.company;
 import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementController;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 import com.unifisweproject.hotelsupplymanagement.supplier.SupplierDisplayWindow;
+import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,10 +24,10 @@ public class CompanyDetailsModifyWindow implements Initializable {
     private TextField ragioneSocialeField;
     @FXML
     private Button confirmButton;
-    private SupplierDisplayWindow supplierController = null;
+    private SupplierManagementController supplierController = null;
     private CustomerManagementController customerController = null;
 
-    public CompanyDetailsModifyWindow(SupplierDisplayWindow supplierDisplayWindow) {
+    public CompanyDetailsModifyWindow(SupplierManagementController supplierDisplayWindow) {
         this.supplierController = supplierDisplayWindow;
     }
 
@@ -40,8 +41,8 @@ public class CompanyDetailsModifyWindow implements Initializable {
         confirmButton.setOnAction(this::confirmData);
         int maxP_IVACharacters = 11;
         P_IVAField.setTextFormatter(HotelSupplyManagementMain.getNumberOnlyStringFormatter(maxP_IVACharacters));
-        //if (supplierController != null)
-            //(setInitialFields();
+        if (supplierController != null)
+            setInitialFields();
         if (customerController != null)
             setInitialFields();
 
@@ -49,8 +50,14 @@ public class CompanyDetailsModifyWindow implements Initializable {
 
     public void setInitialFields() {
 
-        P_IVAField.setText(customerController.getDisplayedCustomer().getP_IVA());
-        ragioneSocialeField.setText(customerController.getDisplayedCustomer().getRagione_sociale());
+        if (supplierController != null) {
+            P_IVAField.setText(supplierController.getDisplayedSupplier().getP_IVA());
+            ragioneSocialeField.setText(supplierController.getDisplayedSupplier().getRagione_sociale());
+        }
+        else {
+            P_IVAField.setText(customerController.getDisplayedCustomer().getP_IVA());
+            ragioneSocialeField.setText(customerController.getDisplayedCustomer().getRagione_sociale());
+        }
 
     }
 
@@ -58,8 +65,8 @@ public class CompanyDetailsModifyWindow implements Initializable {
 
         try {
             verifyEmptyFields();
-            //if (supplierController != null)
-            // supplierDisplayWindowController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
+            if (supplierController != null)
+                supplierController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
             if (customerController != null)
                 customerController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
             closeWindow(event);

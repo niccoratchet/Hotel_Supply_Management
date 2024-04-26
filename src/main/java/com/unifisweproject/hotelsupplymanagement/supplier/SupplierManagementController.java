@@ -1,25 +1,47 @@
 package com.unifisweproject.hotelsupplymanagement.supplier;
 
+import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
+import com.unifisweproject.hotelsupplymanagement.company.CompanyDetailsAddWindow;
+import com.unifisweproject.hotelsupplymanagement.company.CompanyDetailsManagement;
+import com.unifisweproject.hotelsupplymanagement.company.CompanyDetailsModifyWindow;
+import com.unifisweproject.hotelsupplymanagement.contact.ContactDetailsManagement;
+import com.unifisweproject.hotelsupplymanagement.contact.ContactDetailsModifyWindow;
+import com.unifisweproject.hotelsupplymanagement.contact.ContactDetailsAddWindow;
+import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
+import com.unifisweproject.hotelsupplymanagement.main.MainMenuWindowController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Objects;
+
 public class SupplierManagementController {
 
-    /*
-    private final SupplierManagement supplierManagement;
-    private MainMenuWindowController mainMenuWindowController;
-    private boolean searchView = false;
-    private ArrayList<Supplier> results = new ArrayList<>();
     private static SupplierManagementController instance = null;
+    private boolean searchView = false;
+    private final MainMenuWindowController mainMenuWindowController;
+    private final SupplierManagement supplierManagement;
+    private ArrayList<Supplier> results = new ArrayList<>();
     private SupplierManagementView supplierManagementView;
     private SupplierAddWindow supplierAddWindow;
     private SupplierDisplayWindow supplierDisplayWindow;
     private SupplierSearchWindow supplierSearchWindow;
-    private CompanyDetailsAddWindow companyDetailsAddWindow;
     private CompanyDetailsModifyWindow companyDetailsModifyWindow = null;
     private ContactDetailsAddWindow contactDetailsAddWindow;
     private ContactDetailsModifyWindow contactDetailsModifyWindow = null;
     private final ArrayList<String> companyDetails = new ArrayList<>();
     private final ArrayList<String> contactDetails = new ArrayList<>();
+    private Supplier displayedSupplier = null;
     private boolean isBadFormatted = false;
-
 
     private SupplierManagementController() {// Costruttore privato per evitare la creazione di nuove istanze (SingleTon)
 
@@ -31,7 +53,7 @@ public class SupplierManagementController {
     public static SupplierManagementController getInstance() {          // Metodo per ottenere l'istanza della classe (SingleTon)
 
         if (instance == null) {
-            instance = new ItemManagementController();
+            instance = new SupplierManagementController();
         }
         return instance;
 
@@ -48,12 +70,12 @@ public class SupplierManagementController {
                 System.err.println("Errore durante il riempimento della tabella");
             }
         }
-        ObservableList<Item> itemRows = FXCollections.observableArrayList(supplierManagement.getSupplierList());
+        ObservableList<Supplier> supplierRows = FXCollections.observableArrayList(supplierManagement.getSupplierList());
         supplierManagementView.setRows(supplierRows);
 
     }
 
-    public void createRow()  {
+    public void createRow(ActionEvent event)  {
 
         LocalDate date = supplierAddWindow.getDatePicker().getValue();
         try {
@@ -61,25 +83,29 @@ public class SupplierManagementController {
                 throw new RuntimeException("Parametri mancanti");
             if (contactDetails.isEmpty())
                 throw new RuntimeException("Dati di contatto mancanti, inserire i dati nell'apposita sezione e premere 'Conferma modifiche'");
-            ContactDetailsManagement.executeAddQuery(newSupplier.getIndirizzo(), newSupplier.getCAP(), newSupplier.getCivico(),
+            Supplier newSupplier = new Supplier(date.toString(), companyDetails.get(0), companyDetails.get(1), contactDetails.get(0), contactDetails.get(1), contactDetails.get(2));
+            ContactDetailsManagement.executeAddQuery(newSupplier.getIndirizzo(), newSupplier.getCivico(), newSupplier.getCAP(),
                     contactDetailsAddWindow.getLocationField().getText(), contactDetailsAddWindow.getProvinceField().getText(),
                     contactDetailsAddWindow.getPhoneNumberField().getText(), contactDetailsAddWindow.getMailField().getText());         // Inserimento dei dati di contatto nel DB attraverso la classe ContactDetailsManagement
             if (newSupplier.getP_IVA() != null && newSupplier.getRagione_sociale() != null)
                 CompanyDetailsManagement.executeAddQuery(newSupplier.getP_IVA(), newSupplier.getRagione_sociale());         // Inserimento dei dati aziendali nel DB attraverso la classe CompanyDetailsManagement
             supplierManagement.add(newSupplier);
             updateTable();
+            companyDetails.clear();
+            contactDetails.clear();
             supplierAddWindow.closeAddView(event);
         }
         catch (RuntimeException missingParameters) {
             HotelSupplyManagementMain.generateAlert(Alert.AlertType.ERROR, "Errore", "Parametri assenti", "Inserire il valore di tutti i dati obbligatori.");
+            System.err.println("Parametri mancanti: " + missingParameters.getMessage());
         }
 
     }
 
+
     public void modifyRow(ActionEvent event, Supplier displayedSupplier) {
 
         modifyCompanyAndContactDetails(displayedSupplier);
-        LocalDate date = customerDisplayWindow.getDatePicker().getValue();
         try {
             if (supplierDisplayWindow.getDatePicker().getValue() == null)
                 throw new RuntimeException("Parametri mancanti");
@@ -99,22 +125,23 @@ public class SupplierManagementController {
 
     }
 
-Supplier prima cosa si effettua la modifica dei dati aziendali e di contatto
+    public void modifyCompanyAndContactDetails(Supplier displayedSupplier) {
 
         if (companyDetailsModifyWindow != null) {
             CompanyDetailsManagement.executeUpdateQuery(companyDetailsModifyWindow.getP_IVAField().getText(), companyDetailsModifyWindow.getRagioneSocialeField().getText());
         }
         ContactDetailsManagement.executeUpdateQuery(contactDetails.get(0), contactDetails.get(2), contactDetails.get(1),
                 contactDetailsModifyWindow.getLocationField().getText(), contactDetailsModifyWindow.getProvinceField().getText(),
-                contactDetailsModifyWindow.getPhoneNumberField().getText(), contactDetailsModifyWindow.getMailField().getText());         // Modifica dei dati di contatto nel DB attraverso la classe ContactDetailsManagement
+                contactDetailsModifyWindow.getPhoneNumberField().getText(), contactDetailsModifyWindow.getMailField().getText(),
+                displayedSupplier.getIndirizzo(), displayedSupplier.getCivico(), displayedSupplier.getCAP());         // Modifica dei dati di contatto nel DB attraverso la classe ContactDetailsManagement
         if (!contactDetails.isEmpty()) {
-            displayedCustomer.setIndirizzo(contactDetails.get(0));
-            displayedCustomer.setCivico(contactDetails.get(2));
-            displayedCustomer.setCAP(contactDetails.get(1));
+            displayedSupplier.setIndirizzo(contactDetails.get(0));
+            displayedSupplier.setCivico(contactDetails.get(2));
+            displayedSupplier.setCAP(contactDetails.get(1));
         }
         if (!companyDetails.isEmpty()) {
-            displayedCustomer.setP_IVA(companyDetails.get(0));
-            displayedCustomer.setRagione_sociale(companyDetails.get(1));
+            displayedSupplier.setP_IVA(companyDetails.get(0));
+            displayedSupplier.setRagione_sociale(companyDetails.get(1));
         }
 
     }
@@ -136,84 +163,12 @@ Supplier prima cosa si effettua la modifica dei dati aziendali e di contatto
 
     }
 
-    public void updateTable() {
-
-        if(searchView) {
-            ObservableList<Item> searchResultRows = FXCollections.observableArrayList(results);
-            supplierManagementView.setRows(searchResultRows);
-        }
-        else {
-            ObservableList<Item> itemRows = FXCollections.observableArrayList(supplierManagement.getItemList());
-            supplierManagementView.setRows(supplierRows);
-        }
-
-    }
-
-    public void exitSearch() {
-
-        searchButton.setDisable(false);             // Riattivo bottone di ricerca
-        searchButton.setVisible(true);
-        searchView = false;
-        updateTable();
-
-    }
-
-    public void setSupplierManagement(SupplierManagement supplierManagement) {
-        this.supplierManagement = supplierManagement;
-    }
-
-    public void displaySupplierView(ActionEvent ignoredEvent) {
-
-        SelectionModel<Supplier> selectionModel = supplierTable.getSelectionModel();
-        Supplier selectedSupplier = selectionModel.getSelectedItem();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/supplier/SupplierDisplayWindow.fxml"));
-            Parent root = loader.load();
-            SupplierDisplayWindow supplierDisplayWindowController = loader.getController();
-            supplierDisplayWindowController.setDisplayedSupplier(selectedSupplier);
-            supplierDisplayWindowController.setSupplierManagementSceneController(this);
-            Stage stage = new Stage();
-            stage.setTitle(selectedSupplier.getRagione_sociale());
-            stage.setResizable(false);
-            stage.getIcons().add(HotelSupplyManagementMain.icon);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(new Scene(root));
-            stage.show();
-        }
-        catch (IOException e) {
-            System.err.println("Errore durante il caricamento della pagina SupplierDisplayWindow.fxml: " + e.getMessage());
-        }
-
-    }
-
-    public boolean createConfirmDeleteAlert() {            // crea la finestra di avviso di cancellazione di un Item con richiesta di conferma
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Rimozione fornitore");
-        alert.setContentText("Sicuro di procedere con l'eliminazione del fornitore dalla banca dati?");
-        ButtonType buttonTypeYes = new ButtonType("Sì");
-        ButtonType buttonTypeNo = new ButtonType("No");
-        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == buttonTypeYes;
-
-    }
-
-    public void createConfirmedSupplierModify() {
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Modifiche applicate");
-        alert.setContentText("Le modifiche sono state eseguite");
-        alert.showAndWait();
-
-    }
-
-    public void deleteRow() {
+    public void deleteRow(Supplier selectedSupplier) {
 
         if (HotelSupplyManagementMain.displayConfirmationAlert("Attenzione", "Rimozione fornitore", "Sicuro di procedere con l'eliminazione del fornitore dalla banca dati?")) {
-            supplierManagement.delete(selectedItem);
+            supplierManagement.delete(selectedSupplier);
             if (searchView)
-                results.remove(selectedItem);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
+                results.remove(selectedSupplier);                   // Se sto visualizzando una ricerca, effettuo gli aggiornamenti anche su questa view
             updateTable();
         }
 
@@ -221,15 +176,56 @@ Supplier prima cosa si effettua la modifica dei dati aziendali e di contatto
 
     public Supplier getSearchFilters() {
 
-        Supplier searchSupplier = new Supplier(null);   // NOTA: è un oggetto item fittizio utile alla ricerca
+        TextField supplierCodeField = supplierSearchWindow.getSupplierCodeField();
+        TextField PIVAField = supplierSearchWindow.getPivaField();
+        TextField ragioneSocialeField = supplierSearchWindow.getRagioneSocialeField();
+        TextField indirizzoField = supplierSearchWindow.getAddressField();
+        TextField CAPField = supplierSearchWindow.getCapField();
+        TextField civicNumberField = supplierSearchWindow.getCivicNumberField();
+        Supplier searchSupplier = new Supplier(null, null, null, null, null, null);
         int i = 0;
         try {
-            while (i < 1) {
+            while (i < 6) {
                 switch (i) {
                     case 0 -> {
-                        if (!supplierSearchWindow.getDatePicker().isDisabled())
-                            if(supplierSearchWindow.getDatePicker().getValue() != null)
-                                searchSupplier.setData_inserimento(supplierSearchWindow.getDatePicker().getValue().toString());
+                        if (!supplierCodeField.isDisabled())
+                            if(! "".equals(supplierCodeField.getText()))
+                                searchSupplier.setCodice_fornitore(Integer.parseInt(supplierCodeField.getText()));
+                            else
+                                return null;
+                    }
+                    case 1 -> {
+                        if (!PIVAField.isDisabled())
+                            if(! "".equals(PIVAField.getText()))
+                                searchSupplier.setP_IVA(PIVAField.getText());
+                            else
+                                return null;
+                    }
+                    case 2 -> {
+                        if (!ragioneSocialeField.isDisabled())
+                            if(! "".equals(ragioneSocialeField.getText()))
+                                searchSupplier.setRagione_sociale(ragioneSocialeField.getText());
+                            else
+                                return null;
+                    }
+                    case 3 -> {
+                        if (!indirizzoField.isDisabled())
+                            if (! "".equals(indirizzoField.getText()))
+                                searchSupplier.setIndirizzo(indirizzoField.getText());
+                            else
+                                return null;
+                    }
+                    case 4 -> {
+                        if (!CAPField.isDisabled())
+                            if(! "".equals(CAPField.getText()))
+                                searchSupplier.setCAP(CAPField.getText());
+                            else
+                                return null;
+                    }
+                    case 5 -> {
+                        if (!civicNumberField.isDisabled())
+                            if (! "".equals(civicNumberField.getText()))
+                                searchSupplier.setCivico(civicNumberField.getText());
                             else
                                 return null;
                     }
@@ -245,7 +241,7 @@ Supplier prima cosa si effettua la modifica dei dati aziendali e di contatto
 
     }
 
-    public void searchRow(Supplier toBeSearched) {
+    public void searchRow(ActionEvent event) {
 
         Supplier toBeSearched = getSearchFilters();
         if(toBeSearched != null){
@@ -275,6 +271,19 @@ Supplier prima cosa si effettua la modifica dei dati aziendali e di contatto
 
     }
 
+    public void updateTable() {
+
+        if(searchView) {
+            ObservableList<Supplier> searchResultRows = FXCollections.observableArrayList(results);
+            supplierManagementView.setRows(searchResultRows);
+        }
+        else {
+            ObservableList<Supplier> supplierRows = FXCollections.observableArrayList(supplierManagement.getSupplierList());
+            supplierManagementView.setRows(supplierRows);
+        }
+
+    }
+
     public void displayView(ActionEvent event) {            // Metodo per visualizzare la finestra di gestione degli articoli
 
         try {
@@ -283,7 +292,7 @@ Supplier prima cosa si effettua la modifica dei dati aziendali e di contatto
                     supplierManagementView, true, event, "Gestione fornitori", false);
         }
         catch (IOException e) {
-            System.err.println("Errore durante il caricamento di ItemManagementWindow.fxml: " + e.getMessage());
+            System.err.println("Errore durante il caricamento di SupplierManagementWindow.fxml: " + e.getMessage());
         }
         initializeRows();
 
@@ -318,12 +327,66 @@ Supplier prima cosa si effettua la modifica dei dati aziendali e di contatto
     public void displayRowView(ActionEvent event, Supplier selectedSupplier) {
 
         try {
+            this.displayedSupplier = selectedSupplier;
+            setContactDetails(selectedSupplier.getIndirizzo(), selectedSupplier.getCAP(), selectedSupplier.getCivico());
             supplierDisplayWindow = new SupplierDisplayWindow(selectedSupplier);
             FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/supplier/SupplierDisplayWindow.fxml"),
                     supplierDisplayWindow, false, event, selectedSupplier.getRagione_sociale(), false);
         }
         catch (IOException e) {
-            System.err.println("Errore durante l'apertura del file ItemDisplayWindow.fxml: " + e.getMessage());
+            System.err.println("Errore durante l'apertura del file SupplierDisplayWindow.fxml: " + e.getMessage());
+        }
+
+    }
+
+    public void loadAddContactDetailsView(ActionEvent event) {
+
+        try {
+            contactDetailsAddWindow = new ContactDetailsAddWindow(this);
+            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/contact/ContactDetailsAddWindow.fxml"),
+                    contactDetailsAddWindow, false, event, "Aggiungi info su indirizzo e recapito", false);
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante il caricamento di ContactDetailsAddWindow.fxml: " + e.getMessage());
+        }
+
+    }
+
+    public void loadAddCompanyDetailsView(ActionEvent event) {
+
+        try {
+            CompanyDetailsAddWindow companyDetailsAddWindow = new CompanyDetailsAddWindow(this);
+            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/company/CompanyDetailsAddWindow.fxml"),
+                    companyDetailsAddWindow, false, event, "Aggiungi info sull'azienda", false);
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante il caricamento di CompanyDetailsAddWindow.fxml: " + e.getMessage());
+        }
+
+    }
+
+    public void loadModifyContactDetailsView(ActionEvent event) {
+
+        try {
+            contactDetailsModifyWindow = new ContactDetailsModifyWindow(this);
+            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/contact/ContactDetailsModifyWindow.fxml"),
+                    contactDetailsModifyWindow, false, event, "Modifica info su indirizzo e recapito", false);
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante il caricamento di ContactDetailsModifyWindow.fxml: " + e.getMessage());
+        }
+
+    }
+
+    public void loadModifyCompanyDetailsView(ActionEvent event) {
+
+        try {
+            companyDetailsModifyWindow = new CompanyDetailsModifyWindow(this);
+            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/company/CompanyDetailsModifyWindow.fxml"),
+                    companyDetailsModifyWindow, false, event, "Modifica info sull'azienda", false);
+        }
+        catch (IOException e) {
+            System.err.println("Errore durante il caricamento di CompanyDetailsModifyWindow.fxml: " + e.getMessage());
         }
 
     }
@@ -344,23 +407,25 @@ Supplier prima cosa si effettua la modifica dei dati aziendali e di contatto
                 case "searchButton" -> displaySearchView(event);
                 case "backButton" -> supplierManagementView.exitSearch();
                 case "modifyButton" -> {
-                    Supplier selectedSupplier = supplierManagementView.getItemTable().getSelectionModel().getSelectedItem();
+                    Supplier selectedSupplier = supplierManagementView.getSupplierTable().getSelectionModel().getSelectedItem();
                     displayRowView(null, selectedSupplier);
                 }
                 case "deleteButton" -> {
-                    Supplier selectedSupplier = supplierManagementView.getItemTable().getSelectionModel().getSelectedItem();
+                    Supplier selectedSupplier = supplierManagementView.getSupplierTable().getSelectionModel().getSelectedItem();
                     deleteRow(selectedSupplier);
                 }
+                case "addContactButton" -> loadAddContactDetailsView(event);
+                case "addCompanyDataButton" -> loadAddCompanyDetailsView(event);
             }
         }
         else if (event.getSource() instanceof MenuItem menuItem) {
-            if (menuItem.getId().equals("viewSupplierMenu") || menuItem.getId().equals("viewDeleteItemMenu")) {
-                Supplier selectedSupplier = supplierManagementView.getItemTable().getSelectionModel().getSelectedItem();
+            if (menuItem.getId().equals("viewSupplierMenu") || menuItem.getId().equals("viewDeleteSupplierMenu")) {
+                Supplier selectedSupplier = supplierManagementView.getSupplierTable().getSelectionModel().getSelectedItem();
                 if (Objects.nonNull(selectedSupplier)) {
-                    if (menuItem.getId().equals("viewItemMenu"))
-                        displayRowView(null, selectedItem);
+                    if (menuItem.getId().equals("viewSupplierMenu"))
+                        displayRowView(null, selectedSupplier);
                     else
-                        deleteRow(selectedItem);
+                        deleteRow(selectedSupplier);
                 }
             }
             else
@@ -369,13 +434,20 @@ Supplier prima cosa si effettua la modifica dei dati aziendali e di contatto
 
     }
 
-    public void handleMouseEvent(Item selectedItem) {
-        displayRowView(null, selectedItem);
+    public void handleMouseEvent(Supplier selectedSupplier) {
+        displayRowView(null, selectedSupplier);
     }
 
     public void setSearchView(boolean searchView) {
         this.searchView = searchView;
     }
 
-     */
+    public void createConfirmedModifyAlert() {
+        HotelSupplyManagementMain.generateAlert(Alert.AlertType.INFORMATION, "Avviso", "Modifica fornitore", "Modifica del fornitore effettuata con successo");
+    }
+
+    public Supplier getDisplayedSupplier() {
+        return displayedSupplier;
+    }
+
 }

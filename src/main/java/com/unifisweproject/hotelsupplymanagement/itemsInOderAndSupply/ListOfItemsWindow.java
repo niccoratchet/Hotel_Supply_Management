@@ -8,10 +8,9 @@ package com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply;
 
 import com.unifisweproject.hotelsupplymanagement.item.Item;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.main.MainMenuWindowController;
 import com.unifisweproject.hotelsupplymanagement.order.OrderManagementController;
-import com.unifisweproject.hotelsupplymanagement.supply.SuppliesManagementWindowController;
-import com.unifisweproject.hotelsupplymanagement.supply.SupplyAddWindowController;
+import com.unifisweproject.hotelsupplymanagement.supply.SupplyManagementController;
+import com.unifisweproject.hotelsupplymanagement.supply.SupplyAddWindow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,7 +26,6 @@ import java.util.ResourceBundle;
 
 public class ListOfItemsWindow implements Initializable {
 
-    private SupplyAddWindowController supplyAddWindowController = null;
     @FXML
     private TableView<Item> itemTableView;
     @FXML
@@ -51,13 +49,13 @@ public class ListOfItemsWindow implements Initializable {
     @FXML
     private ObservableList<Item> itemList = FXCollections.observableArrayList();
     private OrderManagementController orderController = null;
-    private SuppliesManagementWindowController supplyController = null;
+    private SupplyManagementController supplyController = null;
 
     public ListOfItemsWindow(OrderManagementController orderController) {
         this.orderController = orderController;
     }
 
-    public ListOfItemsWindow(SuppliesManagementWindowController supplyController) {
+    public ListOfItemsWindow(SupplyManagementController supplyController) {
         this.supplyController = supplyController;
     }
 
@@ -81,7 +79,13 @@ public class ListOfItemsWindow implements Initializable {
     }
 
     public void addItem(ActionEvent event) {
-        orderController.addItemToOrder(event);
+
+        if (supplyController != null) {
+            supplyController.addItemToSupply(event);
+        }
+        else
+            orderController.addItemToOrder(event);
+
     }
 
     public void setCellValueFactory() {
@@ -95,7 +99,7 @@ public class ListOfItemsWindow implements Initializable {
     public void setTextFieldListeners() {
 
         quantityField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (supplyAddWindowController != null) {
+            if (supplyController != null) {
                 addButton.setDisable(quantityField.getText().isEmpty() || priceField.getText().isEmpty());
             }
             else {
@@ -113,7 +117,7 @@ public class ListOfItemsWindow implements Initializable {
                 quantityField.setVisible(true);
                 quantityLabel.setVisible(true);
                 quantityField.setDisable(false);
-                if (supplyAddWindowController != null) {
+                if (supplyController != null) {
                     priceLabel.setVisible(true);
                     priceField.setVisible(true);
                     priceField.setDisable(false);
@@ -123,7 +127,7 @@ public class ListOfItemsWindow implements Initializable {
                 quantityField.setVisible(false);
                 quantityLabel.setVisible(false);
                 quantityField.setDisable(true);
-                if (supplyAddWindowController != null) {
+                if (supplyController != null) {
                     priceLabel.setVisible(false);
                     priceField.setVisible(false);
                     priceField.setDisable(true);
@@ -141,20 +145,16 @@ public class ListOfItemsWindow implements Initializable {
 
     }
 
-    public void setAddSupplyViewController(SupplyAddWindowController supplyAddWindowController) {
-        this.supplyAddWindowController = supplyAddWindowController;
-    }
-
     public TableView<Item> getItemTableView() {
         return itemTableView;
     }
 
-    public ObservableList<Item> getItemList() {
-        return itemList;
-    }
-
     public TextField getQuantityField() {
         return quantityField;
+    }
+
+    public TextField getPriceField() {
+        return priceField;
     }
 
 }

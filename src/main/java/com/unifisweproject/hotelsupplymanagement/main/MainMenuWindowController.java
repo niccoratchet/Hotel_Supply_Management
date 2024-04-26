@@ -4,7 +4,8 @@ import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
 import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementController;
 import com.unifisweproject.hotelsupplymanagement.item.ItemManagementController;
 import com.unifisweproject.hotelsupplymanagement.order.OrderManagementController;
-import com.unifisweproject.hotelsupplymanagement.supply.SuppliesManagementWindowController;
+import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagementController;
+import com.unifisweproject.hotelsupplymanagement.supply.SupplyManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -53,7 +54,7 @@ public class MainMenuWindowController implements Initializable {
         openListOfCustomersButton.setOnAction(this::openCustomerManagementView);
         openListOfOrdersButton.setOnAction(this::openOrderManagementView);
         openListOfSuppliersButton.setOnAction(this::openSupplierManagementView);
-        openListOfSuppliesButton.setOnAction(this::openSuppliesManagement);
+        openListOfSuppliesButton.setOnAction(this::openSupplyManagement);
         openCreditsButton.setOnAction(event -> openCredits());
 
     }
@@ -79,32 +80,17 @@ public class MainMenuWindowController implements Initializable {
 
     }
 
-    public void openSupplierManagementView(ActionEvent event) {         // Metodo per l'apertura della finestra di gestione dei fornitori
+    public void openSupplierManagementView(ActionEvent event) {
 
-
-        /*try {
-            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/supplier/SupplierManagementWindow.fxml"),
-                    SupplierManagementController.getInstance(), "Gestione Fornitori", false, stage);
-            verifyIsMenuButton(event);
-        }
-        catch (IOException e) {
-            System.err.println("Non è stato possibile caricare la pagina SupplierManagementWindow.fxml: " + e.getMessage());
-        }
-
-         */
+        SupplierManagementController supplierManagementController = SupplierManagementController.getInstance();
+        supplierManagementController.displayView(event);
 
     }
 
-    public void openSuppliesManagement(ActionEvent event) {
+    public void openSupplyManagement(ActionEvent event) {
 
-        try {
-            FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/supply/SuppliesManagementWindow.fxml"),
-                    SuppliesManagementWindowController.getInstance() ,"Gestione Forniture", false, stage);
-            verifyIsMenuButton(event);
-        }
-        catch (IOException e) {
-            System.err.println("Non è stato possibile caricare la pagina SuppliesManagementWindow.fxml: " + e.getMessage());
-        }
+        SupplyManagementController supplyManagementController = SupplyManagementController.getInstance();
+        supplyManagementController.displayView(event);
 
     }
 
@@ -127,7 +113,7 @@ public class MainMenuWindowController implements Initializable {
         switch (sectionName) {
             case "Articoli in magazzino" -> openItemManagementView(event);
             case "Lista fornitori" -> openSupplierManagementView(event);
-            case "Storico forniture" -> openSuppliesManagement(event);
+            case "Storico forniture" -> openSupplyManagement(event);
             case "Lista clienti" -> openCustomerManagementView(event);
             case "Storico ordini" -> openOrderManagementView(event);
             case "Apri menu principale" -> openMainMenuView();

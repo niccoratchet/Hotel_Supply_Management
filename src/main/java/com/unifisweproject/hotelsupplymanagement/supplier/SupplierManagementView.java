@@ -1,6 +1,5 @@
 package com.unifisweproject.hotelsupplymanagement.supplier;
 
-import com.unifisweproject.hotelsupplymanagement.item.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,17 +19,17 @@ public class SupplierManagementView implements Initializable {
     @FXML
     private TableColumn<Supplier, Integer> IDColumn;
     @FXML
-    private TableColumn<Supplier, String> BusinessNameColumn;
+    private TableColumn<Supplier, String> businessNameColumn;
     @FXML
-    private TableColumn<Supplier, String> PivaColumn;
+    private TableColumn<Supplier, String> PIVAColumn;
     @FXML
-    private TableColumn<Supplier, String> AddressColumn;
+    private TableColumn<Supplier, String> addressColumn;
     @FXML
-    private TableColumn<Supplier, String> CivicColumn;
+    private TableColumn<Supplier, String> civicNumberColumn;
     @FXML
-    private TableColumn<Supplier, String> CapColumn;
+    private TableColumn<Supplier, String> CAPColumn;
     @FXML
-    private TableColumn<Supplier, String> DateColumn;
+    private TableColumn<Supplier, String> dateColumn;
     @FXML
     private Button modifyButton;
     @FXML
@@ -44,8 +43,6 @@ public class SupplierManagementView implements Initializable {
     @FXML
     private AnchorPane tableAnchorPane;
     @FXML
-    private MenuItem supplierMenuItem;
-    @FXML
     private MenuItem itemMenuItem;
     @FXML
     private MenuItem orderMenuItem;
@@ -58,20 +55,19 @@ public class SupplierManagementView implements Initializable {
     private final MenuItem viewDeleteSupplierMenu = new MenuItem("Elimina");
     private final ObservableList<Supplier> supplierRows = FXCollections.observableArrayList();
     private long lastClickTime = 0;
-    //private final SupplierManagementController controller;
+    private final SupplierManagementController controller;
 
     public SupplierManagementView() {
-       // controller = SupplierManagementController.getInstance();
+        controller = SupplierManagementController.getInstance();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        //itemMenuItem.setOnAction(this::handleActionEvent);
-        //supplierMenuItem.setOnAction(this::handleActionEvent);
-        //orderMenuItem.setOnAction(this::handleActionEvent);
-        //supplyMenuItem.setOnAction(this::handleActionEvent);
-        //customerMenuItem.setOnAction(this::handleActionEvent);
+        itemMenuItem.setOnAction(this::handleActionEvent);
+        orderMenuItem.setOnAction(this::handleActionEvent);
+        supplyMenuItem.setOnAction(this::handleActionEvent);
+        customerMenuItem.setOnAction(this::handleActionEvent);
         addButton.setOnAction(this::handleActionEvent);
         searchButton.setOnAction(this::handleActionEvent);
         modifyButton.setOnAction(this::handleActionEvent);
@@ -91,7 +87,7 @@ public class SupplierManagementView implements Initializable {
         viewSupplierMenu.setOnAction(this::handleActionEvent);
         viewSupplierMenu.setId("viewSupplierMenu");
         viewDeleteSupplierMenu.setOnAction(this::handleActionEvent);
-        viewDeleteSupplierMenu.setId("viewDeleteItemMenu");
+        viewDeleteSupplierMenu.setId("viewDeleteSupplierMenu");
         supplierTable.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
                 rightClickMenu.hide();
@@ -99,7 +95,7 @@ public class SupplierManagementView implements Initializable {
                     long currentTime = System.currentTimeMillis();
                     if (currentTime - lastClickTime < 5000)
                     {
-                        //handleMouseEvent(itemTable.getSelectionModel().getSelectedItem());
+                        handleMouseEvent(supplierTable.getSelectionModel().getSelectedItem());
                     }
                     lastClickTime = currentTime;
                 }
@@ -156,29 +152,29 @@ public class SupplierManagementView implements Initializable {
 
     public void setCellValueFactory() {
 
-        IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_articolo"));
-        BusinessNameColumn.setCellValueFactory(new PropertyValueFactory<>("Ragione_sociale"));
-        PivaColumn.setCellValueFactory(new PropertyValueFactory<>("P_iva"));
-        AddressColumn.setCellValueFactory(new PropertyValueFactory<>("Indirizzo"));
-        CivicColumn.setCellValueFactory(new PropertyValueFactory<>("Descrizione"));
-        CapColumn.setCellValueFactory(new PropertyValueFactory<>("Cap"));
-        DateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_inserimento"));
+        IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_fornitore"));
+        businessNameColumn.setCellValueFactory(new PropertyValueFactory<>("Ragione_sociale"));
+        PIVAColumn.setCellValueFactory(new PropertyValueFactory<>("P_IVA"));
+        addressColumn.setCellValueFactory(new PropertyValueFactory<>("Indirizzo"));
+        civicNumberColumn.setCellValueFactory(new PropertyValueFactory<>("Civico"));
+        CAPColumn.setCellValueFactory(new PropertyValueFactory<>("CAP"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_inserimento"));
 
     }
 
     public void handleActionEvent(ActionEvent actionEvent) {
-        //controller.handleActionEvent(actionEvent);
+        controller.handleActionEvent(actionEvent);
     }
 
-    public void handleMouseEvent(Item selectedItem) {
-        //controller.handleMouseEvent(selectedItem);
+    public void handleMouseEvent(Supplier selectedSupplier) {
+        controller.handleMouseEvent(selectedSupplier);
     }
 
     public void exitSearch() {
 
         refreshButtons();
-        //controller.setSearchView(false);
-        //controller.updateTable();
+        controller.setSearchView(false);
+        controller.updateTable();
 
     }
 

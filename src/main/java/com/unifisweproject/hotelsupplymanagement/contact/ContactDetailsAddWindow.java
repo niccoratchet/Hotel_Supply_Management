@@ -2,7 +2,7 @@ package com.unifisweproject.hotelsupplymanagement.contact;
 
 import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementController;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierAddWindow;
+import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,14 +33,14 @@ public class ContactDetailsAddWindow implements Initializable {
     private TextField mailField;
     @FXML
     private Button confirmButton;
-    private SupplierAddWindow supplierController = null;
+    private SupplierManagementController supplierController = null;
     private CustomerManagementController customerController = null;
 
     public ContactDetailsAddWindow(CustomerManagementController customerController) {
         this.customerController = customerController;
     }
 
-    public ContactDetailsAddWindow(SupplierAddWindow supplierController) {
+    public ContactDetailsAddWindow(SupplierManagementController supplierController) {
         this.supplierController = supplierController;
     }
 
@@ -75,8 +75,8 @@ public class ContactDetailsAddWindow implements Initializable {
             }
             if (customerController != null)                                                                                          // Serve per capire quale finestra ha richiamato quella di aggiunta dei dettagli sul recapito
                 customerController.setContactDetails(addressField.getText(), CAPField.getText(), civicNumberField.getText());
-            //if (supplierController != null)
-                //supplierController.setContactDetails(addressField.getText(), CAPField.getText(), civicNumberField.getText());
+            if (supplierController != null)
+                supplierController.setContactDetails(addressField.getText(), CAPField.getText(), civicNumberField.getText());
             closeWindow(event);
         }
         catch (RuntimeException emptyFields) {

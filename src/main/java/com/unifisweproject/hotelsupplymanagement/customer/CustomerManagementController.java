@@ -336,7 +336,6 @@ public class CustomerManagementController {
 
     }
 
-
     public void searchRow(ActionEvent event) {
 
         Customer toBeSearched = getSearchFilters();
@@ -505,7 +504,7 @@ public class CustomerManagementController {
             }
         }
         else if (event.getSource() instanceof MenuItem menuItem) {
-            if (menuItem.getId().equals("viewCustomerMenu") || menuItem.getId().equals("viewDeleteCustomerMenu")) {     //TODO:Giusto tra i ""?
+            if (menuItem.getId().equals("viewCustomerMenu") || menuItem.getId().equals("viewDeleteCustomerMenu")) {
                 Customer selectedCustomer = customerManagementView.getCustomerTable().getSelectionModel().getSelectedItem();
                 if (Objects.nonNull(selectedCustomer)) {
                     if (menuItem.getId().equals("viewCustomerMenu"))

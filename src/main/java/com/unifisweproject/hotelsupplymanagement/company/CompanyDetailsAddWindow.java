@@ -2,7 +2,6 @@ package com.unifisweproject.hotelsupplymanagement.company;
 
 import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementController;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierAddWindow;
 import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -52,7 +51,7 @@ public class CompanyDetailsAddWindow implements Initializable {
                 if (customerController != null)
                     customerController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
                 if (supplierController != null)
-                    //supplierController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
+                    supplierController.setCompanyDetails(P_IVAField.getText(), ragioneSocialeField.getText());
                 closeWindow(event);
             }
             catch (RuntimeException emptyRagioneSociale) {

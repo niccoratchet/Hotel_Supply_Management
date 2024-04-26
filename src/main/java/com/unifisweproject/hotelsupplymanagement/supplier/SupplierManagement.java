@@ -54,12 +54,10 @@ public class SupplierManagement implements Data_Management {
     public void add(Object newSupplier) {
 
         Supplier toBeAdded = (Supplier) newSupplier;
-
+        toBeAdded.setCodice_fornitore(nextSupplierCode + 1);
         String addQuery = "INSERT INTO Fornitore (Data_Inserimento, P_IVA, Ragione_Sociale, Indirizzo, CAP, Civico) \n" +       // creazione della query di inserimento
                 "VALUES (?, ?, ?, ?, ?, ?)";
-
         try {
-
             PreparedStatement preparedStatement = HotelSupplyManagementMain.conn.prepareStatement(addQuery);
             preparedStatement.setString(1, toBeAdded.getData_inserimento());
             preparedStatement.setString(2, toBeAdded.getP_IVA());
@@ -70,11 +68,11 @@ public class SupplierManagement implements Data_Management {
             preparedStatement.executeUpdate();                                                          // una volta creata, si invia il comando al DBMS
             nextSupplierCode++;
             supplierList.add(toBeAdded);
-
         }
         catch (SQLException e) {
             System.out.println("Errore durante l'aggiunta del nuovo Supplier: "+ e.getMessage() +" \n Query utilizzata: " + addQuery);
         }
+
     }
 
     @Override
@@ -264,9 +262,12 @@ public class SupplierManagement implements Data_Management {
         try {
             PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement("DELETE FROM Fornitore WHERE Codice_Fornitore = " + ((Supplier) toBeDeleted).getCodice_fornitore());
             executeQuery(false, statement);
-        } catch (SQLException e) {
+            supplierList.remove(toBeDeleted);
+        }
+        catch (SQLException e) {
             System.err.println("Errore durante l'eliminazione della riga Item: " + e.getMessage());
         }
+
     }
 
     @Override
