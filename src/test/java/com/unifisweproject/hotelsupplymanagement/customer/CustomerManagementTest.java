@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import static com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain.conn;
 import static org.junit.jupiter.api.Assertions.*;
 
-class CustomerManagementTest {                  // TODO: Rendere unico il Management per tutti i test
+class CustomerManagementTest {
 
     Customer customerTest = new Customer(99, 10, "Giuseppe", "Verdi", "2024-04-09", "RSSMRA80A01H501A",
             "01234567890", "Ristorante Il Ritrovo", "Via Parigi", "50085", "3");

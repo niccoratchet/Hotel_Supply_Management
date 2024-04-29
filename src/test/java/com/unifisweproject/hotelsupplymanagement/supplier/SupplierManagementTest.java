@@ -30,7 +30,7 @@ public class SupplierManagementTest {
             Statement supplierStatement1 = conn.createStatement();
             supplierStatement1.executeUpdate(insertSupplierQuery);
             insertSupplierQuery = "INSERT INTO Fornitore (Codice_Fornitore, Data_Inserimento, P_IVA, Ragione_Sociale, Indirizzo, Civico, CAP) " +
-                    "VALUES (98, '2024-04-09', '12345678910', 'Bottega Veneta', 'Viale Caselli', '99', '50987')";
+                    "VALUES (98, '2024-04-09', '12345678910', 'Bottega Veneta', 'Viale Caselli', '98', '50987')";
             Statement supplierStatement2 = conn.createStatement();
             supplierStatement2.executeUpdate(insertSupplierQuery);
             insertSupplierQuery = "INSERT INTO Fornitore (Codice_Fornitore, Data_Inserimento, P_IVA, Ragione_Sociale, Indirizzo, Civico, CAP) " +
@@ -104,7 +104,7 @@ public class SupplierManagementTest {
     }
 
     @Test
-    void searchSupplier() {                         // FIXME: Errore 
+    void searchSupplier() {
 
         SupplierDataManagementModel supplierManagement = SupplierDataManagementModel.getInstance();
         Supplier toBeSearch = new Supplier("2024-04-09",

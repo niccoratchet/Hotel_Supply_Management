@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.supply;
 
+import com.unifisweproject.hotelsupplymanagement.DataManagementController;
 import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
 import com.unifisweproject.hotelsupplymanagement.item.Item;
 import com.unifisweproject.hotelsupplymanagement.item.ItemDataManagementModel;
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class SupplyManagementController {
+public class SupplyDataManagementController implements DataManagementController {
 
     private static final SupplyDataManagementController instance = new SupplyDataManagementController();        // Singleton per la finestra di gestione delle forniture
 
@@ -48,6 +49,7 @@ public class SupplyManagementController {
         return instance;
     }
 
+    @Override
     public void initializeRows()  {
 
         if(!mainMenuWindowController.getIsNotFirstTimeLoad().get(4)) {
@@ -157,6 +159,7 @@ public class SupplyManagementController {
 
     }
 
+    @Override
     public void updateTable() {
 
         ObservableList<Supply> supplyRows;
@@ -191,6 +194,7 @@ public class SupplyManagementController {
 
     }
 
+    @Override
     public void deleteRow(Object toBeDeleted) {
 
         if (HotelSupplyManagementMain.displayConfirmationAlert("Attenzione","Rimozione fornitura", "Sicuro di procedere con l'eliminazione della fornitura dalla banca dati?")) {
@@ -203,6 +207,7 @@ public class SupplyManagementController {
 
     }
 
+    @Override
     public void searchRow(ActionEvent event) {
 
         Supply toBeSearched = getSearchFilters();
@@ -272,6 +277,7 @@ public class SupplyManagementController {
 
     }
 
+    @Override
     public void openDifferentManagement(ActionEvent event) {
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -280,6 +286,7 @@ public class SupplyManagementController {
 
     }
 
+    @Override
     public void displayView(ActionEvent event) {
 
         try {
@@ -296,6 +303,7 @@ public class SupplyManagementController {
 
     }
 
+    @Override
     public void displayRowView(ActionEvent event, Object toBeDisplayed) {
 
         try {
@@ -309,6 +317,7 @@ public class SupplyManagementController {
 
     }
 
+    @Override
     public void displaySearchView(ActionEvent event) {
 
         try {
@@ -322,6 +331,7 @@ public class SupplyManagementController {
 
     }
 
+    @Override
     public void displayAddView() {
 
         try {
@@ -351,6 +361,7 @@ public class SupplyManagementController {
 
     }
 
+    @Override
     public void handleActionEvent(ActionEvent event) {
 
         if (event.getSource() instanceof Button button) {
@@ -389,6 +400,7 @@ public class SupplyManagementController {
         displayRowView(null, selectedSupply);
     }
 
+    @Override
     public void setSearchView(boolean searchView) {
         this.searchView = searchView;
     }
