@@ -43,10 +43,10 @@ public class OrderAddWindow implements Initializable {
     @FXML
     private Button addItemButton;
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
-    private final OrderManagementController controller;
+    private final OrderDataManagementController controller;
 
     public OrderAddWindow() {
-        controller = OrderManagementController.getInstance();
+        controller = OrderDataManagementController.getInstance();
     }
 
     @Override

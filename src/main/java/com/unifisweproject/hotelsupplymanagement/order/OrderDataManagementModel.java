@@ -1,25 +1,25 @@
 package com.unifisweproject.hotelsupplymanagement.order;
 
-import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagement;
-import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
+import com.unifisweproject.hotelsupplymanagement.customer.CustomerDataManagementModel;
+import com.unifisweproject.hotelsupplymanagement.data.DataManagementModel;
 import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ItemsInOrderManagement;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class OrderManagement implements Data_Management {
+public class OrderDataManagementModel implements DataManagementModel {
 
-    private static final OrderManagement instance = new OrderManagement();        // Singleton
+    private static final OrderDataManagementModel instance = new OrderDataManagementModel();        // Singleton
     private int nextOrderCode;               // Tiene traccia del codice dell'ultimo Ordine nel DB
     private final ArrayList<Order> orderList = new ArrayList<>();
-    private final CustomerManagement customerManagement = CustomerManagement.getInstance();
+    private final CustomerDataManagementModel customerManagement = CustomerDataManagementModel.getInstance();
 
-    private OrderManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
+    private OrderDataManagementModel() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
         nextOrderCode = getLastOrderCode();
     }
 
-    public static OrderManagement getInstance() {
+    public static OrderDataManagementModel getInstance() {
         return instance;
     }
 

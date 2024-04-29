@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.supply;
 
+import com.unifisweproject.hotelsupplymanagement.DataManagementView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,7 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class SupplyManagementView implements Initializable {
+public class SupplyDataManagementView implements Initializable, DataManagementView {
 
     @FXML
     private TableView<Supply> supplyTable;
@@ -54,14 +55,19 @@ public class SupplyManagementView implements Initializable {
     private final MenuItem viewSupplyMenu = new MenuItem("Visualizza dettagli");
     private final MenuItem viewDeleteSupplyMenu = new MenuItem("Elimina");
     private long lastClickTime = 0;
-    private final SupplyManagementController controller;
+    private final SupplyDataManagementController controller;
 
-    public SupplyManagementView() {
-        controller = SupplyManagementController.getInstance();
+    public SupplyDataManagementView() {
+        controller = SupplyDataManagementController.getInstance();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initializeView();
+    }
+
+    @Override
+    public void initializeView() {
 
         addButton.setOnAction(this::handleActionEvent);
         deleteButton.setOnAction(this::handleActionEvent);
@@ -100,7 +106,7 @@ public class SupplyManagementView implements Initializable {
 
     }
 
-
+    @Override
     public void setCellValueFactory() {
 
         supplyColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_fornitura"));
@@ -121,7 +127,7 @@ public class SupplyManagementView implements Initializable {
 
     }
 
-
+    @Override
     public void refreshButtons() {
 
         addButton.setDisable(false);                // Riattivo bottone di aggiunta
@@ -133,6 +139,7 @@ public class SupplyManagementView implements Initializable {
 
     }
 
+    @Override
     public void enableBackButton() {
 
         backButton.setDisable(false);
@@ -144,6 +151,7 @@ public class SupplyManagementView implements Initializable {
 
     }
 
+    @Override
     public void exitSearch() {
 
         refreshButtons();
@@ -152,12 +160,14 @@ public class SupplyManagementView implements Initializable {
 
     }
 
+    @Override
     public void handleActionEvent(ActionEvent actionEvent) {
         controller.handleActionEvent(actionEvent);
     }
 
-    public void handleMouseEvent(Supply selectedSupply) {
-        controller.handleMouseEvent(selectedSupply);
+    @Override
+    public void handleMouseEvent(Object selectedSupply) {
+        controller.handleMouseEvent((Supply) selectedSupply);
     }
 
     public TableView<Supply> getSupplyTable() {

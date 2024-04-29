@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.order;
 
+import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ItemsInOrderManagement;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,8 +13,7 @@ import static com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManageme
 
 public class OrderManagementTest {
 
-    static OrderManagement orderManagement;
-    static OrderAddWindow orderAddWindow;
+    static OrderDataManagementModel orderManagement;
 
     @BeforeAll
     static void setUp() {
@@ -48,7 +48,7 @@ public class OrderManagementTest {
     @Test
     void testAddOrder() {
 
-        orderManagement = OrderManagement.getInstance();
+        orderManagement = OrderDataManagementModel.getInstance();
         orderManagement.add(new Order(50, true, "Rimessa Diretta", "2024-04-09"));
         String query = "SELECT * FROM Ordine WHERE Codice_Cliente = 50 AND BF = '1' AND Data_Ordine = '2024-04-09' AND " +
                 "Tipo_Pagamento = 'Rimessa Diretta'";
@@ -75,15 +75,14 @@ public class OrderManagementTest {
     @Test
     void testAddItemsInOrder() {
 
-         orderAddWindow = new OrderAddWindow();
-        orderAddWindow.getItemInOrder().setCodice_Ordine(15);                     // Queste 3 istruzioni servono per impostare i dati dell'ordine nell'oggetto ItemsInOrderManagement che contiene la lista degli articoli ordinati
-        orderAddWindow.getItemInOrder().addCodice_Articolo(50);
-        orderAddWindow.getItemInOrder().addQuantita(1);
-
-        orderAddWindow.getItemInOrder().addCodice_Articolo(35);
-        orderAddWindow.getItemInOrder().addQuantita(5);
-
-        orderAddWindow.updateItemInOrder();                       // Metodo che effettua la query per aggiungere le righe per un singolo ordine in ArticoloInOrdine
+        OrderDataManagementController orderController = OrderDataManagementController.getInstance();
+        orderController.setItemsInOrderManagement(new ItemsInOrderManagement());
+        orderController.getItemsInOrderManagement().setCodice_Ordine(15);                     // Queste 3 istruzioni servono per impostare i dati dell'ordine nell'oggetto ItemsInOrderManagement che contiene la lista degli articoli ordinati
+        orderController.getItemsInOrderManagement().addCodice_Articolo(50);
+        orderController.getItemsInOrderManagement().addQuantita(1);
+        orderController.getItemsInOrderManagement().addCodice_Articolo(35);
+        orderController.getItemsInOrderManagement().addQuantita(5);
+        orderController.getItemsInOrderManagement().insertItemInOrderRow();                       // Metodo che effettua la query per aggiungere le righe per un singolo ordine in ArticoloInOrdine
         String query = "SELECT * FROM ArticoloInOrdine WHERE Codice_Ordine = 15 AND Codice_Articolo = 50 AND Quantita = 1";
         try {
             Statement statement = conn.createStatement();
@@ -121,8 +120,8 @@ public class OrderManagementTest {
     @Test
     void testDeleteOrder() {
 
-        orderManagement = OrderManagement.getInstance();
-        orderManagement.delete(99);
+        orderManagement = OrderDataManagementModel.getInstance();
+        orderManagement.delete(new Order(99, 50, true, "Bonifico Bancario", "2024-04-09"));
         String query = "SELECT * FROM Ordine WHERE Codice_Ordine = 99";
         try {
             Statement statement = conn.createStatement();
@@ -142,12 +141,10 @@ public class OrderManagementTest {
     @Test
     void testSearchOrder() {
 
-        orderManagement = OrderManagement.getInstance();
-        Order order = new Order(15, 50, true, "Bonifico Bancario", "2024-04-09");
+        orderManagement = OrderDataManagementModel.getInstance();
+        Order order = new Order( 50, true, "Bonifico Bancario", "2024-04-09");
         orderManagement.add(order);
-        orderManagement.getOrderList().add(order);
         Order orderToTest = (Order) orderManagement.search(order).get(0);
-        assertEquals(15, orderToTest.getCodice_ordine());
         assertEquals(50, orderToTest.getCodice_cliente());
         assertTrue(orderToTest.isBolla());
         assertEquals("Bonifico Bancario", orderToTest.getTipo_pagamento());

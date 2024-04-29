@@ -25,10 +25,10 @@ public class SupplySearchWindow implements Initializable {
     private CheckBox enableDateSearch;
     @FXML
     private Button confirmButton;
-    private final SupplyManagementController controller;
+    private final SupplyDataManagementController controller;
 
     public SupplySearchWindow() {
-        controller = SupplyManagementController.getInstance();
+        controller = SupplyDataManagementController.getInstance();
     }
 
     @Override

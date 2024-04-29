@@ -18,7 +18,7 @@ public class ItemManagementTest {
     static String insertItemQuery2 = "INSERT INTO Articolo (Codice_Articolo, Nome, Prezzo, Quantita, Descrizione, Data_Inserimento)"
             + " VALUES (98, 'Bicchiere', 2.00, 50, 'Bicchiere in vetro', '2024-04-09')";
     static Item testItem2 = new Item(98, 50, 2.00, "Bicchiere", "Bicchiere in vetro", "2024-04-09");
-    static ItemManagement itemManagement;
+    static ItemDataManagementModel itemManagement;
 
     @BeforeAll
     static void setUp() {                   // Codice di set-up per la connessione al DB e l'inserimento di un articolo di test
@@ -26,7 +26,7 @@ public class ItemManagementTest {
         String url = "jdbc:sqlite:src/test/DBTest.db";
         try {
             HotelSupplyManagementMain.connectToDB(url);
-            itemManagement = ItemManagement.getInstance();
+            itemManagement = ItemDataManagementModel.getInstance();
             itemManagement.getItemList().add(testItem1);
             itemManagement.getItemList().add(testItem2);
         }
@@ -46,7 +46,7 @@ public class ItemManagementTest {
     }
 
     @Test
-    void testAddItem() {                // Test per il metodo addItem in ItemManagement: effettuo l'aggiunta di un articolo e successivamente verifico che i dati siano stati inseriti correttamente
+    void testAddItem() {                // Test per il metodo addItem in ItemDataManagementModel: effettuo l'aggiunta di un articolo e successivamente verifico che i dati siano stati inseriti correttamente
 
         Item newItem = new Item(200, 0.50, "Bicchiere", "Bicchiere in vetro", "2024-04-09");
         itemManagement.add(newItem);
@@ -73,7 +73,7 @@ public class ItemManagementTest {
     }
 
     @Test
-    void testModifyItem() {         // Test per il metodo modifyItem in ItemManagement: effettuo la modifica di un articolo e successivamente verifico che i dati siano stati modificati correttamente
+    void testModifyItem() {         // Test per il metodo modifyItem in ItemDataManagementModel: effettuo la modifica di un articolo e successivamente verifico che i dati siano stati modificati correttamente
 
         testItem1.setNome("Piatto fondo");
         testItem1.setPrezzo(2.50);
@@ -99,7 +99,7 @@ public class ItemManagementTest {
     }
 
     @Test
-    void testSearchItem() {             // Test per il metodo search in ItemManagement: effettuo una ricerca di un articolo e verifico che il risultato sia corretto
+    void testSearchItem() {             // Test per il metodo search in ItemDataManagementModel: effettuo una ricerca di un articolo e verifico che il risultato sia corretto
 
         Item toBeSearched = new Item(-1, -1, -1, "Bicchiere", null, "2024-04-09");
         ArrayList<Object> searchResults = itemManagement.search(toBeSearched);

@@ -40,13 +40,13 @@ public class OrderDisplayWindow implements Initializable {
     @FXML
     private Button backButton;
     private final Order displayedOrder;
-    private final OrderManagementController controller;
+    private final OrderDataManagementController controller;
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
 
     public OrderDisplayWindow(Order displayedOrder) {
 
         this.displayedOrder = displayedOrder;
-        controller = OrderManagementController.getInstance();
+        controller = OrderDataManagementController.getInstance();
 
     }
 

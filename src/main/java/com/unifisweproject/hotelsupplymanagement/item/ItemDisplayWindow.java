@@ -31,10 +31,10 @@ public class ItemDisplayWindow implements Initializable {
     @FXML
     private Button backButton;
     private final Item displayedItem;
-    private final ItemManagementController controller;
+    private final ItemDataManagementController controller;
 
     public ItemDisplayWindow(Item displayedItem) {
-        this.controller = ItemManagementController.getInstance();
+        this.controller = ItemDataManagementController.getInstance();
         this.displayedItem = displayedItem;
     }
 

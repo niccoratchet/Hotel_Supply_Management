@@ -30,10 +30,10 @@ public class OrderSearchWindow implements Initializable {
     private CheckBox enableCustomerSearch;
     @FXML
     private Button confirmButton;
-    private final OrderManagementController controller;
+    private final OrderDataManagementController controller;
 
     public OrderSearchWindow() {
-        controller = OrderManagementController.getInstance();
+        controller = OrderDataManagementController.getInstance();
     }
 
     @Override

@@ -25,9 +25,9 @@ public class SupplierAddWindow implements Initializable {
     private Button addButton;
     @FXML
     private Button backButton;
-    private final SupplierManagementController controller;
+    private final SupplierDataManagementController controller;
 
-    public SupplierAddWindow() { this.controller = SupplierManagementController.getInstance(); }
+    public SupplierAddWindow() { this.controller = SupplierDataManagementController.getInstance(); }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

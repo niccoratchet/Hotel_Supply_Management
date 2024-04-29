@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.supplier;
 
+import com.unifisweproject.hotelsupplymanagement.DataManagementController;
 import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
 import com.unifisweproject.hotelsupplymanagement.company.CompanyDetailsAddWindow;
 import com.unifisweproject.hotelsupplymanagement.company.CompanyDetailsManagement;
@@ -24,14 +25,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class SupplierManagementController {
+public class SupplierDataManagementController implements DataManagementController {
 
-    private static SupplierManagementController instance = null;
+    private static SupplierDataManagementController instance = null;
     private boolean searchView = false;
     private final MainMenuWindowController mainMenuWindowController;
-    private final SupplierManagement supplierManagement;
+    private final SupplierDataManagementModel supplierManagement;
     private ArrayList<Supplier> results = new ArrayList<>();
-    private SupplierManagementView supplierManagementView;
+    private SupplierDataManagementView supplierManagementView;
     private SupplierAddWindow supplierAddWindow;
     private SupplierDisplayWindow supplierDisplayWindow;
     private SupplierSearchWindow supplierSearchWindow;
@@ -43,22 +44,23 @@ public class SupplierManagementController {
     private Supplier displayedSupplier = null;
     private boolean isBadFormatted = false;
 
-    private SupplierManagementController() {// Costruttore privato per evitare la creazione di nuove istanze (SingleTon)
+    private SupplierDataManagementController() {// Costruttore privato per evitare la creazione di nuove istanze (SingleTon)
 
         mainMenuWindowController = MainMenuWindowController.getInstance();
-        supplierManagement = SupplierManagement.getInstance();
+        supplierManagement = SupplierDataManagementModel.getInstance();
 
     }
 
-    public static SupplierManagementController getInstance() {          // Metodo per ottenere l'istanza della classe (SingleTon)
+    public static SupplierDataManagementController getInstance() {          // Metodo per ottenere l'istanza della classe (SingleTon)
 
         if (instance == null) {
-            instance = new SupplierManagementController();
+            instance = new SupplierDataManagementController();
         }
         return instance;
 
     }
 
+    @Override
     public void initializeRows()  {
 
         if (!mainMenuWindowController.getIsNotFirstTimeLoad().get(2)) {
@@ -75,6 +77,7 @@ public class SupplierManagementController {
 
     }
 
+    @Override
     public void createRow(ActionEvent event)  {
 
         LocalDate date = supplierAddWindow.getDatePicker().getValue();
@@ -163,8 +166,10 @@ public class SupplierManagementController {
 
     }
 
-    public void deleteRow(Supplier selectedSupplier) {
+    @Override
+    public void deleteRow(Object toBeDeleted) {
 
+        Supplier selectedSupplier = (Supplier) toBeDeleted;
         if (HotelSupplyManagementMain.displayConfirmationAlert("Attenzione", "Rimozione fornitore", "Sicuro di procedere con l'eliminazione del fornitore dalla banca dati?")) {
             supplierManagement.delete(selectedSupplier);
             if (searchView)
@@ -241,6 +246,7 @@ public class SupplierManagementController {
 
     }
 
+    @Override
     public void searchRow(ActionEvent event) {
 
         Supplier toBeSearched = getSearchFilters();
@@ -271,6 +277,7 @@ public class SupplierManagementController {
 
     }
 
+    @Override
     public void updateTable() {
 
         if(searchView) {
@@ -284,10 +291,11 @@ public class SupplierManagementController {
 
     }
 
+    @Override
     public void displayView(ActionEvent event) {            // Metodo per visualizzare la finestra di gestione degli articoli
 
         try {
-            supplierManagementView = new SupplierManagementView();                                                                                                                                            // Apertura della finestra di gestione degli Item
+            supplierManagementView = new SupplierDataManagementView();                                                                                                                                            // Apertura della finestra di gestione degli Item
             FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/supplier/SupplierManagementWindow.fxml"),
                     supplierManagementView, true, event, "Gestione fornitori", false);
         }
@@ -298,6 +306,7 @@ public class SupplierManagementController {
 
     }
 
+    @Override
     public void displaySearchView(ActionEvent event) {
 
         try {
@@ -311,6 +320,7 @@ public class SupplierManagementController {
 
     }
 
+    @Override
     public void displayAddView() {
 
         try {
@@ -324,8 +334,9 @@ public class SupplierManagementController {
 
     }
 
-    public void displayRowView(ActionEvent event, Supplier selectedSupplier) {
+    public void displayRowView(ActionEvent event, Object toBeDisplayed) {
 
+        Supplier selectedSupplier = (Supplier) toBeDisplayed;
         try {
             this.displayedSupplier = selectedSupplier;
             setContactDetails(selectedSupplier.getIndirizzo(), selectedSupplier.getCAP(), selectedSupplier.getCivico());
@@ -391,6 +402,7 @@ public class SupplierManagementController {
 
     }
 
+    @Override
     public void openDifferentManagement(ActionEvent event) {
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -399,6 +411,7 @@ public class SupplierManagementController {
 
     }
 
+    @Override
     public void handleActionEvent(ActionEvent event) {
 
         if (event.getSource() instanceof Button button) {
@@ -438,6 +451,7 @@ public class SupplierManagementController {
         displayRowView(null, selectedSupplier);
     }
 
+    @Override
     public void setSearchView(boolean searchView) {
         this.searchView = searchView;
     }

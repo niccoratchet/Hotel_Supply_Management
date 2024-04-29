@@ -49,7 +49,7 @@ class CustomerManagementTest {                  // TODO: Rendere unico il Manage
     @Test
     void testAddCustomer() {                // Test per il metodo addCustomer in CustomManagement: effettuo l'aggiunta di un cliente e successivamente verifico che i dati siano stati inseriti correttamente
 
-        CustomerManagement customerManagement = CustomerManagement.getInstance();
+        CustomerDataManagementModel customerManagement = CustomerDataManagementModel.getInstance();
         customerManagement.add(new Customer(10, "Mario", "Rossi", "2024-04-09", "RSSMRA80A01H501A",
                 "01234567890", "Rossi Mario", "Via Roma", "00100", "1"));
         String query = "SELECT * FROM Cliente WHERE Nome = 'Mario' AND Cognome = 'Rossi' AND Data_Inserimento = '2024-04-09' AND " +
@@ -80,10 +80,10 @@ class CustomerManagementTest {                  // TODO: Rendere unico il Manage
     }
 
     @Test
-    void testModifyCustomer() {                 // Test per il metodo modifyCustomer in CustomerManagement: il test si basa sulla modifica dell'indirizzo di un cliente e sulla successiva verifica della modifica effettuando una query al DB
+    void testModifyCustomer() {                 // Test per il metodo modifyCustomer in CustomerDataManagementModel: il test si basa sulla modifica dell'indirizzo di un cliente e sulla successiva verifica della modifica effettuando una query al DB
 
         customerTest.setIndirizzo(modifyString);
-        CustomerManagement customerManagement = CustomerManagement.getInstance();
+        CustomerDataManagementModel customerManagement = CustomerDataManagementModel.getInstance();
         customerManagement.modify(customerTest);
         String verificationQuery = "SELECT * FROM Cliente WHERE Codice_Cliente = 99";
         try {
@@ -103,18 +103,17 @@ class CustomerManagementTest {                  // TODO: Rendere unico il Manage
     void testSearchCustomer() {
 
         Customer toBeSearched = new Customer(-1, -1, "Giuseppe", "Verdi", null, null, null, null, null, null, null);
-        CustomerManagement customerManagement = CustomerManagement.getInstance();
+        CustomerDataManagementModel customerManagement = CustomerDataManagementModel.getInstance();
         customerManagement.add(customerTest);
-        customerManagement.getCustomerList().add(customerTest);
         ArrayList<Object> searchResults = customerManagement.search(toBeSearched);
         assertEquals(1, searchResults.size());
 
     }
 
     @Test
-    void testDeleteCustomer() {                 // Test per il metodo deleteCustomer in CustomerManagement: il test si basa sulla cancellazione di un cliente e sulla successiva verifica della cancellazione effettuando una query al DB
+    void testDeleteCustomer() {                 // Test per il metodo deleteCustomer in CustomerDataManagementModel: il test si basa sulla cancellazione di un cliente e sulla successiva verifica della cancellazione effettuando una query al DB
 
-        CustomerManagement customerManagement = CustomerManagement.getInstance();
+        CustomerDataManagementModel customerManagement = CustomerDataManagementModel.getInstance();
         String insertCustomerQuery = "INSERT INTO Cliente (Codice_Cliente, Data_Inserimento, Sconto, Nome, Cognome, Codice_Fiscale, P_IVA, Ragione_Sociale, Indirizzo, Civico, CAP) " +
                 "VALUES (102, '2024-04-09', 10, 'Giuseppe', 'Verdi', 'RSSMRA80A01H501A', '01234567890', 'Ristorante Il Ritrovo', 'Via Parigi', '3', '50085')";
         try {
@@ -125,7 +124,7 @@ class CustomerManagementTest {                  // TODO: Rendere unico il Manage
             fail("Errore durante la creazione dello Statement: " + e.getMessage());
             return;
         }
-        customerManagement.delete(100);
+        customerManagement.delete(new Customer(100, -1, null, null, null, null, null, null, null, null, null));
         String searchQuery = "SELECT * FROM Cliente WHERE Codice_Cliente = 100";
         try {
             Statement statement = conn.createStatement();

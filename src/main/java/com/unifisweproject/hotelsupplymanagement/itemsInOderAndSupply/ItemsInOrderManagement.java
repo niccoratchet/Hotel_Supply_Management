@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /**
- * Questa classe gestisce la tabella del DB ArticoloInOrdine e aiuta OrderManagement a gestire gli item in un ordine
+ * Questa classe gestisce la tabella del DB ArticoloInOrdine e aiuta OrderDataManagementModel a gestire gli item in un ordine
  */
 
 public class ItemsInOrderManagement {

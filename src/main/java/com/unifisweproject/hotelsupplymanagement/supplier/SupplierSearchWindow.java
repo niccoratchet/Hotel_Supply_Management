@@ -41,10 +41,10 @@ public class SupplierSearchWindow implements Initializable {
     private Button confirmButton;
     @FXML
     private Button backButton;
-    private final SupplierManagementController controller;
+    private final SupplierDataManagementController controller;
 
     public SupplierSearchWindow() {
-        this.controller = SupplierManagementController.getInstance();
+        this.controller = SupplierDataManagementController.getInstance();
     }
 
     @Override

@@ -36,10 +36,10 @@ public class CustomerAddWindow implements Initializable {
     @FXML
     private Button backButton;
 
-    private final CustomerManagementController controller;
+    private final CustomerDataManagementController controller;
 
     public CustomerAddWindow() {
-        this.controller = CustomerManagementController.getInstance();
+        this.controller = CustomerDataManagementController.getInstance();
     }
 
     @Override

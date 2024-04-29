@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.order;
 
+import com.unifisweproject.hotelsupplymanagement.DataManagementView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,7 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class OrderManagementView implements Initializable {
+public class OrderDataManagementView implements Initializable, DataManagementView {
 
     @FXML
     private TableView<Order> orderTable;
@@ -50,14 +51,19 @@ public class OrderManagementView implements Initializable {
     private final MenuItem viewOrderMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteOrderMenu = new MenuItem("Elimina");
     private long lastClickTime = 0;
-    private final OrderManagementController controller;
+    private final OrderDataManagementController controller;
 
-    public OrderManagementView() {
-        controller = OrderManagementController.getInstance();
+    public OrderDataManagementView() {
+        controller = OrderDataManagementController.getInstance();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initializeView();
+    }
+
+    @Override
+    public void initializeView() {
 
         itemMenuItem.setOnAction(this::handleActionEvent);
         supplierMenuItem.setOnAction(this::handleActionEvent);
@@ -93,8 +99,10 @@ public class OrderManagementView implements Initializable {
                     rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY()); // Mostra il menu contestuale alle coordinate del click
             }
         });
+
     }
 
+    @Override
     public void setCellValueFactory() {
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_ordine"));
@@ -112,6 +120,7 @@ public class OrderManagementView implements Initializable {
 
     }
 
+    @Override
     public void refreshButtons() {
 
         addButton.setDisable(false);                // Riattivo bottone di aggiunta
@@ -123,6 +132,7 @@ public class OrderManagementView implements Initializable {
 
     }
 
+    @Override
     public void enableBackButton() {
 
         backButton.setDisable(false);
@@ -134,6 +144,7 @@ public class OrderManagementView implements Initializable {
 
     }
 
+    @Override
     public void exitSearch() {
 
         refreshButtons();
@@ -142,12 +153,14 @@ public class OrderManagementView implements Initializable {
 
     }
 
+    @Override
     public void handleActionEvent(ActionEvent actionEvent) {
         controller.handleActionEvent(actionEvent);
     }
 
-    public void handleMouseEvent(Order selectedOrder) {
-        controller.handleMouseEvent(selectedOrder);
+    @Override
+    public void handleMouseEvent(Object selectedOrder) {
+        controller.handleMouseEvent((Order) selectedOrder);
     }
 
     public TableView<Order> getOrderTable() {

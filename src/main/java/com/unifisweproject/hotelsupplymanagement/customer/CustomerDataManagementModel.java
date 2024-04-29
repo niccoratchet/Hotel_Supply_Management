@@ -1,18 +1,18 @@
 package com.unifisweproject.hotelsupplymanagement.customer;
 
-import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
+import com.unifisweproject.hotelsupplymanagement.data.DataManagementModel;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class CustomerManagement implements Data_Management {
+public class CustomerDataManagementModel implements DataManagementModel {
 
-    private static final CustomerManagement instance = new CustomerManagement();           // Singleton
+    private static final CustomerDataManagementModel instance = new CustomerDataManagementModel();           // Singleton
     private int nextCustomerCode;               // Tiene traccia del codice dell'ultimo Cliente nel DB
     private final ArrayList<Customer> customerList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Cliente
 
-    private CustomerManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
+    private CustomerDataManagementModel() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Cliente'";
         try {
@@ -26,12 +26,12 @@ public class CustomerManagement implements Data_Management {
 
     }
 
-    public static CustomerManagement getInstance() {
+    public static CustomerDataManagementModel getInstance() {
         return instance;
     }
 
     @Override
-    public void loadFromDB() throws SQLException {          // Caricamento dei dati del DB sui clienti nella lista di CustomerManagement
+    public void loadFromDB() throws SQLException {          // Caricamento dei dati del DB sui clienti nella lista di CustomerDataManagementModel
 
         ResultSet resultSet = getRows(true, null);
         while (resultSet.next()) {

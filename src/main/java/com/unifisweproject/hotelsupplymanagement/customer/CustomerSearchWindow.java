@@ -55,10 +55,10 @@ public class CustomerSearchWindow implements Initializable {
     private Button confirmButton;
     @FXML
     private Button backButton;
-    private final CustomerManagementController controller;
+    private final CustomerDataManagementController controller;
 
     public CustomerSearchWindow(){
-        controller = CustomerManagementController.getInstance();
+        controller = CustomerDataManagementController.getInstance();
     }
 
     @Override

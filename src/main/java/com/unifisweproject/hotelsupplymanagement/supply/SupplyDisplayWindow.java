@@ -41,12 +41,12 @@ public class SupplyDisplayWindow implements Initializable {
     private Button backButton;
     private final Supply displayedSupply;
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
-    private final SupplyManagementController controller;
+    private final SupplyDataManagementController controller;
 
     public SupplyDisplayWindow(Supply displayedSupply) {
 
         this.displayedSupply = displayedSupply;
-        controller = SupplyManagementController.getInstance();
+        controller = SupplyDataManagementController.getInstance();
 
     }
 

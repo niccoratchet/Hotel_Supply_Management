@@ -25,10 +25,10 @@ public class SupplierDisplayWindow implements Initializable {
     @FXML
     private Button displayCompanyButton;
     private final Supplier displayedSupplier;
-    private final SupplierManagementController controller;
+    private final SupplierDataManagementController controller;
 
     public SupplierDisplayWindow(Supplier displayedSupplier) {
-        this.controller = SupplierManagementController.getInstance();
+        this.controller = SupplierDataManagementController.getInstance();
         this.displayedSupplier = displayedSupplier;
     }
 

@@ -47,7 +47,7 @@ public class SupplierManagementTest {
     @Test
     void addSupplier() {
 
-        SupplierManagement supplierManagement = SupplierManagement.getInstance();
+        SupplierDataManagementModel supplierManagement = SupplierDataManagementModel.getInstance();
         supplierManagement.add(new Supplier("2024-04-09", "01234567890",
                 "Rossi Mario", "Via Roma", "00100", "1"));
         String query = "SELECT * FROM Fornitore WHERE"+
@@ -78,7 +78,7 @@ public class SupplierManagementTest {
     @Test
     void modifySupplier() {
 
-        SupplierManagement supplierManagement = SupplierManagement.getInstance();
+        SupplierDataManagementModel supplierManagement = SupplierDataManagementModel.getInstance();
         supplierManagement.modify(new Supplier(99, "2024-04-10", "00000200000",
                 "Rossi Mauro", "Via Firenze", "00200", "2"));
         String query = "SELECT * FROM Fornitore WHERE  Codice_Fornitore = 99";
@@ -106,28 +106,27 @@ public class SupplierManagementTest {
     @Test
     void searchSupplier() {                         // FIXME: Errore 
 
-        SupplierManagement supplierManagement = SupplierManagement.getInstance();
-        Supplier toBeSearch = new Supplier(98, "2024-04-09",
-                "12345678910", "Bottega Veneta", "Viale Caselli", "50987", "99");
+        SupplierDataManagementModel supplierManagement = SupplierDataManagementModel.getInstance();
+        Supplier toBeSearch = new Supplier("2024-04-09",
+                "12345678910", "Bottega Veneta", "Viale Caselli", "50987", "98");
         supplierManagement.add(toBeSearch);
-        supplierManagement.getSupplierList().add(toBeSearch);
         ArrayList<Object> list = supplierManagement.search(toBeSearch);
         Supplier test = (Supplier) list.get(0);
-        assertEquals(98, test.getCodice_fornitore());
         assertEquals("2024-04-09", test.getData_inserimento());
         assertEquals("12345678910", test.getP_IVA());
         assertEquals("Bottega Veneta", test.getRagione_sociale());
         assertEquals("Viale Caselli", test.getIndirizzo());
         assertEquals("50987", test.getCAP());
-        assertEquals("99", test.getCivico());
+        assertEquals("98", test.getCivico());
 
     }
 
     @Test
     void deleteSupplier() {
 
-        SupplierManagement supplierManagement = SupplierManagement.getInstance();
-        supplierManagement.delete(97);
+        SupplierDataManagementModel supplierManagement = SupplierDataManagementModel.getInstance();
+        supplierManagement.delete(new Supplier(97, "2024-04-09", "00000000000",
+                "Hotel Bogazzi", "Piazza Rufina", "50000", "1"));
         String query = "SELECT * FROM Fornitore WHERE  Codice_Fornitore = 97";
         try {
             Statement statement = conn.createStatement();

@@ -2,7 +2,7 @@ package com.unifisweproject.hotelsupplymanagement.supply;
 
 import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
 import com.unifisweproject.hotelsupplymanagement.item.Item;
-import com.unifisweproject.hotelsupplymanagement.item.ItemManagement;
+import com.unifisweproject.hotelsupplymanagement.item.ItemDataManagementModel;
 import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ListOfItemsWindow;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ItemsInSupplyManagement;
@@ -22,12 +22,12 @@ import java.util.Objects;
 
 public class SupplyManagementController {
 
-    private static final SupplyManagementController instance = new SupplyManagementController();        // Singleton per la finestra di gestione delle forniture
+    private static final SupplyDataManagementController instance = new SupplyDataManagementController();        // Singleton per la finestra di gestione delle forniture
 
     private boolean searchView = false;
-    private SupplyManagementView supplyManagementView;
+    private SupplyDataManagementView supplyManagementView;
     private final MainMenuWindowController mainMenuWindowController;
-    private final SupplyManagement supplyManagement;
+    private final SupplyDataManagementModel supplyManagement;
     private ArrayList<Supply> results = new ArrayList<>();
     private ResultSet resultSet;
     private ListOfItemsWindow listOfItemsWindow;
@@ -37,14 +37,14 @@ public class SupplyManagementController {
     private ItemsInSupplyManagement itemsInSupplyManagement;
     private final ArrayList<Integer> newAmount = new ArrayList<>();             // Lista per memorizzare le nuove quantita degli item in un nuovo ordine
 
-    private SupplyManagementController() {               // Costruttore privato per evitare la creazione di nuove istanze (SingleTon)
+    private SupplyDataManagementController() {               // Costruttore privato per evitare la creazione di nuove istanze (SingleTon)
 
         mainMenuWindowController = MainMenuWindowController.getInstance();
-        supplyManagement = SupplyManagement.getInstance();
+        supplyManagement = SupplyDataManagementModel.getInstance();
 
     }
 
-    public static SupplyManagementController getInstance() {          // Metodo per ottenere l'istanza della classe (SingleTon)
+    public static SupplyDataManagementController getInstance() {          // Metodo per ottenere l'istanza della classe (SingleTon)
         return instance;
     }
 
@@ -81,7 +81,8 @@ public class SupplyManagementController {
 
     }
 
-    public void createRow(ActionEvent event) {              // Metodo per la creazione di una nuova fornitura fatto partire dalla finestra SupplyAddWindow      //TODO: da finire
+    @Override
+    public void createRow(ActionEvent event) {              // Metodo per la creazione di una nuova fornitura fatto partire dalla finestra SupplyAddWindow
 
         int supplierCode = 0;
         String selectedSupplier = supplyAddWindow.getSupplierList().getValue();
@@ -144,14 +145,14 @@ public class SupplyManagementController {
 
         try {
             if (!mainMenuWindowController.getIsNotFirstTimeLoad().get(0)) {
-                ItemManagement.getInstance().loadFromDB();                          // Se nel corso del programma non è stata ancora caricata la lista degli articoli, si richiama il metodo loadFromDB
+                ItemDataManagementModel.getInstance().loadFromDB();                          // Se nel corso del programma non è stata ancora caricata la lista degli articoli, si richiama il metodo loadFromDB
                 mainMenuWindowController.getIsNotFirstTimeLoad().set(0, true);
             }
         }
         catch (SQLException e) {
             System.err.println("Errore durante il riempimento della tabella");
         }
-        ObservableList<Item> itemRows = FXCollections.observableArrayList(ItemManagement.getInstance().getItemList());
+        ObservableList<Item> itemRows = FXCollections.observableArrayList(ItemDataManagementModel.getInstance().getItemList());
         listOfItemsWindow.setRows(itemRows);
 
     }
@@ -282,12 +283,12 @@ public class SupplyManagementController {
     public void displayView(ActionEvent event) {
 
         try {
-         supplyManagementView = new SupplyManagementView();
+         supplyManagementView = new SupplyDataManagementView();
             FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/supply/SupplyManagementWindow.fxml"),
                     supplyManagementView, true, event, "Gestione forniture", false);
         }
         catch (IOException e) {
-            System.err.println("Errore durante l'apertura del file SupplyManagementView.fxml: " + e.getMessage());
+            System.err.println("Errore durante l'apertura del file SupplyDataManagementView.fxml: " + e.getMessage());
         }
         initializeRows();
         if (Objects.isNull(itemsInSupplyManagement))

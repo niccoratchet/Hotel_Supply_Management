@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.item;
 
+import com.unifisweproject.hotelsupplymanagement.DataManagementController;
 import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 import com.unifisweproject.hotelsupplymanagement.main.MainMenuWindowController;
@@ -13,35 +14,36 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ItemManagementController {
+public class ItemDataManagementController implements DataManagementController {
 
-    private final ItemManagement itemManagement;
+    private final ItemDataManagementModel itemManagement;
     private final MainMenuWindowController mainMenuWindowController;
     private boolean searchView = false;
     private ArrayList<Item> results = new ArrayList<>();
-    private static ItemManagementController instance = null;        // Applicazione SingleTon per la finestra di gestione degli Item
-    private ItemManagementView itemManagementView;
+    private static ItemDataManagementController instance = null;        // Applicazione SingleTon per la finestra di gestione degli Item
+    private ItemDataManagementView itemManagementView;
     private ItemAddWindow itemAddWindow;
     private ItemDisplayWindow itemDisplayWindow;
     private ItemSearchWindow itemSearchWindow;
     private boolean isBadFormatted = false;                     // Variabile per gestire la correttezza o meno dei parametri inseriti nella ricerca di un articolo
 
-    private ItemManagementController() {
+    private ItemDataManagementController() {
 
         mainMenuWindowController = MainMenuWindowController.getInstance();
-        itemManagement = ItemManagement.getInstance();
+        itemManagement = ItemDataManagementModel.getInstance();
 
     }
 
-    public static ItemManagementController getInstance() {         // Metodo per ottenere l'istanza della classe (SingleTon)
+    public static ItemDataManagementController getInstance() {         // Metodo per ottenere l'istanza della classe (SingleTon)
 
         if (instance == null) {
-            instance = new ItemManagementController();
+            instance = new ItemDataManagementController();
         }
         return instance;
 
     }
 
+    @Override
     public void initializeRows()  {
 
         if (!mainMenuWindowController.getIsNotFirstTimeLoad().get(0)) {
@@ -58,6 +60,7 @@ public class ItemManagementController {
 
     }
 
+    @Override
     public void createRow(ActionEvent event) {             // Metodo chiamato quando si preme il pulsante di aggiunta di un nuovo articolo
 
         try {
@@ -98,6 +101,7 @@ public class ItemManagementController {
 
     }
 
+    @Override
     public void updateTable() {
 
         if(searchView) {
@@ -111,8 +115,10 @@ public class ItemManagementController {
 
     }
 
-    public void deleteRow(Item selectedItem) {
+    @Override
+    public void deleteRow(Object toBeDeleted) {
 
+        Item selectedItem = (Item) toBeDeleted;
         if (HotelSupplyManagementMain.displayConfirmationAlert("Attenzione", "Rimozione prodotto", "Sicuro di procedere con l'eliminazione del prodotto dalla banca dati?")) {
             itemManagement.delete(selectedItem);
             if (searchView)
@@ -183,6 +189,7 @@ public class ItemManagementController {
 
     }
 
+    @Override
     public void searchRow(ActionEvent event) {         // Metodo per cercare un articolo dato l'oggetto Item fittizio creato con i parametri inseriti
 
         Item toBeSearched = getSearchFilters();
@@ -213,10 +220,11 @@ public class ItemManagementController {
 
     }
 
+    @Override
     public void displayView(ActionEvent event) {            // Metodo per visualizzare la finestra di gestione degli articoli
 
         try {
-            itemManagementView = new ItemManagementView();                                                                                                                                            // Apertura della finestra di gestione degli Item
+            itemManagementView = new ItemDataManagementView();                                                                                                                                            // Apertura della finestra di gestione degli Item
             FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemManagementWindow.fxml"),
                     itemManagementView, true, event, "Gestione prodotti", false);
         }
@@ -227,6 +235,7 @@ public class ItemManagementController {
 
     }
 
+    @Override
     public void displaySearchView(ActionEvent event) {
 
         try {
@@ -240,6 +249,7 @@ public class ItemManagementController {
 
     }
 
+    @Override
     public void displayAddView() {
 
         try {
@@ -253,12 +263,13 @@ public class ItemManagementController {
 
     }
 
-    public void displayRowView(ActionEvent event, Item selectedItem) {
+    @Override
+    public void displayRowView(ActionEvent event, Object toBeDisplayed) {
 
         try {
-            itemDisplayWindow = new ItemDisplayWindow(selectedItem);
+            itemDisplayWindow = new ItemDisplayWindow((Item) toBeDisplayed);
             FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/item/ItemDisplayWindow.fxml"),
-                    itemDisplayWindow, false, event, selectedItem.getNome(), false);
+                    itemDisplayWindow, false, event, (((Item) toBeDisplayed).getNome()), false);
         }
         catch (IOException e) {
             System.err.println("Errore durante l'apertura del file ItemDisplayWindow.fxml: " + e.getMessage());
@@ -266,6 +277,7 @@ public class ItemManagementController {
 
     }
 
+    @Override
     public void openDifferentManagement(ActionEvent event) {
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -274,6 +286,7 @@ public class ItemManagementController {
 
     }
 
+    @Override
     public void handleActionEvent(ActionEvent event) {
 
         if (event.getSource() instanceof Button button) {
@@ -311,6 +324,7 @@ public class ItemManagementController {
         displayRowView(null, selectedItem);
     }
 
+    @Override
     public void setSearchView(boolean searchView) {
         this.searchView = searchView;
     }

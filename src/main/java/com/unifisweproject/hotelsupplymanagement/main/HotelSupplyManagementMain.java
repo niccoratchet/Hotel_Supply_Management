@@ -85,7 +85,7 @@ public class HotelSupplyManagementMain extends Application {
             }
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Errore durante l'apertura del DataBase: " + e.getMessage());
         }
 
     }
@@ -98,7 +98,7 @@ public class HotelSupplyManagementMain extends Application {
                 conn.close();
         }
         catch(SQLException e) {
-            System.out.println("Error during DB closure");
+            System.out.println("Errore durante la chiusura della connessione al DataBase: " + e.getMessage());
         }
 
     }

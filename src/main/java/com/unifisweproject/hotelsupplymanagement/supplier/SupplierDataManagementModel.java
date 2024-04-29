@@ -1,6 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.supplier;
 
-import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
+import com.unifisweproject.hotelsupplymanagement.data.DataManagementModel;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 
 import java.sql.PreparedStatement;
@@ -9,15 +9,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class SupplierManagement implements Data_Management {
+public class SupplierDataManagementModel implements DataManagementModel {
 
 
     private int nextSupplierCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
     private final ArrayList<Supplier> supplierList = new ArrayList<>();
 
-    private static final SupplierManagement instance = new SupplierManagement(); // Applicazione Singleton per la gestione del supplier
+    private static final SupplierDataManagementModel instance = new SupplierDataManagementModel(); // Applicazione Singleton per la gestione del supplier
 
-    private SupplierManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
+    private SupplierDataManagementModel() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Fornitore'";
 
@@ -32,7 +32,7 @@ public class SupplierManagement implements Data_Management {
 
     }
 
-    public static SupplierManagement getInstance() {
+    public static SupplierDataManagementModel getInstance() {
         return instance;
     }
 

@@ -1,27 +1,27 @@
 package com.unifisweproject.hotelsupplymanagement.supply;
 
-import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
+import com.unifisweproject.hotelsupplymanagement.data.DataManagementModel;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagement;
+import com.unifisweproject.hotelsupplymanagement.supplier.SupplierDataManagementModel;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class SupplyManagement implements Data_Management {
+public class SupplyDataManagementModel implements DataManagementModel {
 
     /*
         Questa classe è stata creata per gestire la tabella "Fornitura" del database. Non ha bisogno dell'attributo nextItemCode per il fatto
         che non è possibile aggiungere nuovi elementi alla tabella se non sono già presenti Fornitori e Articoli.
      */
 
-    private static final SupplyManagement instance = new SupplyManagement();        // Singleton per SupplyManagement
+    private static final SupplyDataManagementModel instance = new SupplyDataManagementModel();        // Singleton per SupplyDataManagementModel
     private int nextSupplyCode;                 // Codice della prossima fornitura da aggiungere
     private final ArrayList<Supply> suppliesList = new ArrayList<>();               // Lista di oggetti che rappresenta una singola riga in Fornitura nel DB
-    private final SupplierManagement supplierManagement = SupplierManagement.getInstance();
+    private final SupplierDataManagementModel supplierManagement = SupplierDataManagementModel.getInstance();
 
-    private SupplyManagement() {              // Costruttore privato per evitare la creazione di nuove istanze (Singleton) e per estrapolare il prossimo codice fornitura
+    private SupplyDataManagementModel() {              // Costruttore privato per evitare la creazione di nuove istanze (Singleton) e per estrapolare il prossimo codice fornitura
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Fornitura'";
         try {
@@ -35,7 +35,7 @@ public class SupplyManagement implements Data_Management {
 
     }
 
-    public static SupplyManagement getInstance() {
+    public static SupplyDataManagementModel getInstance() {
         return instance;
     }
 

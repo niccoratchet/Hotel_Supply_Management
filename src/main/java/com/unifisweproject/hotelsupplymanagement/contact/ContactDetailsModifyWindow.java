@@ -1,8 +1,8 @@
 package com.unifisweproject.hotelsupplymanagement.contact;
 
-import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementController;
+import com.unifisweproject.hotelsupplymanagement.customer.CustomerDataManagementController;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagementController;
+import com.unifisweproject.hotelsupplymanagement.supplier.SupplierDataManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,14 +35,14 @@ public class ContactDetailsModifyWindow implements Initializable {
     private TextField mailField;
     @FXML
     private Button confirmButton;
-    private SupplierManagementController supplierController = null;
-    private CustomerManagementController customerController = null;
+    private SupplierDataManagementController supplierController = null;
+    private CustomerDataManagementController customerController = null;
 
-    public ContactDetailsModifyWindow(SupplierManagementController supplierController) {
+    public ContactDetailsModifyWindow(SupplierDataManagementController supplierController) {
         this.supplierController = supplierController;
     }
 
-    public ContactDetailsModifyWindow(CustomerManagementController customerController) {
+    public ContactDetailsModifyWindow(CustomerDataManagementController customerController) {
         this.customerController = customerController;
     }
 

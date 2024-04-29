@@ -39,10 +39,10 @@ public class SupplyAddWindow implements Initializable {
     @FXML
     private Button addItemsButton;
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
-    private final SupplyManagementController controller;
+    private final SupplyDataManagementController controller;
 
     public SupplyAddWindow() {
-        controller = SupplyManagementController.getInstance();
+        controller = SupplyDataManagementController.getInstance();
     }
 
     @Override

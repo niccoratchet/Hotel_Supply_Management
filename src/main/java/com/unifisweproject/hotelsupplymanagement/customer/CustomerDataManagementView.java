@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.customer;
 
+import com.unifisweproject.hotelsupplymanagement.DataManagementView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,7 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class  CustomerManagementView implements Initializable{
+public class CustomerDataManagementView implements Initializable, DataManagementView {
 
     @FXML
     private TableView<Customer> customerTable;
@@ -65,13 +66,19 @@ public class  CustomerManagementView implements Initializable{
     private final MenuItem viewCustomerMenu = new MenuItem("Visualizza");
     private final MenuItem viewDeleteCustomerMenu = new MenuItem("Elimina");
     ObservableList<Customer> customerRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
-    private final CustomerManagementController controller;
+    private final CustomerDataManagementController controller;
 
-    public CustomerManagementView(){
-        controller = CustomerManagementController.getInstance();
+    public CustomerDataManagementView(){
+        controller = CustomerDataManagementController.getInstance();
     }
 
+    @Override
     public void initialize(URL url, ResourceBundle rb) {            // Il metodo inizializza la tabella, inserendo tutte le righe presenti nel DataBase nella tabella Cliente
+        initializeView();
+    }
+
+    @Override
+    public void initializeView() {
 
         modifyButton.setOnAction(this::handleActionEvent);
         deleteButton.setOnAction(this::handleActionEvent);
@@ -139,7 +146,7 @@ public class  CustomerManagementView implements Initializable{
 
     }
 
-
+    @Override
     public void setCellValueFactory() {
 
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_cliente"));
@@ -156,7 +163,7 @@ public class  CustomerManagementView implements Initializable{
 
     }
 
-
+    @Override
     public void refreshButtons() {
 
         addButton.setDisable(false);                // Riattivo bottone di aggiunta
@@ -168,6 +175,7 @@ public class  CustomerManagementView implements Initializable{
 
     }
 
+    @Override
     public void enableBackButton() {
 
         backButton.setDisable(false);
@@ -179,14 +187,17 @@ public class  CustomerManagementView implements Initializable{
 
     }
 
+    @Override
     public void handleActionEvent(ActionEvent actionEvent) {
         controller.handleActionEvent(actionEvent);
     }
 
-    public void handleMouseEvent(Customer selectedCustomer) {
-        controller.handleMouseEvent(selectedCustomer);
+    @Override
+    public void handleMouseEvent(Object selectedCustomer) {
+        controller.handleMouseEvent((Customer) selectedCustomer);
     }
 
+    @Override
     public void exitSearch() {
 
         refreshButtons();

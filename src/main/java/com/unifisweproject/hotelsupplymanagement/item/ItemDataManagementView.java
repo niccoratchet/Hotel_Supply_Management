@@ -1,5 +1,6 @@
-package com.unifisweproject.hotelsupplymanagement.supplier;
+package com.unifisweproject.hotelsupplymanagement.item;
 
+import com.unifisweproject.hotelsupplymanagement.DataManagementView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,24 +13,22 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class SupplierManagementView implements Initializable {
+public class ItemDataManagementView implements Initializable, DataManagementView {
 
     @FXML
-    private TableView<Supplier> supplierTable;
+    private TableView<Item> itemTable;
     @FXML
-    private TableColumn<Supplier, Integer> IDColumn;
+    private TableColumn<Item, Integer> IDColumn;
     @FXML
-    private TableColumn<Supplier, String> businessNameColumn;
+    private TableColumn<Item, String> NameColumn;
     @FXML
-    private TableColumn<Supplier, String> PIVAColumn;
+    private TableColumn<Item, Integer> AmountColumn;
     @FXML
-    private TableColumn<Supplier, String> addressColumn;
+    private TableColumn<Item, Double> PriceColumn;
     @FXML
-    private TableColumn<Supplier, String> civicNumberColumn;
+    private TableColumn<Item, String> DescriptionColumn;
     @FXML
-    private TableColumn<Supplier, String> CAPColumn;
-    @FXML
-    private TableColumn<Supplier, String> dateColumn;
+    private TableColumn<Item, String> DateColumn;
     @FXML
     private Button modifyButton;
     @FXML
@@ -43,40 +42,45 @@ public class SupplierManagementView implements Initializable {
     @FXML
     private AnchorPane tableAnchorPane;
     @FXML
-    private MenuItem itemMenuItem;
-    @FXML
-    private MenuItem orderMenuItem;
+    private MenuItem supplierMenuItem;
     @FXML
     private MenuItem customerMenuItem;
+    @FXML
+    private MenuItem orderMenuItem;
     @FXML
     private MenuItem supplyMenuItem;
     @FXML
     private MenuItem mainMenuItem;
     private final ContextMenu rightClickMenu = new ContextMenu();               // Content Menu e MenuItem per poter visualizzare menù tasto destro
-    private final MenuItem viewSupplierMenu = new MenuItem("Visualizza");
-    private final MenuItem viewDeleteSupplierMenu = new MenuItem("Elimina");
-    private final ObservableList<Supplier> supplierRows = FXCollections.observableArrayList();
+    private final MenuItem viewItemMenu = new MenuItem("Visualizza");
+    private final MenuItem viewDeleteItemMenu = new MenuItem("Elimina");
+    private final ObservableList<Item> itemRows = FXCollections.observableArrayList();    // Lista di righe presenti nella tabella, si aggiorna nel caso dell'aggiunta di una riga
     private long lastClickTime = 0;
-    private final SupplierManagementController controller;
+    private final ItemDataManagementController controller;
 
-    public SupplierManagementView() {
-        controller = SupplierManagementController.getInstance();
+    public ItemDataManagementView() {
+        controller = ItemDataManagementController.getInstance();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initializeView();
+    }
 
-        itemMenuItem.setOnAction(this::handleActionEvent);
+    @Override
+    public void initializeView() {
+
+        supplierMenuItem.setOnAction(this::handleActionEvent);
+        customerMenuItem.setOnAction(this::handleActionEvent);
         orderMenuItem.setOnAction(this::handleActionEvent);
         supplyMenuItem.setOnAction(this::handleActionEvent);
-        customerMenuItem.setOnAction(this::handleActionEvent);
         mainMenuItem.setOnAction(this::handleActionEvent);
         addButton.setOnAction(this::handleActionEvent);
         searchButton.setOnAction(this::handleActionEvent);
         modifyButton.setOnAction(this::handleActionEvent);
         deleteButton.setOnAction(this::handleActionEvent);
         backButton.setOnAction(this::handleActionEvent);
-        supplierTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
+        itemTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
             if(newSelection != null) {
                 modifyButton.setDisable(false);             // Aggiunta del listener nella tabella per rilevare quale elemento viene selezionato
                 deleteButton.setDisable(false);
@@ -86,51 +90,42 @@ public class SupplierManagementView implements Initializable {
                 deleteButton.setDisable(true);
             }
         });
-        rightClickMenu.getItems().addAll(viewSupplierMenu, viewDeleteSupplierMenu);
-        viewSupplierMenu.setOnAction(this::handleActionEvent);
-        viewSupplierMenu.setId("viewSupplierMenu");
-        viewDeleteSupplierMenu.setOnAction(this::handleActionEvent);
-        viewDeleteSupplierMenu.setId("viewDeleteSupplierMenu");
-        supplierTable.setOnMouseClicked(event -> {
+        rightClickMenu.getItems().addAll(viewItemMenu, viewDeleteItemMenu);
+        viewItemMenu.setOnAction(this::handleActionEvent);
+        viewItemMenu.setId("viewItemMenu");
+        viewDeleteItemMenu.setOnAction(this::handleActionEvent);
+        viewDeleteItemMenu.setId("viewDeleteItemMenu");
+        itemTable.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {            // Controlla se il click è un doppio click e gestiscilo di conseguenza
                 rightClickMenu.hide();
                 if (event.getClickCount() == 2) {
                     long currentTime = System.currentTimeMillis();
                     if (currentTime - lastClickTime < 5000)
                     {
-                        handleMouseEvent(supplierTable.getSelectionModel().getSelectedItem());
+                        handleMouseEvent(itemTable.getSelectionModel().getSelectedItem());
                     }
                     lastClickTime = currentTime;
                 }
             }
             else {
-                SelectionModel<Supplier> selectionModel = supplierTable.getSelectionModel();        // verifico se è stato cliccato un elemento
-                Supplier selectedSupplier = selectionModel.getSelectedItem();
-                if(selectedSupplier != null)
+                SelectionModel<Item> selectionModel = itemTable.getSelectionModel();        // verifico se è stato cliccato un elemento
+                Item selectedItem = selectionModel.getSelectedItem();
+                if(selectedItem != null)
                     rightClickMenu.show(tableAnchorPane, event.getScreenX(), event.getScreenY());       // Mostra il menu contestuale alle coordinate del click
             }
         });
-        supplierTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
-            if(newSelection != null) {
-                modifyButton.setDisable(false);
-                deleteButton.setDisable(false);
-            }
-            else {
-                modifyButton.setDisable(true);
-                deleteButton.setDisable(true);
-            }
-        });
 
     }
 
-    public void setRows(ObservableList<Supplier> supplierRows) {
+    public void setRows(ObservableList<Item> itemRows) {
 
-        this.supplierRows.setAll(supplierRows);
+        this.itemRows.setAll(itemRows);
         setCellValueFactory();
-        supplierTable.setItems(this.supplierRows);
+        itemTable.setItems(this.itemRows);
 
     }
 
+    @Override
     public void refreshButtons() {
 
         addButton.setDisable(false);                // Riattivo bottone di aggiunta
@@ -142,6 +137,7 @@ public class SupplierManagementView implements Initializable {
 
     }
 
+    @Override
     public void enableBackButton() {
 
         backButton.setDisable(false);
@@ -153,26 +149,29 @@ public class SupplierManagementView implements Initializable {
 
     }
 
+    @Override
     public void setCellValueFactory() {
 
-        IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_fornitore"));
-        businessNameColumn.setCellValueFactory(new PropertyValueFactory<>("Ragione_sociale"));
-        PIVAColumn.setCellValueFactory(new PropertyValueFactory<>("P_IVA"));
-        addressColumn.setCellValueFactory(new PropertyValueFactory<>("Indirizzo"));
-        civicNumberColumn.setCellValueFactory(new PropertyValueFactory<>("Civico"));
-        CAPColumn.setCellValueFactory(new PropertyValueFactory<>("CAP"));
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_inserimento"));
+        IDColumn.setCellValueFactory(new PropertyValueFactory<>("Codice_articolo"));
+        NameColumn.setCellValueFactory(new PropertyValueFactory<>("Nome"));
+        AmountColumn.setCellValueFactory(new PropertyValueFactory<>("Quantita"));
+        PriceColumn.setCellValueFactory(new PropertyValueFactory<>("Prezzo"));
+        DescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("Descrizione"));
+        DateColumn.setCellValueFactory(new PropertyValueFactory<>("Data_inserimento"));
 
     }
 
+    @Override
     public void handleActionEvent(ActionEvent actionEvent) {
         controller.handleActionEvent(actionEvent);
     }
 
-    public void handleMouseEvent(Supplier selectedSupplier) {
-        controller.handleMouseEvent(selectedSupplier);
+    @Override
+    public void handleMouseEvent(Object selectedItem) {
+        controller.handleMouseEvent((Item) selectedItem);
     }
 
+    @Override
     public void exitSearch() {
 
         refreshButtons();
@@ -181,8 +180,8 @@ public class SupplierManagementView implements Initializable {
 
     }
 
-    public TableView<Supplier> getSupplierTable() {
-        return supplierTable;
+    public TableView<Item> getItemTable() {
+        return itemTable;
     }
 
 }

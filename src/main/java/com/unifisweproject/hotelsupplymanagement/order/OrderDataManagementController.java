@@ -1,8 +1,9 @@
 package com.unifisweproject.hotelsupplymanagement.order;
 
+import com.unifisweproject.hotelsupplymanagement.DataManagementController;
 import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
 import com.unifisweproject.hotelsupplymanagement.item.Item;
-import com.unifisweproject.hotelsupplymanagement.item.ItemManagement;
+import com.unifisweproject.hotelsupplymanagement.item.ItemDataManagementModel;
 import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ItemsInOrderManagement;
 import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ListOfItemsWindow;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
@@ -19,14 +20,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class OrderManagementController {
+public class OrderDataManagementController implements DataManagementController {
 
-    private static final OrderManagementController instance = new OrderManagementController();      // Singleton
+    private static final OrderDataManagementController instance = new OrderDataManagementController();      // Singleton
     private boolean searchView = false;
     private ArrayList<Order> results = new ArrayList<>();
-    private final OrderManagement orderManagement;
+    private final OrderDataManagementModel orderManagement;
     private final MainMenuWindowController mainMenuWindowController;
-    private OrderManagementView orderManagementView;
+    private OrderDataManagementView orderManagementView;
     private OrderDisplayWindow orderDisplayWindow;
     private OrderSearchWindow orderSearchWindow;
     private ListOfItemsWindow listOfItemsWindow;
@@ -35,17 +36,18 @@ public class OrderManagementController {
     private ResultSet resultSet;
     private final ArrayList<Integer> newAmount = new ArrayList<>();             // Lista per memorizzare le nuove quantita degli item in un nuovo ordine
 
-    private OrderManagementController() {
+    private OrderDataManagementController() {
 
         mainMenuWindowController = MainMenuWindowController.getInstance();
-        orderManagement = OrderManagement.getInstance();
+        orderManagement = OrderDataManagementModel.getInstance();
 
     }
 
-    public static OrderManagementController getInstance() {
+    public static OrderDataManagementController getInstance() {
         return instance;
     }
 
+    @Override
     public void initializeRows()  {
 
         if(!mainMenuWindowController.getIsNotFirstTimeLoad().get(3)) {
@@ -82,6 +84,7 @@ public class OrderManagementController {
 
     }
 
+    @Override
     public void createRow(ActionEvent event) {              // Metodo per la creazione di un nuovo ordine fatto partire dalla finestra OrderAddWindow
 
         int customerCode = 0;
@@ -119,7 +122,7 @@ public class OrderManagementController {
 
     public void addItemToOrder(ActionEvent event) {               // Metodo per aggiungere un articolo a un ordine e visualizzare in OrderAddWindow, fatto partire da ListOfItemsWindow
 
-        Item selectedItem = listOfItemsWindow.getItemTableView().getSelectionModel().getSelectedItem();         // TODO: Probabilmente anche la controparte Supply dovrà avere un metodo simile
+        Item selectedItem = listOfItemsWindow.getItemTableView().getSelectionModel().getSelectedItem();
         int newAmount;
         String quantity = listOfItemsWindow.getQuantityField().getText();
         if (quantity.equals("0")) {
@@ -157,18 +160,19 @@ public class OrderManagementController {
 
         try {
             if (!mainMenuWindowController.getIsNotFirstTimeLoad().get(0)) {
-                ItemManagement.getInstance().loadFromDB();                          // Se nel corso del programma non è stata ancora caricata la lista degli articoli, si richiama il metodo loadFromDB
+                ItemDataManagementModel.getInstance().loadFromDB();                          // Se nel corso del programma non è stata ancora caricata la lista degli articoli, si richiama il metodo loadFromDB
                 mainMenuWindowController.getIsNotFirstTimeLoad().set(0, true);
             }
         }
         catch (SQLException e) {
             System.err.println("Errore durante il riempimento della tabella");
         }
-        ObservableList<Item> itemRows = FXCollections.observableArrayList(ItemManagement.getInstance().getItemList());
+        ObservableList<Item> itemRows = FXCollections.observableArrayList(ItemDataManagementModel.getInstance().getItemList());
         listOfItemsWindow.setRows(itemRows);
 
     }
 
+    @Override
     public void updateTable() {
 
         ObservableList<Order> orderRows;
@@ -202,6 +206,7 @@ public class OrderManagementController {
 
     }
 
+    @Override
     public void deleteRow(Object toBeDeleted) {
 
         if (HotelSupplyManagementMain.displayConfirmationAlert("Attenzione","Rimozione ordine", "Sicuro di procedere con l'eliminazione dell'ordine dalla banca dati?")) {
@@ -214,6 +219,7 @@ public class OrderManagementController {
 
     }
 
+    @Override
     public void searchRow(ActionEvent event) {
 
         Order toBeSearched = getSearchFilters();
@@ -275,6 +281,7 @@ public class OrderManagementController {
 
     }
 
+    @Override
     public void openDifferentManagement(ActionEvent event) {
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -283,15 +290,16 @@ public class OrderManagementController {
 
     }
 
+    @Override
     public void displayView(ActionEvent event) {
 
         try {
-            orderManagementView = new OrderManagementView();
+            orderManagementView = new OrderDataManagementView();
             FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/order/OrderManagementWindow.fxml"),
                     orderManagementView, true, event, "Gestione ordini", false);
         }
         catch (IOException e) {
-            System.err.println("Errore durante l'apertura del file OrderManagementView.fxml: " + e.getMessage());
+            System.err.println("Errore durante l'apertura del file OrderDataManagementView.fxml: " + e.getMessage());
         }
         initializeRows();
         if (Objects.isNull(itemsInOrderManagement))
@@ -299,6 +307,7 @@ public class OrderManagementController {
 
     }
 
+    @Override
     public void displayRowView(ActionEvent event, Object toBeDisplayed) {
 
         try {
@@ -312,6 +321,7 @@ public class OrderManagementController {
 
     }
 
+    @Override
     public void displaySearchView(ActionEvent event) {
 
         try {
@@ -325,6 +335,7 @@ public class OrderManagementController {
 
     }
 
+    @Override
     public void displayAddView() {
 
         try {
@@ -354,6 +365,7 @@ public class OrderManagementController {
 
     }
 
+    @Override
     public void handleActionEvent(ActionEvent event) {
 
         if (event.getSource() instanceof Button button) {
@@ -392,8 +404,17 @@ public class OrderManagementController {
         displayRowView(null, selectedOrder);
     }
 
+    @Override
     public void setSearchView(boolean searchView) {
         this.searchView = searchView;
+    }
+
+    public ItemsInOrderManagement getItemsInOrderManagement() {
+        return itemsInOrderManagement;
+    }
+
+    public void setItemsInOrderManagement(ItemsInOrderManagement itemsInOrderManagement) {
+        this.itemsInOrderManagement = itemsInOrderManagement;
     }
 
 }

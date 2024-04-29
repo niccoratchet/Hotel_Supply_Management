@@ -8,8 +8,8 @@ package com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply;
 
 import com.unifisweproject.hotelsupplymanagement.item.Item;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.order.OrderManagementController;
-import com.unifisweproject.hotelsupplymanagement.supply.SupplyManagementController;
+import com.unifisweproject.hotelsupplymanagement.order.OrderDataManagementController;
+import com.unifisweproject.hotelsupplymanagement.supply.SupplyDataManagementController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -47,14 +47,14 @@ public class ListOfItemsWindow implements Initializable {
     private Button backButton;
     @FXML
     private ObservableList<Item> itemList = FXCollections.observableArrayList();
-    private OrderManagementController orderController = null;
-    private SupplyManagementController supplyController = null;
+    private OrderDataManagementController orderController = null;
+    private SupplyDataManagementController supplyController = null;
 
-    public ListOfItemsWindow(OrderManagementController orderController) {
+    public ListOfItemsWindow(OrderDataManagementController orderController) {
         this.orderController = orderController;
     }
 
-    public ListOfItemsWindow(SupplyManagementController supplyController) {
+    public ListOfItemsWindow(SupplyDataManagementController supplyController) {
         this.supplyController = supplyController;
     }
 

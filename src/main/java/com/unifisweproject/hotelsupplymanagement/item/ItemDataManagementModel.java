@@ -1,6 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.item;
 
-import com.unifisweproject.hotelsupplymanagement.data.Data_Management;
+import com.unifisweproject.hotelsupplymanagement.data.DataManagementModel;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
 
 import java.sql.PreparedStatement;
@@ -9,13 +9,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class ItemManagement implements Data_Management {
+public class ItemDataManagementModel implements DataManagementModel {
     private int nextItemCode;               // Tiene traccia del codice dell'ultimo Articolo nel DB
     private final ArrayList<Item> itemList = new ArrayList<>();           // Lista che contiene tutti gli Item contenuti nella tabella Articolo
 
-    private static final ItemManagement instance = new ItemManagement();          // Applicazione SingleTon per la gestione degli Item
+    private static final ItemDataManagementModel instance = new ItemDataManagementModel();          // Applicazione SingleTon per la gestione degli Item
 
-    private ItemManagement() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
+    private ItemDataManagementModel() {                                                                   // Il costruttore inizializza il contenuto della variabile nextItemCode
 
         String getCodeQuery = "SELECT seq FROM sqlite_sequence WHERE name = 'Articolo'";
 
@@ -30,7 +30,7 @@ public class ItemManagement implements Data_Management {
 
     }
 
-    public static ItemManagement getInstance() {         // Metodo per ottenere l'istanza della classe (SingleTon)
+    public static ItemDataManagementModel getInstance() {         // Metodo per ottenere l'istanza della classe (SingleTon)
         return instance;
     }
 

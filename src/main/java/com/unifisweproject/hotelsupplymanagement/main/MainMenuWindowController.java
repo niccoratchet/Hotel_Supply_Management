@@ -1,11 +1,11 @@
 package com.unifisweproject.hotelsupplymanagement.main;
 
 import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
-import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementController;
-import com.unifisweproject.hotelsupplymanagement.item.ItemManagementController;
-import com.unifisweproject.hotelsupplymanagement.order.OrderManagementController;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagementController;
-import com.unifisweproject.hotelsupplymanagement.supply.SupplyManagementController;
+import com.unifisweproject.hotelsupplymanagement.customer.CustomerDataManagementController;
+import com.unifisweproject.hotelsupplymanagement.item.ItemDataManagementController;
+import com.unifisweproject.hotelsupplymanagement.order.OrderDataManagementController;
+import com.unifisweproject.hotelsupplymanagement.supplier.SupplierDataManagementController;
+import com.unifisweproject.hotelsupplymanagement.supply.SupplyDataManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -59,35 +59,35 @@ public class MainMenuWindowController implements Initializable {
 
     public void openItemManagementView(ActionEvent event) {        // Metodo per l'apertura della finestra di gestione degli articoli
 
-        ItemManagementController itemManagementController = ItemManagementController.getInstance();
+        ItemDataManagementController itemManagementController = ItemDataManagementController.getInstance();
         itemManagementController.displayView(event);
 
     }
 
     public void openCustomerManagementView(ActionEvent event) {      // Metodo per l'apertura della finestra di gestione dei clienti
 
-        CustomerManagementController customerManagementController = CustomerManagementController.getInstance();
+        CustomerDataManagementController customerManagementController = CustomerDataManagementController.getInstance();
         customerManagementController.displayView(event);
 
     }
 
     public void openOrderManagementView(ActionEvent event) {      // Metodo per l'apertura della finestra di gestione degli ordini
 
-        OrderManagementController orderManagementController = OrderManagementController.getInstance();
+        OrderDataManagementController orderManagementController = OrderDataManagementController.getInstance();
         orderManagementController.displayView(event);
 
     }
 
     public void openSupplierManagementView(ActionEvent event) {
 
-        SupplierManagementController supplierManagementController = SupplierManagementController.getInstance();
+        SupplierDataManagementController supplierManagementController = SupplierDataManagementController.getInstance();
         supplierManagementController.displayView(event);
 
     }
 
     public void openSupplyManagement(ActionEvent event) {
 
-        SupplyManagementController supplyManagementController = SupplyManagementController.getInstance();
+        SupplyDataManagementController supplyManagementController = SupplyDataManagementController.getInstance();
         supplyManagementController.displayView(event);
 
     }

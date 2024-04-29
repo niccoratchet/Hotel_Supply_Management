@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public interface Data_Management {
+public interface DataManagementModel {
 
     void add(Object newObject);                              // Aggiunta di un'istanza di un determinato tipo di oggetto nel DB
     void modify(Object value);                           // Aggiorna i dati di un'istanza all'interno del DB

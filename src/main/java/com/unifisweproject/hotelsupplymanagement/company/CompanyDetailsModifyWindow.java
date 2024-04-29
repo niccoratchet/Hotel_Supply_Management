@@ -1,8 +1,8 @@
 package com.unifisweproject.hotelsupplymanagement.company;
 
-import com.unifisweproject.hotelsupplymanagement.customer.CustomerManagementController;
+import com.unifisweproject.hotelsupplymanagement.customer.CustomerDataManagementController;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierManagementController;
+import com.unifisweproject.hotelsupplymanagement.supplier.SupplierDataManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,14 +23,14 @@ public class CompanyDetailsModifyWindow implements Initializable {
     private TextField ragioneSocialeField;
     @FXML
     private Button confirmButton;
-    private SupplierManagementController supplierController = null;
-    private CustomerManagementController customerController = null;
+    private SupplierDataManagementController supplierController = null;
+    private CustomerDataManagementController customerController = null;
 
-    public CompanyDetailsModifyWindow(SupplierManagementController supplierDisplayWindow) {
+    public CompanyDetailsModifyWindow(SupplierDataManagementController supplierDisplayWindow) {
         this.supplierController = supplierDisplayWindow;
     }
 
-    public CompanyDetailsModifyWindow(CustomerManagementController customerController) {
+    public CompanyDetailsModifyWindow(CustomerDataManagementController customerController) {
         this.customerController = customerController;
     }
 

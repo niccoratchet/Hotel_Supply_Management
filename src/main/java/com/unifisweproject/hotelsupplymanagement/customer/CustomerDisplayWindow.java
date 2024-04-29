@@ -36,11 +36,11 @@ public class CustomerDisplayWindow implements Initializable {
     @FXML
     private Button displayCompanyDataButton;
     private final Customer displayedCustomer;
-    private final CustomerManagementController controller;
+    private final CustomerDataManagementController controller;
 
     public CustomerDisplayWindow(Customer displayedCustomer) {
 
-        this.controller = CustomerManagementController.getInstance();
+        this.controller = CustomerDataManagementController.getInstance();
         this.displayedCustomer = displayedCustomer;
 
     }

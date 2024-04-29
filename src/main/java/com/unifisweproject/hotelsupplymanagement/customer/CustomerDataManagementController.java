@@ -1,5 +1,6 @@
 package com.unifisweproject.hotelsupplymanagement.customer;
 
+import com.unifisweproject.hotelsupplymanagement.DataManagementController;
 import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
 import com.unifisweproject.hotelsupplymanagement.company.CompanyDetailsAddWindow;
 import com.unifisweproject.hotelsupplymanagement.company.CompanyDetailsManagement;
@@ -21,14 +22,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class CustomerManagementController {
+public class CustomerDataManagementController implements DataManagementController {
 
-    private static CustomerManagementController instance = null;        // Singleton
+    private static CustomerDataManagementController instance = null;        // Singleton
     private boolean searchView = false;
     private final MainMenuWindowController mainMenuWindowController;
-    private final CustomerManagement customerManagement;
+    private final CustomerDataManagementModel customerManagement;
     private ArrayList<Customer> results = new ArrayList<>();
-    private CustomerManagementView customerManagementView;
+    private CustomerDataManagementView customerManagementView;
     private CustomerAddWindow customerAddWindow;
     private CustomerDisplayWindow customerDisplayWindow;
     private CustomerSearchWindow customerSearchWindow;
@@ -41,22 +42,23 @@ public class CustomerManagementController {
     private Customer displayedCustomer = null;                                             // Variabile per gestire il cliente visualizzato
     private boolean isBadFormatted = false;                     // Variabile per gestire la correttezza o meno dei parametri inseriti nella ricerca di un cliente
 
-    private CustomerManagementController() {                              // Costruttore privato per Singleton
+    private CustomerDataManagementController() {                              // Costruttore privato per Singleton
 
         mainMenuWindowController = MainMenuWindowController.getInstance();
-        customerManagement = CustomerManagement.getInstance();
+        customerManagement = CustomerDataManagementModel.getInstance();
 
     }
 
-    public static CustomerManagementController getInstance() {            // Metodo per ottenere l'istanza del Singleton
+    public static CustomerDataManagementController getInstance() {            // Metodo per ottenere l'istanza del Singleton
 
         if (instance == null) {
-            instance = new CustomerManagementController();
+            instance = new CustomerDataManagementController();
         }
         return instance;
 
     }
 
+    @Override
     public void initializeRows()  {
 
         if (!mainMenuWindowController.getIsNotFirstTimeLoad().get(1)) {
@@ -73,6 +75,7 @@ public class CustomerManagementController {
 
     }
 
+    @Override
     public void createRow(ActionEvent event)  {
 
         String customerName = customerAddWindow.getNameField().getText();
@@ -187,6 +190,7 @@ public class CustomerManagementController {
 
     }
 
+    @Override
     public void updateTable() {
 
         if(searchView) {
@@ -225,8 +229,10 @@ public class CustomerManagementController {
         companyDetails.clear();
     }
 
-    public void deleteRow(Customer selectedCustomer) {
+    @Override
+    public void deleteRow(Object toBeDeleted) {
 
+        Customer selectedCustomer = (Customer) toBeDeleted;
         if (HotelSupplyManagementMain.displayConfirmationAlert("Attenzione", "Rimozione cliente", "Sicuro di procedere con l'eliminazione del cliente dalla banca dati?")) {
             customerManagement.delete(selectedCustomer);
             if (searchView)
@@ -336,6 +342,7 @@ public class CustomerManagementController {
 
     }
 
+    @Override
     public void searchRow(ActionEvent event) {
 
         Customer toBeSearched = getSearchFilters();
@@ -366,10 +373,11 @@ public class CustomerManagementController {
 
     }
 
+    @Override
     public void displayView(ActionEvent event) {
 
         try {
-            customerManagementView = new CustomerManagementView();                                                                                                                                            // Apertura della finestra di gestione degli Item
+            customerManagementView = new CustomerDataManagementView();                                                                                                                                            // Apertura della finestra di gestione degli Item
             FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/customer/CustomerManagementWindow.fxml"),
                     customerManagementView, true, event, "Gestione clienti", false);
         }
@@ -380,6 +388,7 @@ public class CustomerManagementController {
 
     }
 
+    @Override
     public void displaySearchView(ActionEvent event) {
 
         try {
@@ -393,7 +402,7 @@ public class CustomerManagementController {
 
     }
 
-
+    @Override
     public void displayAddView() {
 
         try {
@@ -407,10 +416,11 @@ public class CustomerManagementController {
 
     }
 
-
-    public void displayRowView(ActionEvent event, Customer selectedCustomer) {
+    @Override
+    public void displayRowView(ActionEvent event, Object toBeDisplayed) {
 
         try {
+            Customer selectedCustomer = (Customer) toBeDisplayed;
             this.displayedCustomer = selectedCustomer;
             setContactDetails(selectedCustomer.getIndirizzo(), selectedCustomer.getCAP(), selectedCustomer.getCivico());
             customerDisplayWindow = new CustomerDisplayWindow(selectedCustomer);
@@ -475,6 +485,7 @@ public class CustomerManagementController {
 
     }
 
+    @Override
     public void openDifferentManagement(ActionEvent event) {
 
         Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
@@ -523,6 +534,7 @@ public class CustomerManagementController {
         displayRowView(null, selectedCustomer);
     }
 
+    @Override
     public void setSearchView(boolean searchView) {
         this.searchView = searchView;
     }
