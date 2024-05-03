@@ -1,6 +1,8 @@
 package com.unifisweproject.hotelsupplymanagement.supply;
 
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
+import com.unifisweproject.hotelsupplymanagement.model.supply.Supply;
+import com.unifisweproject.hotelsupplymanagement.model.supply.SupplyManagementModel;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -11,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SupplyManagementTest {
 
-    static SupplyDataManagementModel supplyManagement;
+    static SupplyManagementModel supplyManagement;
     static String insertSupplyTestQuery = "INSERT INTO Fornitura (Codice_Fornitura, Codice_Articolo, Codice_Fornitore, Data_Fornitura, Prezzo, Quantita) " +
             "VALUES (99, 99, 99, '2024-04-09', 1.50, 100)";
     static Supply supplyTest = new Supply(99, 99, 99, "2024-04-09", 100, 1.50);
@@ -22,7 +24,7 @@ public class SupplyManagementTest {
         String url = "jdbc:sqlite:src/test/DBTest.db";
         try {
             HotelSupplyManagementMain.connectToDB(url);
-            supplyManagement = SupplyDataManagementModel.getInstance();
+            supplyManagement = SupplyManagementModel.getInstance();
             supplyManagement.getSupplyList().add(supplyTest);
         }
         catch (Exception e) {
@@ -39,7 +41,7 @@ public class SupplyManagementTest {
     }
 
     @Test
-    void testAddSupply() {              // Test per il metodo add in SupplyDataManagementModel: il test si basa sull'aggiunta di una fornitura nel DB
+    void testAddSupply() {              // Test per il metodo add in SupplyManagementModel: il test si basa sull'aggiunta di una fornitura nel DB
 
         supplyManagement.add(new Supply(99,99, "2024-04-09", 63, 10.00));
         String query = "SELECT * FROM Fornitura WHERE Codice_Articolo = 99 AND Codice_Fornitore = 99 AND Data_Fornitura = '2024-04-09' AND " +
@@ -65,7 +67,7 @@ public class SupplyManagementTest {
     }
 
     @Test
-    void testDeleteSupply() {               // Test per il metodo delete in SupplyDataManagementModel: il test si basa sulla cancellazione di una fornitura dal DB
+    void testDeleteSupply() {               // Test per il metodo delete in SupplyManagementModel: il test si basa sulla cancellazione di una fornitura dal DB
 
         String insertSupply = "INSERT INTO Fornitura (Codice_Fornitura, Codice_Articolo, Codice_Fornitore, Data_Fornitura, Prezzo, Quantita) " +
                 "VALUES (102, 99, 99, '2024-04-09', 1.50, 100)";
@@ -94,7 +96,7 @@ public class SupplyManagementTest {
     }
 
     @Test
-    void testSearchSupply() {               // Test per il metodo search in SupplyDataManagementModel: il test si basa sulla ricerca di una fornitura nel DB
+    void testSearchSupply() {               // Test per il metodo search in SupplyManagementModel: il test si basa sulla ricerca di una fornitura nel DB
 
         Supply toBeSearched = new Supply(-1, 99, 99, null, -1, -1);
         assertEquals(1, supplyManagement.search(toBeSearched).size());

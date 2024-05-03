@@ -2,8 +2,8 @@ package com.unifisweproject.hotelsupplymanagement.main;
 
 
 import com.unifisweproject.hotelsupplymanagement.FXMLWindowLoader;
-import com.unifisweproject.hotelsupplymanagement.login.FirstAccessWindowController;
-import com.unifisweproject.hotelsupplymanagement.login.LoginWindowController;
+import com.unifisweproject.hotelsupplymanagement.login.FirstAccessWindow;
+import com.unifisweproject.hotelsupplymanagement.login.LoginWindow;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -77,7 +77,7 @@ public class HotelSupplyManagementMain extends Application {
             icon = new Image(Objects.requireNonNull(HotelSupplyManagementMain.class.getResourceAsStream("/com/unifisweproject/hotelsupplymanagement/Icon/HotelSupplyManagementIcon.png")));
             if(!isFirstAccess()) {
                 try {
-                    FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/LoginWindow.fxml"), new LoginWindowController(), false, null, "Hotel Supply Management", false);
+                    FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/LoginWindow.fxml"), new LoginWindow(), false, null, "Hotel Supply Management", false);
                 }
                 catch(IOException e) {
                     System.err.println("Errore durante il caricamento della pagine del file LoginWindow.fxml: " + e.getMessage());
@@ -119,7 +119,7 @@ public class HotelSupplyManagementMain extends Application {
         if(file.length() == 0) {
             isFirstAccess = true;
             try {
-                FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/FirstAccessWindow.fxml"), new FirstAccessWindowController(), false, null, "Hotel Supply Management", false);
+                FXMLWindowLoader.loadFXML(getClass().getResource("/com/unifisweproject/hotelsupplymanagement/login/FirstAccessWindow.fxml"), new FirstAccessWindow(), false, null, "Hotel Supply Management", false);
             }
             catch (IOException e) {
                 System.err.println("Errore durante il caricamento della pagina del file FirstAccessWindow.fxml: " + e.getMessage());

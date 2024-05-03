@@ -1,8 +1,8 @@
 package com.unifisweproject.hotelsupplymanagement.contact;
 
-import com.unifisweproject.hotelsupplymanagement.customer.CustomerDataManagementController;
+import com.unifisweproject.hotelsupplymanagement.controller.customer.CustomerManagementController;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierDataManagementController;
+import com.unifisweproject.hotelsupplymanagement.controller.supplier.SupplierManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,14 +35,14 @@ public class ContactDetailsModifyWindow implements Initializable {
     private TextField mailField;
     @FXML
     private Button confirmButton;
-    private SupplierDataManagementController supplierController = null;
-    private CustomerDataManagementController customerController = null;
+    private SupplierManagementController supplierController = null;
+    private CustomerManagementController customerController = null;
 
-    public ContactDetailsModifyWindow(SupplierDataManagementController supplierController) {
+    public ContactDetailsModifyWindow(SupplierManagementController supplierController) {
         this.supplierController = supplierController;
     }
 
-    public ContactDetailsModifyWindow(CustomerDataManagementController customerController) {
+    public ContactDetailsModifyWindow(CustomerManagementController customerController) {
         this.customerController = customerController;
     }
 
@@ -55,7 +55,7 @@ public class ContactDetailsModifyWindow implements Initializable {
         CAPField.setTextFormatter(HotelSupplyManagementMain.getNumberOnlyStringFormatter(capCharacters));
         phoneNumberField.setTextFormatter(HotelSupplyManagementMain.getNumberOnlyStringFormatter(maxPhoneNumberCharacter));
         try {
-            updateText();
+            setInitialFields();
         } catch (SQLException e) {
             System.out.println("Errore nel caricamento dei dati: " + e.getMessage());
         }
@@ -70,7 +70,7 @@ public class ContactDetailsModifyWindow implements Initializable {
 
     }
 
-    public void updateText() throws SQLException {
+    public void setInitialFields() throws SQLException {
 
         ResultSet resultSet;
         if (customerController != null) {

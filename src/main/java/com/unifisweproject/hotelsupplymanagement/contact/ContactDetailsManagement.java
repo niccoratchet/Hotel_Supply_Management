@@ -25,7 +25,7 @@ public class ContactDetailsManagement {
 
     }
 
-    public static ResultSet setInitialFields(String address, String civicNumber, String cap) throws SQLException {
+    public static ResultSet setInitialFields(String address, String civicNumber, String cap) throws SQLException {          // Viene effettuata una query per cercare i dati relativi al recapito del Cliente
 
         String searchContactQuery = "SELECT * FROM Recapito WHERE Indirizzo = ? AND CAP = ? AND Civico = ?";
         PreparedStatement statement = HotelSupplyManagementMain.conn.prepareStatement(searchContactQuery);

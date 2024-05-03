@@ -1,6 +1,8 @@
 package com.unifisweproject.hotelsupplymanagement.supplier;
 
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
+import com.unifisweproject.hotelsupplymanagement.model.supplier.Supplier;
+import com.unifisweproject.hotelsupplymanagement.model.supplier.SupplierManagementModel;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -47,7 +49,7 @@ public class SupplierManagementTest {
     @Test
     void addSupplier() {
 
-        SupplierDataManagementModel supplierManagement = SupplierDataManagementModel.getInstance();
+        SupplierManagementModel supplierManagement = SupplierManagementModel.getInstance();
         supplierManagement.add(new Supplier("2024-04-09", "01234567890",
                 "Rossi Mario", "Via Roma", "00100", "1"));
         String query = "SELECT * FROM Fornitore WHERE"+
@@ -78,7 +80,7 @@ public class SupplierManagementTest {
     @Test
     void modifySupplier() {
 
-        SupplierDataManagementModel supplierManagement = SupplierDataManagementModel.getInstance();
+        SupplierManagementModel supplierManagement = SupplierManagementModel.getInstance();
         supplierManagement.modify(new Supplier(99, "2024-04-10", "00000200000",
                 "Rossi Mauro", "Via Firenze", "00200", "2"));
         String query = "SELECT * FROM Fornitore WHERE  Codice_Fornitore = 99";
@@ -106,7 +108,7 @@ public class SupplierManagementTest {
     @Test
     void searchSupplier() {
 
-        SupplierDataManagementModel supplierManagement = SupplierDataManagementModel.getInstance();
+        SupplierManagementModel supplierManagement = SupplierManagementModel.getInstance();
         Supplier toBeSearch = new Supplier("2024-04-09",
                 "12345678910", "Bottega Veneta", "Viale Caselli", "50987", "98");
         supplierManagement.add(toBeSearch);
@@ -124,7 +126,7 @@ public class SupplierManagementTest {
     @Test
     void deleteSupplier() {
 
-        SupplierDataManagementModel supplierManagement = SupplierDataManagementModel.getInstance();
+        SupplierManagementModel supplierManagement = SupplierManagementModel.getInstance();
         supplierManagement.delete(new Supplier(97, "2024-04-09", "00000000000",
                 "Hotel Bogazzi", "Piazza Rufina", "50000", "1"));
         String query = "SELECT * FROM Fornitore WHERE  Codice_Fornitore = 97";

@@ -1,8 +1,8 @@
 package com.unifisweproject.hotelsupplymanagement.company;
 
-import com.unifisweproject.hotelsupplymanagement.customer.CustomerDataManagementController;
+import com.unifisweproject.hotelsupplymanagement.controller.customer.CustomerManagementController;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
-import com.unifisweproject.hotelsupplymanagement.supplier.SupplierDataManagementController;
+import com.unifisweproject.hotelsupplymanagement.controller.supplier.SupplierManagementController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,8 +16,8 @@ import java.util.ResourceBundle;
 
 public class CompanyDetailsAddWindow implements Initializable {
 
-    private CustomerDataManagementController customerController = null;
-    private SupplierDataManagementController supplierController = null;
+    private CustomerManagementController customerController = null;
+    private SupplierManagementController supplierController = null;
     @FXML
     private TextField P_IVAField;
     @FXML
@@ -25,11 +25,11 @@ public class CompanyDetailsAddWindow implements Initializable {
     @FXML
     private Button confirmButton;
 
-    public CompanyDetailsAddWindow(CustomerDataManagementController customerController) {
+    public CompanyDetailsAddWindow(CustomerManagementController customerController) {
         this.customerController = customerController;
     }
 
-    public CompanyDetailsAddWindow(SupplierDataManagementController supplierController) {
+    public CompanyDetailsAddWindow(SupplierManagementController supplierController) {
         this.supplierController = supplierController;
     }
 

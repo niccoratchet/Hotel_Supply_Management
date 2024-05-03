@@ -1,6 +1,8 @@
 package com.unifisweproject.hotelsupplymanagement.customer;
 
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
+import com.unifisweproject.hotelsupplymanagement.model.customer.Customer;
+import com.unifisweproject.hotelsupplymanagement.model.customer.CustomerManagementModel;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -49,7 +51,7 @@ class CustomerManagementTest {
     @Test
     void testAddCustomer() {                // Test per il metodo addCustomer in CustomManagement: effettuo l'aggiunta di un cliente e successivamente verifico che i dati siano stati inseriti correttamente
 
-        CustomerDataManagementModel customerManagement = CustomerDataManagementModel.getInstance();
+        CustomerManagementModel customerManagement = CustomerManagementModel.getInstance();
         customerManagement.add(new Customer(10, "Mario", "Rossi", "2024-04-09", "RSSMRA80A01H501A",
                 "01234567890", "Rossi Mario", "Via Roma", "00100", "1"));
         String query = "SELECT * FROM Cliente WHERE Nome = 'Mario' AND Cognome = 'Rossi' AND Data_Inserimento = '2024-04-09' AND " +
@@ -80,10 +82,10 @@ class CustomerManagementTest {
     }
 
     @Test
-    void testModifyCustomer() {                 // Test per il metodo modifyCustomer in CustomerDataManagementModel: il test si basa sulla modifica dell'indirizzo di un cliente e sulla successiva verifica della modifica effettuando una query al DB
+    void testModifyCustomer() {                 // Test per il metodo modifyCustomer in CustomerManagementModel: il test si basa sulla modifica dell'indirizzo di un cliente e sulla successiva verifica della modifica effettuando una query al DB
 
         customerTest.setIndirizzo(modifyString);
-        CustomerDataManagementModel customerManagement = CustomerDataManagementModel.getInstance();
+        CustomerManagementModel customerManagement = CustomerManagementModel.getInstance();
         customerManagement.modify(customerTest);
         String verificationQuery = "SELECT * FROM Cliente WHERE Codice_Cliente = 99";
         try {
@@ -103,7 +105,7 @@ class CustomerManagementTest {
     void testSearchCustomer() {
 
         Customer toBeSearched = new Customer(-1, -1, "Giuseppe", "Verdi", null, null, null, null, null, null, null);
-        CustomerDataManagementModel customerManagement = CustomerDataManagementModel.getInstance();
+        CustomerManagementModel customerManagement = CustomerManagementModel.getInstance();
         customerManagement.add(customerTest);
         ArrayList<Object> searchResults = customerManagement.search(toBeSearched);
         assertEquals(1, searchResults.size());
@@ -111,9 +113,9 @@ class CustomerManagementTest {
     }
 
     @Test
-    void testDeleteCustomer() {                 // Test per il metodo deleteCustomer in CustomerDataManagementModel: il test si basa sulla cancellazione di un cliente e sulla successiva verifica della cancellazione effettuando una query al DB
+    void testDeleteCustomer() {                 // Test per il metodo deleteCustomer in CustomerManagementModel: il test si basa sulla cancellazione di un cliente e sulla successiva verifica della cancellazione effettuando una query al DB
 
-        CustomerDataManagementModel customerManagement = CustomerDataManagementModel.getInstance();
+        CustomerManagementModel customerManagement = CustomerManagementModel.getInstance();
         String insertCustomerQuery = "INSERT INTO Cliente (Codice_Cliente, Data_Inserimento, Sconto, Nome, Cognome, Codice_Fiscale, P_IVA, Ragione_Sociale, Indirizzo, Civico, CAP) " +
                 "VALUES (102, '2024-04-09', 10, 'Giuseppe', 'Verdi', 'RSSMRA80A01H501A', '01234567890', 'Ristorante Il Ritrovo', 'Via Parigi', '3', '50085')";
         try {

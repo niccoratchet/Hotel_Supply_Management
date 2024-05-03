@@ -1,7 +1,10 @@
 package com.unifisweproject.hotelsupplymanagement.order;
 
-import com.unifisweproject.hotelsupplymanagement.itemsInOderAndSupply.ItemsInOrderManagement;
+import com.unifisweproject.hotelsupplymanagement.controller.order.OrderManagementController;
+import com.unifisweproject.hotelsupplymanagement.itemsInOrderAndSupply.ItemsInOrderManagement;
 import com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManagementMain;
+import com.unifisweproject.hotelsupplymanagement.model.order.OrderManagementModel;
+import com.unifisweproject.hotelsupplymanagement.model.order.Order;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,7 +16,7 @@ import static com.unifisweproject.hotelsupplymanagement.main.HotelSupplyManageme
 
 public class OrderManagementTest {
 
-    static OrderDataManagementModel orderManagement;
+    static OrderManagementModel orderManagement;
 
     @BeforeAll
     static void setUp() {
@@ -48,7 +51,7 @@ public class OrderManagementTest {
     @Test
     void testAddOrder() {
 
-        orderManagement = OrderDataManagementModel.getInstance();
+        orderManagement = OrderManagementModel.getInstance();
         orderManagement.add(new Order(50, true, "Rimessa Diretta", "2024-04-09"));
         String query = "SELECT * FROM Ordine WHERE Codice_Cliente = 50 AND BF = '1' AND Data_Ordine = '2024-04-09' AND " +
                 "Tipo_Pagamento = 'Rimessa Diretta'";
@@ -75,7 +78,7 @@ public class OrderManagementTest {
     @Test
     void testAddItemsInOrder() {
 
-        OrderDataManagementController orderController = OrderDataManagementController.getInstance();
+        OrderManagementController orderController = OrderManagementController.getInstance();
         orderController.setItemsInOrderManagement(new ItemsInOrderManagement());
         orderController.getItemsInOrderManagement().setCodice_Ordine(15);                     // Queste 3 istruzioni servono per impostare i dati dell'ordine nell'oggetto ItemsInOrderManagement che contiene la lista degli articoli ordinati
         orderController.getItemsInOrderManagement().addCodice_Articolo(50);
@@ -120,7 +123,7 @@ public class OrderManagementTest {
     @Test
     void testDeleteOrder() {
 
-        orderManagement = OrderDataManagementModel.getInstance();
+        orderManagement = OrderManagementModel.getInstance();
         orderManagement.delete(new Order(99, 50, true, "Bonifico Bancario", "2024-04-09"));
         String query = "SELECT * FROM Ordine WHERE Codice_Ordine = 99";
         try {
@@ -141,7 +144,7 @@ public class OrderManagementTest {
     @Test
     void testSearchOrder() {
 
-        orderManagement = OrderDataManagementModel.getInstance();
+        orderManagement = OrderManagementModel.getInstance();
         Order order = new Order( 50, true, "Bonifico Bancario", "2024-04-09");
         orderManagement.add(order);
         Order orderToTest = (Order) orderManagement.search(order).get(0);
